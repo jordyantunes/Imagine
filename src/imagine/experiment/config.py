@@ -17,13 +17,14 @@ from src.imagine.reward_function.oracle_reward_function_playground import Oracle
 from src.playground_env.descriptions import generate_all_descriptions
 from src.imagine.goal_generator.simple_sentence_generator import SentenceGeneratorHeuristic
 from src.imagine.language_model import LanguageModelLSTM
+from pathlib import Path
 
 HOME = os.environ['HOME']
 if 'flowers' in HOME:
     USE_LOCAL_CONFIG = True
 else:
     USE_LOCAL_CONFIG = False
-REPO_PATH = '/'.join(os.path.dirname(os.path.realpath(__file__)).split('/')[:-3]) + '/'
+REPO_PATH = str(Path(os.path.dirname(os.path.realpath(__file__))) / '..' / '..' / '..')
 
 # This is the default configuration dict. Main parameters are overridden by parameters defined in train.py
 DEFAULT_CONFIG = dict(experiment_params=dict(trial_id=0,

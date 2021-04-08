@@ -50,9 +50,13 @@ while True:
 
             elif event.key == K_q:
                 stop = True
+
             if action.sum() != 0:
                 time.sleep(0.05)
                 break
+        elif event.type == QUIT:
+            pygame.quit()
+            sys.exit()
 
     out = env.step(action)
     env.render()

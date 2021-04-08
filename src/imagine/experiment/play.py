@@ -4,6 +4,11 @@ import sys
 
 import numpy as np
 
+from pathlib import Path
+import os
+if os.getenv('HOME') is None:
+    os.environ['HOME'] = str(Path.home())
+
 sys.path.append('../../../')
 from src.utils.util import set_global_seeds
 import src.imagine.experiment.config as config
