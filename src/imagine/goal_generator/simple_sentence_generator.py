@@ -136,6 +136,7 @@ class SentenceGeneratorHeuristic(SentenceGenerator):
                             if not set_match:
                                 if equivalent_words[0] in eq_set and equivalent_words[1] in eq_set:
                                     set_match = True
+                                    # TODO break
                                 else:
                                     if equivalent_words[0] in eq_set:
                                         set_match = True
@@ -154,6 +155,7 @@ class SentenceGeneratorHeuristic(SentenceGenerator):
         # remove sets in double,
         # merge set with equivalence
         ind_remove = []
+        # TODO improve removal using sets
         for i in range(len(self.word_equivalence)):
             if i not in ind_remove:
                 for j in range(i + 1, len(self.word_equivalence)):

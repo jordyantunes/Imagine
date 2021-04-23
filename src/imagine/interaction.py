@@ -97,7 +97,7 @@ class RolloutWorker:
 
                 if self.compute_Q:
                     u, Q = policy_output
-                    Qs.append(Q)
+                    Qs.append(Q.detach().cpu().numpy())
                 else:
                     u = policy_output
 

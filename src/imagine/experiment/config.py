@@ -97,7 +97,8 @@ if USE_LOCAL_CONFIG:
 
 def configure_everything(rank, seed, num_cpu, env, trial_id, n_epochs, reward_function, policy_encoding,
                          feedback_strategy, policy_architecture, goal_invention, reward_checkpoint,
-                         rl_positive_ratio, p_partner_availability, imagination_method, git_commit='', display=True):
+                         rl_positive_ratio, p_partner_availability, imagination_method, git_commit='', display=True,
+                         admissible_attributes=None):
     # Seed everything
     rank_seed = seed + 1000000 * rank
     set_global_seeds(rank_seed)
@@ -111,7 +112,9 @@ def configure_everything(rank, seed, num_cpu, env, trial_id, n_epochs, reward_fu
 
     # Env generating function
     def make_env():
-        return gym.make(params['conditions']['env_name'], display=display)
+        return gym.make(params['conditions']['env_name'],
+                        display=display,
+                        admissible_attributes=admissible_attributes)
 
     # Get info from environment and configure dimensions dict
     tmp_env = make_env()
@@ -331,7 +334,7 @@ def configure_learning_algo(reward_function, goal_sampler, params, reuse=False, 
                                      policy_architecture=params['conditions']['policy_architecture'],
                                      reward_function=reward_function,
                                      dims=params['dims'].copy(),
-                                     cuda=False,
+                                     cuda=True,
                                      logdir=params['experiment_params']['logdir'],
                                      clip_range=5,
                                      lr_actor=0.001,

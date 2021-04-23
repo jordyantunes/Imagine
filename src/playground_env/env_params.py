@@ -1,19 +1,41 @@
 import os
-
 from src.playground_env.color_generation import *
 
+params_init = False
+global_params = dict(max_nb_objects=3,
+                     admissible_actions=('Move', 'Grasp', 'Grow'),
+                     admissible_attributes=('colors', 'categories', 'types'),
+                     min_max_sizes=((0.2, 0.25), (0.25, 0.3)),
+                     agent_size=0.05,
+                     epsilon_initial_pos=0.3,
+                     screen_size=800,
+                     next_to_epsilon=0.3,
+                     attribute_combinations=False,
+                     obj_size_update=0.04,
+                     render_mode=True)
 
-def get_env_params(max_nb_objects=3,
-                   admissible_actions=('Move', 'Grasp', 'Grow'),
-                   admissible_attributes=('colors', 'categories', 'types'),
-                   min_max_sizes=((0.2, 0.25), (0.25, 0.3)),
-                   agent_size=0.05,
-                   epsilon_initial_pos=0.3,
-                   screen_size=800,
-                   next_to_epsilon=0.3,
-                   attribute_combinations=False,
-                   obj_size_update=0.04,
-                   render_mode=True
+
+def init_params(**params):
+    global global_params
+    global params_init
+
+    params_init = True
+
+    for k, v in params.items():
+        global_params[k] = v
+
+
+def get_env_params(max_nb_objects=None,
+                   admissible_actions=None,
+                   admissible_attributes=None,
+                   min_max_sizes=None,
+                   agent_size=None,
+                   epsilon_initial_pos=None,
+                   screen_size=None,
+                   next_to_epsilon=None,
+                   attribute_combinations=None,
+                   obj_size_update=None,
+                   render_mode=None
                    ):
     """
     Builds the set of environment parameters, and the set of function to extract information from the state.
@@ -47,6 +69,23 @@ def get_env_params(max_nb_objects=3,
     -------
     params: dict
     """
+    global global_params
+    global params_init
+
+    if not params_init:
+        print("ATTENTION: getting default env without setting env params")
+
+    max_nb_objects= max_nb_objects or global_params['max_nb_objects']
+    admissible_actions= admissible_actions or global_params['admissible_actions']
+    admissible_attributes= admissible_attributes or global_params['admissible_attributes']
+    min_max_sizes= min_max_sizes or global_params['min_max_sizes']
+    agent_size= agent_size or global_params['agent_size']
+    epsilon_initial_pos= epsilon_initial_pos or global_params['epsilon_initial_pos']
+    screen_size= screen_size or global_params['screen_size']
+    next_to_epsilon= next_to_epsilon or global_params['next_to_epsilon']
+    attribute_combinations= attribute_combinations or global_params['attribute_combinations']
+    obj_size_update= obj_size_update or global_params['obj_size_update']
+    render_mode= render_mode or global_params['render_mode']
 
     # list objects and categories
     furnitures = ('door', 'chair', 'desk', 'lamp', 'table', 'cupboard', 'sink', 'window', 'sofa', 'carpet')

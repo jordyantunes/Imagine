@@ -7,6 +7,7 @@ import inspect
 import functools
 from copy import deepcopy
 from subprocess import CalledProcessError
+import platform
 
 import torch
 import numpy as np
@@ -124,7 +125,10 @@ def fork(num_cpu):
     # Fork for multi-CPU MPI implementation.
     if num_cpu > 1:
         try:
-            whoami = mpi_fork(num_cpu, ['--bind-to', 'core:overload-allowed'])
+            if platform.system() == 'Windows':
+                whoami = mpi_fork(num_cpu, ['-affinity', '-affinity_layout', 'spread:P'])
+            else:
+                whoami = mpi_fork(num_cpu, ['--bind-to', 'core:overload-allowed'])
             # whoami = mpi_fork(num_cpu, ['--bind-to', 'core:overload-allowed'])
         except CalledProcessError:
             # fancy version of mpi call failed, try simple version
@@ -242,10 +246,16 @@ def mpi_fork(n, extra_mpi_args=[]):
             OMP_NUM_THREADS="1",
             IN_MPI="1"
         )
-        # "-bind-to core" is crucial for good performance
-        args = ["mpirun", "-np", str(n)] + \
+        args = ""
+        if platform.system() == 'Windows':
+            args = ["mpiexec", "-np", str(n)] + \
             extra_mpi_args + \
             [sys.executable]
+        else:    
+            # "-bind-to core" is crucial for good performance
+            args = ["mpirun", "-np", str(n)] + \
+                extra_mpi_args + \
+                [sys.executable]
 
         args += sys.argv
         subprocess.check_call(args, env=env)

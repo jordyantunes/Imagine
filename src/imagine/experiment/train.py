@@ -2,6 +2,10 @@ import os
 import sys
 import time
 import argparse
+from pathlib import Path
+
+if os.getenv("HOME") is None:
+    os.environ['HOME'] = str(Path.home())
 
 os.environ["MKL_NUM_THREADS"] = '1'
 os.environ['OPENBLAS_NUM_THREADS'] = '1'
@@ -285,5 +289,6 @@ if __name__ == '__main__':
     add('--reward_checkpoint', default=REWARD_CHECKPOINT, type=str, help="reward checkpoint file for pretrained")
     add('--p_partner_availability', default=P_PARTNER_AVAIL, type=float, help="probability availability partner")
     add('--imagination_method', default=IMAG_METHOD, type=str, help="CGH, low_precision, low_coverage, oracle, random")
+    add('--admissible_attributes', default=None, type=tuple, help="Admissable attributes. Affects sentences. Default: ('colors', 'categories', 'types')")
     kwargs = vars(parser.parse_args())
     launch(**kwargs)

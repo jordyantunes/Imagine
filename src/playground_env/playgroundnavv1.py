@@ -4,7 +4,7 @@ from gym import spaces
 import numpy as np
 import pygame
 from src.playground_env.objects import generate_objects
-from src.playground_env.env_params import get_env_params
+from src.playground_env.env_params import get_env_params, init_params
 
 
 class PlayGroundNavigationV1(gym.Env):
@@ -46,18 +46,18 @@ class PlayGroundNavigationV1(gym.Env):
                  render_mode=False
                  ):
 
-        self.params = get_env_params(max_nb_objects=max_nb_objects,
-                                     admissible_actions=admissible_actions,
-                                     admissible_attributes=admissible_attributes,
-                                     min_max_sizes=min_max_sizes,
-                                     agent_size=agent_size,
-                                     epsilon_initial_pos=epsilon_initial_pos,
-                                     screen_size=screen_size,
-                                     next_to_epsilon=next_to_epsilon,
-                                     attribute_combinations=attribute_combinations,
-                                     obj_size_update=obj_size_update,
-                                     render_mode=render_mode
-                                     )
+        init_params(max_nb_objects=max_nb_objects,
+                    admissible_actions=admissible_actions,
+                    admissible_attributes=admissible_attributes,
+                    min_max_sizes=min_max_sizes,
+                    agent_size=agent_size,
+                    epsilon_initial_pos=epsilon_initial_pos,
+                    screen_size=screen_size,
+                    next_to_epsilon=next_to_epsilon,
+                    attribute_combinations=attribute_combinations,
+                    obj_size_update=obj_size_update,
+                    render_mode=render_mode)
+        self.params = get_env_params()
         self.adm_attributes = self.params['admissible_attributes']
         self.adm_abs_attributes = [a for a in self.adm_attributes if 'relative' not in a]
 
