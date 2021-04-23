@@ -124,3 +124,5 @@ data/*
 src/data/expe/*
 src/data/lstm_checkpoints/*
 src/results/*
+
+!requirements.txt

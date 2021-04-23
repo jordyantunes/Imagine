@@ -1,0 +1,12 @@
+torch==1.8.1+cu111
+nltk==3.5
+matplotlib==3.4.0
+pandas==1.2.3
+tqdm==4.59.0
+gym==0.18.0
+tensorflow==2.4.1
+pygame==2.0.1
+mpi4py==3.0.3
+numpy==1.19.5
+baselines==0.1.5
+scikit_learn==0.24.1
