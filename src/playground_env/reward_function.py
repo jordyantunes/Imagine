@@ -1,7 +1,7 @@
 from src.playground_env.env_params import get_env_params
 from src.playground_env.descriptions import generate_all_descriptions
 
-train_descriptions, test_descriptions, extra_descriptions = generate_all_descriptions(get_env_params())
+# train_descriptions, test_descriptions, extra_descriptions = generate_all_descriptions(get_env_params())
 
 def get_move_descriptions(get_agent_position_attributes, current_state):
     """
@@ -221,6 +221,9 @@ def sample_descriptions_from_state(state, params):
     train_descr = []
     test_descr = []
     extra_descr = []
+    
+    train_descriptions, test_descriptions, extra_descriptions = generate_all_descriptions(get_env_params())
+    
     for descr in descriptions:
         if descr in train_descriptions:
             train_descr.append(descr)

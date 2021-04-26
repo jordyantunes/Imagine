@@ -23,6 +23,7 @@ from src.utils.util import fork, get_time_tracker
 from src.imagine.goal_sampler import GoalSampler, EvalGoalSampler
 from src.imagine.data_processor import DataProcessor
 from src.stats_logger import StatsLogger
+import json
 
 NUM_CPU = 1
 NB_EPOCHS = 500
@@ -289,6 +290,9 @@ if __name__ == '__main__':
     add('--reward_checkpoint', default=REWARD_CHECKPOINT, type=str, help="reward checkpoint file for pretrained")
     add('--p_partner_availability', default=P_PARTNER_AVAIL, type=float, help="probability availability partner")
     add('--imagination_method', default=IMAG_METHOD, type=str, help="CGH, low_precision, low_coverage, oracle, random")
-    add('--admissible_attributes', default=None, type=tuple, help="Admissable attributes. Affects sentences. Default: ('colors', 'categories', 'types')")
+    add('--admissible_attributes', default=None, nargs='*', type=str, help="Admissable attributes. Affects sentences. Default: ('colors', 'categories', 'types')")
     kwargs = vars(parser.parse_args())
+    print("-----------Params-----------")
+    print(json.dumps(kwargs, indent='\t'))
+    print("-----------Params-----------")
     launch(**kwargs)

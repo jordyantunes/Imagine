@@ -34,6 +34,7 @@ COPY src src
 COPY pretrained_weights pretrained_weights
 
 ENV PATH="/opt/venv/bin:$PATH"
+ENV PYTHONPATH="/home/localuser"
 
 RUN python -c "import nltk; nltk.download('punkt')"
 
