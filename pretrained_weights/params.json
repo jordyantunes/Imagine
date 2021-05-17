@@ -11,7 +11,8 @@
     "policy_save_interval": 10,
     "save_obs": false,
     "method_test": "robin",
-    "n_test_rollouts": 191
+    "n_test_rollouts": 191,
+    "admissible_attributes": ["colors", "categories", "types"]
   },
   "conditions": {
     "imagination_method": "CGH",

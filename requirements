@@ -11,3 +11,13 @@ pip install pygame==1.9.6
 
 import nltk
 nltk.download('punkt')
+
+
+pip install mpi4py \
+numpy \
+matplotlib \
+pandas \
+nltk \
+gym \
+scikit_learn \
+pygame \

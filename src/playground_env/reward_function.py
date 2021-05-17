@@ -60,10 +60,10 @@ def get_grasp_descriptions(get_grasped_ids, current_state, sort_attributes, obj_
             adj_att += combine_two(adj_att, adj_att)
         for adj in adj_att:
             quantifier = 'any'  # 'the' if check_if_relative(adj) else 'a'
-            if not check_if_relative(adj):
-                for name in name_att:
-                    # grasp_descriptions.append('{} {} {} {}'.format(verb, quantifier, adj, name))
-                    grasp_descriptions.append('{} {} {}'.format(verb, adj, name))
+            # if not check_if_relative(adj):
+            for name in name_att:
+                # grasp_descriptions.append('{} {} {} {}'.format(verb, quantifier, adj, name))
+                grasp_descriptions.append('{} {} {}'.format(verb, adj, name))
             grasp_descriptions.append('{} {} {} thing'.format(verb, quantifier, adj))
         for name in name_att:
             grasp_descriptions.append('{} any {}'.format(verb, name))
@@ -111,10 +111,10 @@ def get_grow_descriptions(get_grown_ids, initial_state, current_state, params, o
         for adj in adj_att:
             if adj not in list_exluded:
                 quantifier = 'any'  # 'the' if check_if_relative(adj) else 'a'
-                if not check_if_relative(adj):
-                    for name in name_att:
-                        # grow_descriptions.append('{} {} {} {}'.format(verb, quantifier, adj, name))
-                        grow_descriptions.append('{} {} {}'.format(verb, adj, name))
+                # if not check_if_relative(adj):
+                for name in name_att:
+                    # grow_descriptions.append('{} {} {} {}'.format(verb, quantifier, adj, name))
+                    grow_descriptions.append('{} {} {}'.format(verb, adj, name))
                 grow_descriptions.append('{} {} {} thing'.format(verb, quantifier, adj))
         for name in name_att:
             # grow_descriptions.append('{} a {}'.format(verb, name))

@@ -1,5 +1,8 @@
 import os
+from itertools import product
 from src.playground_env.color_generation import *
+import re
+
 
 params_init = False
 global_params = dict(max_nb_objects=3,
@@ -123,6 +126,36 @@ def get_env_params(max_nb_objects=None,
                       relative_sizes=relative_sizes,
                       relative_positions=relative_positions)
 
+    # Adjective combinations
+    attribute_type_combinations_temp = [
+        ('relative_shades', 'colors'),
+        ('relative_sizes', 'colors'),
+        ('shades', 'colors'),
+        ('sizes', 'colors')
+    ]
+
+    attribute_type_combinations = []
+
+    for i, v in enumerate(attribute_type_combinations_temp):
+        not_admissable = False
+        for att in v:
+            if att not in admissible_attributes:
+                not_admissable = True
+        if not not_admissable:
+            attribute_type_combinations.append(v)
+
+    combination_sentences = []
+    for combination in attribute_type_combinations:
+        adj_matrix = []
+        for adj_type in combination:
+            adj_list = []
+            for adj in attributes[adj_type]:
+                adj_list.append(adj)
+            adj_matrix.append(adj_list)
+        all_combinations = list(product(*adj_matrix))
+        all_combinations = [" ".join(c) for c in all_combinations]
+        combination_sentences += all_combinations
+
     # Get the list of admissible attributes
     name_attributes = ()
     adjective_attributes = ()
@@ -142,7 +175,15 @@ def get_env_params(max_nb_objects=None,
                          ('flower',) + \
                          tuple('Grasp {} animal'.format(c) for c in colors + ('any',)) + \
                          tuple('Grow {} {}'.format(c, p) for c in colors + ('any',) for p in plants + ('plant', 'living_thing')) + \
-                         tuple('Grasp {} fly'.format(c) for c in colors + ('any',))
+                         tuple('Grasp {} fly'.format(c) for c in colors + ('any',)) + \
+                         (re.compile(r"big.*tree"),) + \
+                         (re.compile(r"biggest.*dog"),) + \
+                         (re.compile(r"small.*plant"),) + \
+                         (re.compile(r"smallest.*cat"),) + \
+                         (re.compile(r"dark.*rose"),) + \
+                         (re.compile(r"darkest.*grass"),) + \
+                         (re.compile(r"light.*cactus"),) + \
+                         (re.compile(r"lightest.*cactus"),)
 
 
     # get indices of attributes in object feature vector
@@ -180,7 +221,8 @@ def get_env_params(max_nb_objects=None,
                   next_to_epsilon=next_to_epsilon,
                   attribute_combinations=attribute_combinations,
                   obj_size_update=obj_size_update,
-                  render_mode=render_mode
+                  render_mode=render_mode,
+                  combination_sentences=combination_sentences
                   )
 
     # # # # # # # # # # # # # # #

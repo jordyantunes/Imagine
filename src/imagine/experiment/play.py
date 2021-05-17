@@ -17,10 +17,10 @@ from src.imagine.goal_sampler import GoalSampler
 from src.playground_env.reward_function import get_reward_from_state
 from src.playground_env.descriptions import generate_all_descriptions
 
-PATH = '../../../pretrained_weights/'
+PATH = Path(os.getenv('IMAGINE_TRAINED_WEIGHTS') or '../../../pretrained_weights/')
 EPOCH = '160'
-POLICY_FILE = PATH + 'policy_checkpoints/policy_{}.pkl'.format(EPOCH)
-PARAMS_FILE = PATH + 'params.json'
+POLICY_FILE = str(PATH / 'policy_checkpoints/policy_{}.pkl'.format(EPOCH))
+PARAMS_FILE = str(PATH / 'params.json')
 
 
 def main(policy_file, seed, n_test_rollouts, render):
@@ -50,6 +50,7 @@ def main(policy_file, seed, n_test_rollouts, render):
                                                     p_partner_availability=params['conditions'][
                                                         'p_social_partner_availability'],
                                                     imagination_method=params['conditions']['imagination_method'],
+                                                    admissible_attributes=params['experiment_params']['admissible_attributes'],
                                                     git_commit='')
 
     policy_language_model, reward_language_model = config.get_language_models(params)
@@ -64,7 +65,7 @@ def main(policy_file, seed, n_test_rollouts, render):
 
     reward_function = config.get_reward_function(goal_sampler, params)
     if params['conditions']['reward_function'] == 'learned_lstm':
-        reward_function.restore_from_checkpoint(PATH + 'reward_checkpoints/reward_func_checkpoint_{}'.format(EPOCH))
+        reward_function.restore_from_checkpoint(str(PATH / 'reward_checkpoints/reward_func_checkpoint_{}'.format(EPOCH)))
     policy_language_model.set_reward_function(reward_function)
     if reward_language_model is not None:
         reward_language_model.set_reward_function(reward_function)

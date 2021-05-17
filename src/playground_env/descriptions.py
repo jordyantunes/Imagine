@@ -1,4 +1,5 @@
 from src.playground_env.env_params import get_env_params
+import re
 
 
 def generate_all_descriptions(env_params):
@@ -54,9 +55,9 @@ def generate_all_descriptions(env_params):
         grasp_descriptions = []
         for adj in adjective_attributes:
             quantifier = 'any'  # 'the' if check_if_relative(adj) else 'a'
-            if not check_if_relative(adj):
-                for name in name_attributes:
-                    grasp_descriptions.append('Grasp {} {}'.format(adj, name))
+            # if not check_if_relative(adj):
+            for name in name_attributes:
+                grasp_descriptions.append('Grasp {} {}'.format(adj, name))
                     # grasp_descriptions.append('Grasp {} {} {}'.format(quantifier, adj, name))
             grasp_descriptions.append('Grasp {} {} thing'.format(quantifier, adj))
         for name in name_attributes:
@@ -72,16 +73,22 @@ def generate_all_descriptions(env_params):
         for adj in adjective_attributes:
             if adj not in list_exluded:
                 quantifier = 'any' #'the' if check_if_relative(adj) else 'a'
-                if not check_if_relative(adj):
-                    for name in name_attributes:
-                        if name not in list_exluded:
-                            grow_descriptions.append('Grow {} {}'.format(adj, name))
+                # if not check_if_relative(adj):
+                for name in name_attributes:
+                    if name not in list_exluded:
+                        grow_descriptions.append('Grow {} {}'.format(adj, name))
                             # grow_descriptions.append('Grow {} {} {}'.format(quantifier, adj, name))
                 grow_descriptions.append('Grow {} {} thing'.format(quantifier, adj))
+                    
         for name in name_attributes:
             if name not in list_exluded:
                 # grow_descriptions.append('Grow a {}'.format(name))
                 grow_descriptions.append('Grow any {}'.format(name))
+        
+        for adj_combination in p['combination_sentences']:
+            for name in name_attributes:
+                if name not in list_exluded:
+                    grow_descriptions.append('Grow {} {}'.format(adj_combination, name))
 
         all_descriptions += tuple(grow_descriptions)
 
@@ -108,9 +115,15 @@ def generate_all_descriptions(env_params):
     for descr in all_descriptions:
         to_remove = False
         for w in p['words_test_set_def']: # words_test_set_def is the set of occurrences that is reserved to the testing set.
-            if w in descr:
+            if isinstance(w, re.Pattern):
+                r = w.search(descr)
+                if r is not None:
+                    to_remove = True
+                    break
+            elif w in descr:
                 to_remove = True
                 break
+                
         if not to_remove:
             train_descriptions.append(descr)
         else:

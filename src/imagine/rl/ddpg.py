@@ -82,15 +82,15 @@ class DDPG:
         self.memory_replay_ratio_positive_per_goal = deque(maxlen=50)
 
         # create the network
-        self.actor_network = Actor(params['dims'], layers, hidden)
-        self.critic_network = Critic(params['dims'], layers, hidden)
+        self.actor_network = Actor(params['dims'], layers, hidden, use_cuda=self.cuda)
+        self.critic_network = Critic(params['dims'], layers, hidden, use_cuda=self.cuda)
 
         # sync the networks across the cpus
         sync_networks(self.actor_network)
         sync_networks(self.critic_network)
         # build up the target network
-        self.actor_target_network = Actor(params['dims'], layers, hidden)
-        self.critic_target_network = Critic(params['dims'], layers, hidden)
+        self.actor_target_network = Actor(params['dims'], layers, hidden, use_cuda=self.cuda)
+        self.critic_target_network = Critic(params['dims'], layers, hidden, use_cuda=self.cuda)
         # load the weights into the target networks
         self.actor_target_network.load_state_dict(self.actor_network.state_dict())
         self.critic_target_network.load_state_dict(self.critic_network.state_dict())

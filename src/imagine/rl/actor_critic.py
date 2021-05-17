@@ -38,7 +38,7 @@ class Actor(nn.Module):
     """
     Deepset implementation of Actor network
     """
-    def __init__(self, dims, layers, hidden):
+    def __init__(self, dims, layers, hidden, use_cuda=False):
         super(Actor, self).__init__()
         self.layers = layers
         self.dimo = dims['obs']
@@ -46,6 +46,7 @@ class Actor(nn.Module):
         self.dimu = dims['acts']
         self.inds_objs = dims['inds_objs']
         self.hidden = hidden
+        self.use_cuda = use_cuda
 
         self.half_o = self.dimo // 2
         self.n_objs = len(self.inds_objs)
@@ -68,7 +69,8 @@ class Actor(nn.Module):
         input_pi = torch.zeros([len(o), self.n_objs * (self.dim_obj + self.dim_body)])
 
         # todo remove
-        input_pi = input_pi.to(device='cuda')
+        if self.use_cuda:
+            input_pi = input_pi.to(device='cuda')
         for i in range(self.n_objs):
             obs_obj = torch.cat(tensors=[o[:, self.inds_objs[i][0]: self.inds_objs[i][-1] + 1],
                                          o[:,
@@ -78,7 +80,8 @@ class Actor(nn.Module):
             deepset_input = torch.mul(body_obj_input, attention)
 
             input_obj = F.relu(self.fc_actor(deepset_input))
-            input_obj = input_obj.to(device='cuda')
+            if self.use_cuda:
+                input_obj = input_obj.to(device='cuda')
             input_pi += input_obj
 
         return self.tanh(self.fc_pi(input_pi))
@@ -132,7 +135,7 @@ class Critic(nn.Module):
     """
     Deepset implementation of Critic network
     """
-    def __init__(self, dims, layers, hidden):
+    def __init__(self, dims, layers, hidden, use_cuda=False):
         super(Critic, self).__init__()
         self.layers = layers
         self.dimo = dims['obs']
@@ -140,6 +143,7 @@ class Critic(nn.Module):
         self.dimu = dims['acts']
         self.inds_objs = dims['inds_objs']
         self.hidden = hidden
+        self.use_cuda = use_cuda
 
         self.half_o = self.dimo // 2
         self.n_objs = len(self.inds_objs)
@@ -160,7 +164,9 @@ class Critic(nn.Module):
         obs_body = torch.cat(tensors=[o[:, :self.inds_objs[0][0]],
                                       o[:, self.half_o: self.half_o + self.inds_objs[0][0]]], dim=1)
         input_Q = torch.zeros([len(o), self.n_objs * (self.dim_obj + self.dim_body + self.dimu)])
-        input_Q = input_Q.to(device='cuda')
+
+        if self.use_cuda:
+            input_Q = input_Q.to(device='cuda')
         for i in range(self.n_objs):
             obs_obj = torch.cat(tensors=[o[:, self.inds_objs[i][0]: self.inds_objs[i][-1] + 1],
                                          o[:,
@@ -170,7 +176,8 @@ class Critic(nn.Module):
             deepset_input = torch.mul(body_obj_act_input, attention)
 
             input_obj = F.relu(self.fc_critic(deepset_input))
-            input_obj = input_obj.to(device='cuda')
+            if self.use_cuda:
+                input_obj = input_obj.to(device='cuda')
             input_Q += input_obj
 
         return self.fc_Q(input_Q)

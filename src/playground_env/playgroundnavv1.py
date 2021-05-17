@@ -27,7 +27,7 @@ class PlayGroundNavigationV1(gym.Env):
                  viz_data_collection=False,
                  display=True,
                  agent_step_size=0.15,
-                 agent_initial_pos=(0, 0),
+                 agent_initial_pos=np.array((0, 0)),
                  agent_initial_pos_range=0.6,
                  max_nb_objects=3,  # number of objects in the scene
                  random_nb_obj=False,
@@ -60,10 +60,25 @@ class PlayGroundNavigationV1(gym.Env):
         self.params = get_env_params()
         self.adm_attributes = self.params['admissible_attributes']
         self.adm_abs_attributes = [a for a in self.adm_attributes if 'relative' not in a]
+        self.adm_rel_attributes = [a for a in self.adm_attributes if a not in self.adm_abs_attributes]
+
+        self.rel_attributes_mapping = {
+            # rel_attr: (abs_corresp, abs_opposite)
+            "biggest": ("big", "small"),
+            "smallest": ("small", "big"),
+            "lightest": ("light", "dark"),
+            "darkest": ("dark", "light"),
+            "leftest": ("left", "right"),
+            "rightest": ("right", "left"),
+            "highest": ("top", "bottom"),
+            "lowest": ("bottom", "top")
+        }
 
         self.attributes = self.params['attributes']
         self.categories = self.params['categories']
         self.screen_size = self.params['screen_size']
+
+        print("Tipo screen_size:", type(self.screen_size))
 
         self.viz_data_collection = viz_data_collection
         self.show_imagination_bubble = False
@@ -164,15 +179,28 @@ class PlayGroundNavigationV1(gym.Env):
             obj_to_be_grown = dict(zip(self.adm_abs_attributes, [None for _ in range(len(self.adm_abs_attributes))]))
             obj_supply = dict(zip(self.adm_abs_attributes, [None for _ in range(len(self.adm_abs_attributes))]))
 
+            rel_attributes = []
             # first add the object that should be grown
             for w in words[1:]:
                 for k in self.adm_abs_attributes:
                     if w in self.attributes[k]:
                         obj_to_be_grown[k] = w
+                for k in self.adm_rel_attributes:
+                    if w in self.attributes[k]:
+                        obj_to_be_grown[k] = self.rel_attributes_mapping[w][0]
+                        rel_attributes.append((k, w))
+            
             if obj_to_be_grown['categories'] is None and obj_to_be_grown['types'] is None:
                 # if only attributes are proposed, sample a grownable object type
                 obj_to_be_grown['categories'] = np.random.choice(['animal', 'plant'])
             objs.append(obj_to_be_grown.copy())
+
+            # add object to compare if description is relative
+            if len(rel_attributes) > 0:
+                obj_to_compare = obj_to_be_grown.copy()
+                for k, attr in rel_attributes:
+                    obj_to_compare[k] = self.rel_attributes_mapping[attr][1]
+                objs.append(obj_to_compare.copy())
 
             # now sample the supply
             if obj_to_be_grown['categories'] in ['living_thing', 'plant'] or obj_to_be_grown['types'] in \
@@ -184,12 +212,25 @@ class PlayGroundNavigationV1(gym.Env):
             objs.append(obj_supply.copy())
 
         else:
+            rel_attributes = []
+
             obj = dict(zip(self.adm_abs_attributes, [None for _ in range(len(self.adm_abs_attributes))]))
             for w in words[1:]:
                 for k in self.adm_abs_attributes:
                     if w in self.attributes[k]:
                         obj[k] = w
+                for k in self.adm_rel_attributes:
+                    if w in self.attributes[k]:
+                        obj[k] = self.rel_attributes_mapping[w][0]
+                        rel_attributes.appen((k, w))
             objs.append(obj.copy())
+            
+            # add object to compare if description is relative
+            if len(rel_attributes) > 0:
+                obj_to_compare = obj.copy()
+                for k, attr in rel_attributes:
+                    obj_to_compare[k] = self.rel_attributes_mapping[attr][1]
+                objs.append(obj_to_compare.copy())
 
         return self.reset_scene(objs)
 
@@ -235,6 +276,7 @@ class PlayGroundNavigationV1(gym.Env):
         return self.observation.copy()
 
     def get_pixel_coordinates(self, xpos, ypos):
+        # print("Tipo screen_size:", type(self.screen_size), type(self.params['screen_size']), type(xpos), type(ypos))
         return ((xpos + 1) / 2 * (self.params['screen_size'] * 2 / 3) + 1 / 6 * self.params['screen_size']).astype(
             np.int), \
                ((-ypos + 1) / 2 * (self.params['screen_size'] * 2 / 3) + 1 / 6 * self.params['screen_size']).astype(
