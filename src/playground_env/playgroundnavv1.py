@@ -43,7 +43,8 @@ class PlayGroundNavigationV1(gym.Env):
                  next_to_epsilon=0.3,  # define the area to qualify an object as 'next to' another.
                  attribute_combinations=False,
                  obj_size_update=0.04,
-                 render_mode=False
+                 render_mode=False,
+                 cuda=False
                  ):
 
         init_params(max_nb_objects=max_nb_objects,
@@ -56,7 +57,8 @@ class PlayGroundNavigationV1(gym.Env):
                     next_to_epsilon=next_to_epsilon,
                     attribute_combinations=attribute_combinations,
                     obj_size_update=obj_size_update,
-                    render_mode=render_mode)
+                    render_mode=render_mode,
+                    cuda=cuda)
         self.params = get_env_params()
         self.adm_attributes = self.params['admissible_attributes']
         self.adm_abs_attributes = [a for a in self.adm_attributes if 'relative' not in a]
@@ -222,7 +224,7 @@ class PlayGroundNavigationV1(gym.Env):
                 for k in self.adm_rel_attributes:
                     if w in self.attributes[k]:
                         obj[k] = self.rel_attributes_mapping[w][0]
-                        rel_attributes.appen((k, w))
+                        rel_attributes.append((k, w))
             objs.append(obj.copy())
             
             # add object to compare if description is relative

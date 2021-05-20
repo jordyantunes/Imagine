@@ -15,7 +15,8 @@ global_params = dict(max_nb_objects=3,
                      next_to_epsilon=0.3,
                      attribute_combinations=False,
                      obj_size_update=0.04,
-                     render_mode=True)
+                     render_mode=True,
+                     cuda=False)
 
 
 def init_params(**params):
@@ -38,7 +39,8 @@ def get_env_params(max_nb_objects=None,
                    next_to_epsilon=None,
                    attribute_combinations=None,
                    obj_size_update=None,
-                   render_mode=None
+                   render_mode=None,
+                   cuda=None
                    ):
     """
     Builds the set of environment parameters, and the set of function to extract information from the state.
@@ -89,6 +91,7 @@ def get_env_params(max_nb_objects=None,
     attribute_combinations= attribute_combinations or global_params['attribute_combinations']
     obj_size_update= obj_size_update or global_params['obj_size_update']
     render_mode= render_mode or global_params['render_mode']
+    cuda = cuda or global_params['cuda']
 
     # list objects and categories
     furnitures = ('door', 'chair', 'desk', 'lamp', 'table', 'cupboard', 'sink', 'window', 'sofa', 'carpet')
@@ -222,7 +225,8 @@ def get_env_params(max_nb_objects=None,
                   attribute_combinations=attribute_combinations,
                   obj_size_update=obj_size_update,
                   render_mode=render_mode,
-                  combination_sentences=combination_sentences
+                  combination_sentences=combination_sentences,
+                  cuda=cuda
                   )
 
     # # # # # # # # # # # # # # #

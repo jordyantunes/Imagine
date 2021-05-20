@@ -176,7 +176,7 @@ def train(policy, training_worker, evaluation_worker, data_processor, goal_sampl
 
 def launch(**kwargs):
     # Fork for multi-CPU MPI implementation.
-    rank = fork(kwargs['num_cpu'])
+    rank = fork(kwargs['num_cpu'], custom_params=kwargs['custom_mpi_params'])
 
     # Configure everything and log parameters
     params, rank_seed = config.configure_everything(rank, **kwargs)
@@ -291,6 +291,7 @@ if __name__ == '__main__':
     add('--p_partner_availability', default=P_PARTNER_AVAIL, type=float, help="probability availability partner")
     add('--imagination_method', default=IMAG_METHOD, type=str, help="CGH, low_precision, low_coverage, oracle, random")
     add('--admissible_attributes', default=None, nargs='*', type=str, help="Admissable attributes. Affects sentences. Default: ('colors', 'categories', 'types')")
+    add('--custom_mpi_params', default=['--oversubscribe'], nargs='*', type=str, help="Custom MPI Params")
     kwargs = vars(parser.parse_args())
     print("-----------Params-----------")
     print(json.dumps(kwargs, indent='\t'))

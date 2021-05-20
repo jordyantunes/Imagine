@@ -27,7 +27,7 @@ env = gym.make(env_name,
                admissible_attributes=params["admissible_attributes"])
 
 env.reset()
-env.unwrapped.reset_with_goal("Grow red tree")
+env.unwrapped.reset_with_goal("Grow biggest red tree")
 
 stop = False
 while not stop:

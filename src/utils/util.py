@@ -121,14 +121,17 @@ def clean_dict_for_json(a_dict):
 
 
 
-def fork(num_cpu):
+def fork(num_cpu, custom_params=None):
     # Fork for multi-CPU MPI implementation.
     if num_cpu > 1:
         try:
             if platform.system() == 'Windows':
                 whoami = mpi_fork(num_cpu, ['-affinity', '-affinity_layout', 'spread:P'])
             else:
-                whoami = mpi_fork(num_cpu, ['--bind-to', 'core:overload-allowed'])
+                if custom_params is not None and isinstance(custom_params, list):
+                    whoami = mpi_fork(num_cpu, custom_params)
+                else:
+                    whoami = mpi_fork(num_cpu, ['--bind-to', 'core:overload-allowed'])
             # whoami = mpi_fork(num_cpu, ['--bind-to', 'core:overload-allowed'])
         except CalledProcessError:
             # fancy version of mpi call failed, try simple version
