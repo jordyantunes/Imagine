@@ -44,7 +44,12 @@ class PlayGroundNavigationV1(gym.Env):
                  attribute_combinations=False,
                  obj_size_update=0.04,
                  render_mode=False,
-                 cuda=False
+                 cuda=False,
+                 furnitures=None,
+                 plants=None,
+                 animals=None,
+                 supplies=None,
+                 **others
                  ):
 
         init_params(max_nb_objects=max_nb_objects,
@@ -58,7 +63,11 @@ class PlayGroundNavigationV1(gym.Env):
                     attribute_combinations=attribute_combinations,
                     obj_size_update=obj_size_update,
                     render_mode=render_mode,
-                    cuda=cuda)
+                    cuda=cuda,
+                    furnitures=furnitures,
+                    plants=plants,
+                    animals=animals,
+                    supplies=supplies)
         self.params = get_env_params()
         self.adm_attributes = self.params['admissible_attributes']
         self.adm_abs_attributes = [a for a in self.adm_attributes if 'relative' not in a]

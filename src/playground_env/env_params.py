@@ -5,6 +5,14 @@ import re
 
 
 params_init = False
+
+AVAILABLE_OBJECTS = {
+    "furnitures": ('door', 'chair', 'desk', 'lamp', 'table', 'cupboard', 'sink', 'window', 'sofa', 'carpet'),
+    "plants": ('cactus', 'carnivorous', 'flower', 'tree', 'bush', 'grass', 'algae', 'tea', 'rose', 'bonsai'),
+    "animals": ('dog', 'cat', 'chameleon', 'human', 'fly', 'parrot', 'mouse', 'lion', 'pig', 'cow'),
+    "supplies": ('food', 'water'),
+}
+
 global_params = dict(max_nb_objects=3,
                      admissible_actions=('Move', 'Grasp', 'Grow'),
                      admissible_attributes=('colors', 'categories', 'types'),
@@ -16,8 +24,13 @@ global_params = dict(max_nb_objects=3,
                      attribute_combinations=False,
                      obj_size_update=0.04,
                      render_mode=True,
-                     cuda=False)
+                     cuda=False,
+                     furnitures = AVAILABLE_OBJECTS['furnitures'],
+                     plants = AVAILABLE_OBJECTS['plants'],
+                     animals = AVAILABLE_OBJECTS['animals'],
+                     supplies = AVAILABLE_OBJECTS['supplies'])
 
+cache_env_params = None
 
 def init_params(**params):
     global global_params
@@ -26,7 +39,17 @@ def init_params(**params):
     params_init = True
 
     for k, v in params.items():
-        global_params[k] = v
+        if v is None:
+            continue
+        if k in AVAILABLE_OBJECTS.keys():
+            to_add = []
+            for att in v:
+                if att in AVAILABLE_OBJECTS[k]:
+                    to_add.append(att)
+            if len(to_add) > 0:
+                global_params[k] = tuple(to_add)    
+        else:    
+            global_params[k] = v
 
 
 def get_env_params(max_nb_objects=None,
@@ -40,7 +63,11 @@ def get_env_params(max_nb_objects=None,
                    attribute_combinations=None,
                    obj_size_update=None,
                    render_mode=None,
-                   cuda=None
+                   cuda=None,
+                   furnitures=None,
+                   plants=None,
+                   animals=None,
+                   supplies=None
                    ):
     """
     Builds the set of environment parameters, and the set of function to extract information from the state.
@@ -76,9 +103,25 @@ def get_env_params(max_nb_objects=None,
     """
     global global_params
     global params_init
+    global cache_env_params
 
     if not params_init:
         print("ATTENTION: getting default env without setting env params")
+
+    if max_nb_objects is None and \
+        admissible_actions is None and \
+        admissible_attributes is None and \
+        min_max_sizes is None and \
+        agent_size is None and \
+        epsilon_initial_pos is None and \
+        screen_size is None and \
+        next_to_epsilon is None and \
+        attribute_combinations is None and \
+        obj_size_update is None and \
+        render_mode is None and \
+        cuda is None and \
+        cache_env_params is not None:
+        return cache_env_params
 
     max_nb_objects= max_nb_objects or global_params['max_nb_objects']
     admissible_actions= admissible_actions or global_params['admissible_actions']
@@ -94,10 +137,10 @@ def get_env_params(max_nb_objects=None,
     cuda = cuda or global_params['cuda']
 
     # list objects and categories
-    furnitures = ('door', 'chair', 'desk', 'lamp', 'table', 'cupboard', 'sink', 'window', 'sofa', 'carpet')
-    plants = ('cactus', 'carnivorous', 'flower', 'tree', 'bush', 'grass', 'algae', 'tea', 'rose', 'bonsai')
-    animals = ('dog', 'cat', 'chameleon', 'human', 'fly', 'parrot', 'mouse', 'lion', 'pig', 'cow')
-    supplies = ('food', 'water')
+    furnitures = furnitures or global_params['furnitures']
+    plants = plants or global_params['plants']
+    animals = animals or global_params['animals']
+    supplies = supplies or global_params['supplies']
     living_things = animals + plants
     categories = dict(animal=animals,
                       plant=plants,
@@ -539,4 +582,6 @@ def get_env_params(max_nb_objects=None,
 
     dir_path = os.path.dirname(os.path.realpath(__file__))
     params['img_path'] = dir_path + '/icons/'
-    return params
+
+    cache_env_params = params
+    return cache_env_params

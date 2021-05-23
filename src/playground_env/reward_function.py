@@ -1,5 +1,5 @@
 from src.playground_env.env_params import get_env_params
-from src.playground_env.descriptions import generate_all_descriptions
+from src.playground_env.descriptions import generate_all_descriptions, generate_any_description, sort_attributes
 
 # train_descriptions, test_descriptions, extra_descriptions = generate_all_descriptions(get_env_params())
 
@@ -18,10 +18,8 @@ def get_move_descriptions(get_agent_position_attributes, current_state):
     descr: list of str
         List of Move descriptions satisfied by the current state.
     """
-    move_descriptions = []
     position_attributes = get_agent_position_attributes(current_state)
-    for pos_att in position_attributes:
-        move_descriptions.append('Go ' + pos_att)
+    move_descriptions = generate_any_description('Go', position_attributes)
     return move_descriptions.copy()
 
 def get_grasp_descriptions(get_grasped_ids, current_state, sort_attributes, obj_attributes, params, check_if_relative, combine_two):
@@ -51,23 +49,10 @@ def get_grasp_descriptions(get_grasped_ids, current_state, sort_attributes, obj_
         List of Grasp descriptions satisfied by the current state.
     """
     obj_grasped = get_grasped_ids(current_state)
-    verb = 'Grasp'
     grasp_descriptions = []
     for i_obj in obj_grasped:
         att = obj_attributes[i_obj]
-        adj_att, name_att = sort_attributes(att)
-        if params['attribute_combinations']:
-            adj_att += combine_two(adj_att, adj_att)
-        for adj in adj_att:
-            quantifier = 'any'  # 'the' if check_if_relative(adj) else 'a'
-            # if not check_if_relative(adj):
-            for name in name_att:
-                # grasp_descriptions.append('{} {} {} {}'.format(verb, quantifier, adj, name))
-                grasp_descriptions.append('{} {} {}'.format(verb, adj, name))
-            grasp_descriptions.append('{} {} {} thing'.format(verb, quantifier, adj))
-        for name in name_att:
-            grasp_descriptions.append('{} any {}'.format(verb, name))
-            # grasp_descriptions.append('{} a {}'.format(verb, name))
+        grasp_descriptions += generate_any_description('Grasp', att)
 
     return grasp_descriptions.copy()
 
@@ -100,25 +85,10 @@ def get_grow_descriptions(get_grown_ids, initial_state, current_state, params, o
         List of Grasp descriptions satisfied by the current state.
     """
     obj_grown = get_grown_ids(initial_state, current_state)
-    verb = 'Grow'
     grow_descriptions = []
-    list_exluded = params['categories']['furniture'] + params['categories']['supply'] + ('furniture', 'supply')
     for i_obj in obj_grown:
         att = obj_attributes[i_obj]
-        adj_att, name_att = sort_attributes(att)
-        if params['attribute_combinations']:
-            adj_att += combine_two(adj_att, adj_att)
-        for adj in adj_att:
-            if adj not in list_exluded:
-                quantifier = 'any'  # 'the' if check_if_relative(adj) else 'a'
-                # if not check_if_relative(adj):
-                for name in name_att:
-                    # grow_descriptions.append('{} {} {} {}'.format(verb, quantifier, adj, name))
-                    grow_descriptions.append('{} {} {}'.format(verb, adj, name))
-                grow_descriptions.append('{} {} {} thing'.format(verb, quantifier, adj))
-        for name in name_att:
-            # grow_descriptions.append('{} a {}'.format(verb, name))
-            grow_descriptions.append('{} any {}'.format(verb, name))
+        grow_descriptions += generate_any_description('Grow', att)
 
     return grow_descriptions.copy()
 
@@ -127,25 +97,11 @@ def get_extra_grow_descriptions(get_supply_contact_ids, initial_state, current_s
     Equivalent of the grow description for attempting to grow furniture (track funny behavior of the agent).
     """
     obj_grown = get_supply_contact_ids(current_state)
-    verb = 'Attempted grow'
     grow_descriptions = []
-    list_exluded = params['categories']['living_thing'] + ('living_thing', 'animal', 'plant')
+    
     for i_obj in obj_grown:
         att = obj_attributes[i_obj]
-        adj_att, name_att = sort_attributes(att)
-        if params['attribute_combinations']:
-            adj_att += combine_two(adj_att, adj_att)
-        for adj in adj_att:
-            if adj not in list_exluded:
-                quantifier = 'any'  # 'the' if check_if_relative(adj) else 'a'
-                if not check_if_relative(adj):
-                    for name in name_att:
-                        # grow_descriptions.append('{} {} {} {}'.format(verb, quantifier, adj, name))
-                        grow_descriptions.append('{} {} {}'.format(verb, adj, name))
-                grow_descriptions.append('{} {} {} thing'.format(verb, quantifier, adj))
-        for name in name_att:
-            # grow_descriptions.append('{} a {}'.format(verb, name))
-            grow_descriptions.append('{} any {}'.format(verb, name))
+        grow_descriptions += generate_any_description('Attempted grow', att)
 
     return grow_descriptions.copy()
 
@@ -279,17 +235,6 @@ def get_reward_from_state(state, goal, params):
         for k in admissible_attributes:
             obj_att += get_attributes_functions[k](obj_features, i_obj)
         obj_attributes.append(obj_att)
-
-    def sort_attributes(attributes):
-        adj_attributes = []
-        name_attributes = []
-        for att in attributes:
-            if att in tuple(params['categories'].keys()) + params['attributes']['types']:
-                name_attributes.append(att)
-            else:
-                adj_attributes.append(att)
-        return adj_attributes, name_attributes
-
 
     words = goal.split(' ')
     reward = False

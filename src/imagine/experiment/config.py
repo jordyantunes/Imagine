@@ -115,7 +115,8 @@ def configure_everything(rank, seed, num_cpu, env, trial_id, n_epochs, reward_fu
         return gym.make(params['conditions']['env_name'],
                         display=display,
                         admissible_attributes=admissible_attributes,
-                        cuda=kwargs.get('cuda', False))
+                        cuda=kwargs.get('cuda', False),
+                        **kwargs)
 
     # Get info from environment and configure dimensions dict
     tmp_env = make_env()

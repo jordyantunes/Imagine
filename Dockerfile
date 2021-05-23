@@ -30,13 +30,12 @@ RUN useradd -ms /bin/bash localuser
 USER localuser
 WORKDIR /home/localuser
 
-COPY src src
-COPY pretrained_weights pretrained_weights
-
 ENV PATH="/opt/venv/bin:$PATH"
 ENV PYTHONPATH="/home/localuser"
 
 RUN python -c "import nltk; nltk.download('punkt')"
 
+COPY src src
+COPY pretrained_weights pretrained_weights
 
 ENTRYPOINT "/bin/bash"

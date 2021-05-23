@@ -13,9 +13,20 @@ from src.playground_env.reward_function import sample_descriptions_from_state, g
 admissible_attributes=['colors', 'categories', 'types', 'sizes', 'relative_sizes']
 # admissible_attributes=['colors', 'categories', 'types']
 
-init_params(admissible_attributes=admissible_attributes)
+furnitures = ['door', 'chair', 'desk', 'lamp']
+plants = ['flower', 'tree', 'bush', 'rose']
+animals = ['dog', 'cat', 'human', 'fly']
+
+init_params(admissible_attributes=admissible_attributes,
+            furnitures=furnitures,
+            plants=plants,
+            animals=animals)
 params = get_env_params(render_mode=True)
 train, test, extra = generate_all_descriptions(params)
+
+print(len(train))
+print(train)
+exit(0)
 
 if not params['render_mode']:
     env_name = 'PlaygroundNavigation-v1'

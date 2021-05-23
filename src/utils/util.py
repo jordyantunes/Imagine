@@ -131,7 +131,7 @@ def fork(num_cpu, custom_params=None):
                 if custom_params is not None and isinstance(custom_params, list):
                     whoami = mpi_fork(num_cpu, custom_params)
                 else:
-                    whoami = mpi_fork(num_cpu, ['--bind-to', 'core:overload-allowed'])
+                    whoami = mpi_fork(num_cpu, ['--bind-to', 'core:overload-allowed', '--oversubscribe'])
             # whoami = mpi_fork(num_cpu, ['--bind-to', 'core:overload-allowed'])
         except CalledProcessError:
             # fancy version of mpi call failed, try simple version

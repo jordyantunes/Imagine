@@ -3,8 +3,6 @@ import re
 from typing import List, Union, Dict
 
 
-descriptions_cache = None
-
 def sort_attributes(attributes):
     params = get_env_params().copy()
     
@@ -23,20 +21,16 @@ def generate_any_description(action: str, attributes: Union[List[str],Dict[str,L
 
     descriptions = []
 
-    if action in ('Grasp', 'Grow', 'Attempt grow'):
-        if action == 'Grow':
-            list_excluded = env_params['categories']['furniture'] + env_params['categories']['supply'] + ('furniture', 'supply')
-        elif action == 'Attempted grow':
-            list_excluded = env_params['categories']['living_thing'] + ('living_thing', 'animal', 'plant')
-        list_excluded = [] 
+    if action in ('Grasp', 'Grow'):
+        list_excluded = env_params['categories']['furniture'] + env_params['categories']['supply'] + ('furniture', 'supply')
+
+        if action != 'Grow':
+            list_excluded = []
 
         if isinstance(attributes, dict):
             adjective_attributes, name_attributes = attributes['adjective_attributes'], attributes['name_attributes']
         else:
             adjective_attributes, name_attributes = sort_attributes(attributes)
-
-        adjective_attributes = [a for a in adjective_attributes if a not in list_excluded]
-        name_attributes = [a for a in name_attributes if a not in list_excluded]
 
         for adj in adjective_attributes:
             quantifier = 'any'
@@ -46,7 +40,7 @@ def generate_any_description(action: str, attributes: Union[List[str],Dict[str,L
         for name in name_attributes:
             descriptions.append('{} any {}'.format(action, name))
 
-        adj_combination = [c for c in env_params['combination_sentences'] if all(i in adjective_attributes for i in c.split())]
+        adj_combination = [c for c in env_params['combination_sentences'] if all(i in c.split() for i in adjective_attributes)]
 
         for adj_comb in adj_combination:
             for name in name_attributes:
@@ -77,21 +71,12 @@ def generate_all_descriptions(env_params):
         Other descriptions that we might want to track (here when the agent tries to grow furniture for instance).
 
     """
-    global descriptions_cache
-
-    if descriptions_cache is not None:
-        return descriptions_cache
 
     p = env_params.copy()
 
     # Get the list of admissible attributes and split them by name attributes (type and categories) and adjective attributes.
     name_attributes = env_params['name_attributes']
     adjective_attributes = env_params['adjective_attributes']
-    
-    attributes = {      
-        "name_attributes": name_attributes + ('thing',),
-        "adjective_attributes": adjective_attributes
-    }
 
 
     # function to check whether an attribute is a relative attribute
@@ -108,21 +93,73 @@ def generate_all_descriptions(env_params):
     all_descriptions = ()
     
     if 'Move' in p['admissible_actions']:
-        attrs = ['left', 'right', 'bottom', 'top', 'center']
-        attrs += [f"{d2} {d1}" for d1 in ['left', 'right'] for d2 in ['top', 'bottom']] 
-        
-        move_descriptions = generate_any_description('Go', attrs)
+        move_descriptions = []
+        for d in ['left', 'right', 'bottom', 'top']:
+            move_descriptions.append('Go {}'.format(d))
+        for d1 in ['left', 'right']:
+            for d2 in ['top', 'bottom']:
+                move_descriptions.append('Go {} {}'.format(d2, d1))
+        move_descriptions.append('Go center')
         all_descriptions += tuple(move_descriptions)
     
     if 'Grasp' in p['admissible_actions']:
-        grasp_descriptions = generate_any_description('Grasp', attributes)
+        grasp_descriptions = []
+        for adj in adjective_attributes:
+            quantifier = 'any'  # 'the' if check_if_relative(adj) else 'a'
+            # if not check_if_relative(adj):
+            for name in name_attributes:
+                grasp_descriptions.append('Grasp {} {}'.format(adj, name))
+                    # grasp_descriptions.append('Grasp {} {} {}'.format(quantifier, adj, name))
+            grasp_descriptions.append('Grasp {} {} thing'.format(quantifier, adj))
+        for name in name_attributes:
+            # grasp_descriptions.append('Grasp a {}'.format(name))
+            grasp_descriptions.append('Grasp any {}'.format(name))
+
         all_descriptions += tuple(grasp_descriptions)
     
     
     if 'Grow' in p['admissible_actions']:
-        grow_descriptions = generate_any_description('Grow', attributes)
+        grow_descriptions = []
+        list_exluded = p['categories']['furniture'] + p['categories']['supply'] + ('furniture', 'supply')
+        for adj in adjective_attributes:
+            if adj not in list_exluded:
+                quantifier = 'any' #'the' if check_if_relative(adj) else 'a'
+                # if not check_if_relative(adj):
+                for name in name_attributes:
+                    if name not in list_exluded:
+                        grow_descriptions.append('Grow {} {}'.format(adj, name))
+                            # grow_descriptions.append('Grow {} {} {}'.format(quantifier, adj, name))
+                grow_descriptions.append('Grow {} {} thing'.format(quantifier, adj))
+                    
+        for name in name_attributes:
+            if name not in list_exluded:
+                # grow_descriptions.append('Grow a {}'.format(name))
+                grow_descriptions.append('Grow any {}'.format(name))
+        
+        for adj_combination in p['combination_sentences']:
+            for name in name_attributes:
+                if name not in list_exluded:
+                    grow_descriptions.append('Grow {} {}'.format(adj_combination, name))
+
         all_descriptions += tuple(grow_descriptions)
-        attempted_grow_descriptions = tuple(generate_any_description('Attempt grow', attributes))
+
+    attempted_grow_descriptions = []
+    if 'Grow' in p['admissible_actions']:
+        list_exluded = p['categories']['living_thing'] + ('living_thing', 'animal', 'plant')
+        for adj in adjective_attributes:
+            if adj not in list_exluded:
+                quantifier = 'any' #'the' if check_if_relative(adj) else 'a'
+                if not check_if_relative(adj):
+                    for name in name_attributes:
+                        if name not in list_exluded:
+                            # attempted_grow_descriptions.append('Attempted grow {} {} {}'.format(quantifier, adj, name))
+                            attempted_grow_descriptions.append('Attempted grow {} {}'.format(adj, name))
+                attempted_grow_descriptions.append('Attempted grow {} {} thing'.format(quantifier, adj))
+        for name in name_attributes:
+            if name not in list_exluded:
+                # attempted_grow_descriptions.append('Attempted grow a {}'.format(name))
+                attempted_grow_descriptions.append('Attempted grow any {}'.format(name))
+    attempted_grow_descriptions = tuple(attempted_grow_descriptions)
 
     train_descriptions = []
     test_descriptions = []
@@ -147,8 +184,7 @@ def generate_all_descriptions(env_params):
     test_descriptions = tuple(sorted(test_descriptions))
     extra_descriptions = tuple(sorted(attempted_grow_descriptions))
 
-    descriptions_cache = (train_descriptions, test_descriptions, extra_descriptions)
-    return descriptions_cache
+    return train_descriptions, test_descriptions, extra_descriptions
 
 if __name__ == '__main__':
     env_params = get_env_params()
