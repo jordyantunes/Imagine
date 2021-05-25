@@ -13,6 +13,14 @@ AVAILABLE_OBJECTS = {
     "supplies": ('food', 'water'),
 }
 
+# todo remove need for mapping please
+CATEGORIES_MAPPING = {
+    "furniture":"furnitures",
+    "plant":"plants",
+    "animal":"animals",
+    "supply":"supplies"
+}
+
 global_params = dict(max_nb_objects=3,
                      admissible_actions=('Move', 'Grasp', 'Grow'),
                      admissible_attributes=('colors', 'categories', 'types'),
@@ -41,13 +49,16 @@ def init_params(**params):
     for k, v in params.items():
         if v is None:
             continue
-        if k in AVAILABLE_OBJECTS.keys():
+    
+        key = CATEGORIES_MAPPING.get(k, k)
+
+        if key in AVAILABLE_OBJECTS.keys():
             to_add = []
             for att in v:
-                if att in AVAILABLE_OBJECTS[k]:
+                if att in AVAILABLE_OBJECTS[key]:
                     to_add.append(att)
             if len(to_add) > 0:
-                global_params[k] = tuple(to_add)    
+                global_params[key] = tuple(to_add)    
         else:    
             global_params[k] = v
 
@@ -217,20 +228,22 @@ def get_env_params(max_nb_objects=None,
         assert att in attributes.keys()
 
     # This defines the list of occurrences that should belong to the test set. All descriptions that contain them belong to the testing set.
-    words_test_set_def = ('red tree', 'green dog', 'blue door') + \
-                         ('flower',) + \
-                         tuple('Grasp {} animal'.format(c) for c in colors + ('any',)) + \
-                         tuple('Grow {} {}'.format(c, p) for c in colors + ('any',) for p in plants + ('plant', 'living_thing')) + \
-                         tuple('Grasp {} fly'.format(c) for c in colors + ('any',)) + \
-                         (re.compile(r"big.*tree"),) + \
-                         (re.compile(r"biggest.*dog"),) + \
-                         (re.compile(r"small.*plant"),) + \
-                         (re.compile(r"smallest.*cat"),) + \
-                         (re.compile(r"dark.*rose"),) + \
-                         (re.compile(r"darkest.*grass"),) + \
-                         (re.compile(r"light.*cactus"),) + \
-                         (re.compile(r"lightest.*cactus"),)
-
+    words_test_set_def = {
+        1: ('red tree', 'green dog', 'blue door') + \
+            (re.compile(r"big.*tree"),) + \
+            (re.compile(r"biggest.*dog"),) + \
+            (re.compile(r"small.*plant"),) + \
+            (re.compile(r"smallest.*cat"),) + \
+            (re.compile(r"dark.*rose"),) + \
+            (re.compile(r"darkest.*grass"),) + \
+            (re.compile(r"light.*cactus"),) + \
+            (re.compile(r"lightest.*cactus"),),
+        2: ('flower',),
+        3: tuple('Grasp {} animal'.format(c) for c in colors + ('any',)),
+        4: tuple('Grasp {} fly'.format(c) for c in colors + ('any',)),
+        5: tuple('Grow {} {}'.format(c, p) for c in colors + ('any',) for p in plants + ('plant', 'living_thing'))
+    }
+                         
 
     # get indices of attributes in object feature vector
     dim_body_features = 3

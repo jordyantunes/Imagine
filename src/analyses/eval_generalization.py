@@ -1,5 +1,6 @@
 
 import pickle
+import pathlib
 import os
 import json
 import sys
@@ -9,7 +10,7 @@ import src.imagine.experiment.config as config
 from src.imagine.interaction import RolloutWorker
 from src.imagine.goal_sampler import GoalSampler
 from src.playground_env.reward_function import get_reward_from_state
-from src.playground_env.env_params import thing_colors, plants
+# from src.playground_env.env_params import thing_colors, plants
 from src.utils.util import get_stat_func
 import tensorflow as tf
 import matplotlib
@@ -29,7 +30,6 @@ colors = [[0, 0.447, 0.7410], [0.85, 0.325, 0.098], [0.466, 0.674, 0.188], [0.92
                   [0.466, 0.674, 0.188], [0.929, 0.694, 0.125],
                   [0.3010, 0.745, 0.933], [0.635, 0.078, 0.184]]
 
-
 PATH = 'path_to_folder_with_trial_ids_folders/'
 
 RUN = True
@@ -39,18 +39,6 @@ RENDER = 0
 N_REPET = 1
 LINE = 'mean'
 ERR = 'std'
-
-
-plants.remove('flower')
-types_words = [['Grasp red tree', 'Grasp blue door', 'Grasp green dog', 'Grow green dog'],
-               ['flower'],
-               ['Grasp {} animal'.format(d) for d in thing_colors + ['any']],
-               ['Grasp {} fly'.format(d) for d in thing_colors + ['any']],
-               ['Grow {} {}'.format(c, p) for c in thing_colors + ['any'] for p in plants + ['plant', 'living_thing']]
-               ]
-types_words[4].remove('Grow red tree')
-type_legends = ['Type {}'.format(i) for i in range(1, len(types_words) + 1)]
-n_types = len(type_legends)
 
 
 def run_generalization_study(path, freq=10):
@@ -96,22 +84,32 @@ def run_generalization_study(path, freq=10):
                                                             n_epochs=10,
                                                             reward_function=params['conditions']['reward_function'],
                                                             policy_encoding=params['conditions']['policy_encoding'],
-                                                            bias_buffer=params['conditions']['bias_buffer'],
+                                                            bias_buffer=params['conditions'].get('bias_buffer'),
                                                             feedback_strategy=params['conditions']['feedback_strategy'],
                                                             policy_architecture=params['conditions']['policy_architecture'],
                                                             goal_invention=params['conditions']['goal_invention'],
                                                             reward_checkpoint=params['conditions']['reward_checkpoint'],
                                                             rl_positive_ratio=params['conditions']['rl_positive_ratio'],
                                                             p_partner_availability=params['conditions']['p_social_partner_availability'],
-                                                            git_commit='')
+                                                            git_commit='',
+                                                            imagination_method=params['conditions']['imagination_method'],
+                                                            admissible_attributes=params['env_params'].get('admissible_attributes'),
+                                                            cuda=params['env_params'].get('cuda'),
+                                                            **params['env_params'].get('categories', {}))
+
+            test_set_def = params['env_params']['words_test_set_def']
+            types_words = list(test_set_def.values())
+            type_legends = ['Type {}'.format(i) for i in test_set_def.keys()]
+            n_types = len(test_set_def.keys())
 
             policy_language_model, reward_language_model = config.get_language_models(params)
-            onehot_encoder = config.get_one_hot_encoder()
+
+            onehot_encoder = config.get_one_hot_encoder(params['train_descriptions'] + params['test_descriptions'])
             goal_sampler = GoalSampler(policy_language_model=policy_language_model,
                                        reward_language_model=reward_language_model,
                                        goal_dim=policy_language_model.goal_dim,
                                        one_hot_encoder=onehot_encoder,
-                                       **params['goal_sampler'],
+                                       **params.get('goal_sampler', {}),
                                        params=params)
 
 
@@ -149,7 +147,7 @@ def run_generalization_study(path, freq=10):
 
                 goal_sampler.update_discovered_goals(params['all_descriptions'], episode_count=0, epoch=0)
 
-                with tf.variable_scope(tf.get_variable_scope(), reuse=reuse):
+                with tf.compat.v1.variable_scope(tf.compat.v1.get_variable_scope(), reuse=reuse):
                     with open(policy_folder + 'policy_{}.pkl'.format(epoch), 'rb') as f:
                         policy = pickle.load(f)
 

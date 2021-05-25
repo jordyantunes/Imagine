@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import pickle
+import argparse
+
 font = {'size'   : 25}
 matplotlib.rc('font', **font)
 matplotlib.rcParams['pdf.fonttype'] = 42
@@ -185,13 +187,13 @@ def plot_all(path, trial):
         exploration_score_extra[k] = explo_score_extra
         exploration_score_all[k] = explo_score_all
 
-        dist_per_obj[k] = metrics['dist_per_obj']
+        dist_per_obj[k] = metrics.get('dist_per_obj')
         count_reward_test_set[k] = metrics['count_reward_test_set']
         count_reward_train_set[k] = metrics['count_reward_train_set']
         count_reward_extra_set[k] = metrics['count_reward_extra_set']
         counter_rew_train_test[k] = metrics['count_reward_test_set'] + metrics['count_reward_train_set']
-        var_obj_pos[k] = metrics['var_obj_pos']
-        var_states[k] = metrics['var_states']
+        var_obj_pos[k] = metrics.get('var_obj_pos')
+        var_states[k] = metrics.get('var_states')
 
     exploration_metrics = dict(var_obj_pos=var_obj_pos,
                                count_reward_extra_set=count_reward_extra_set,
@@ -211,6 +213,11 @@ def plot_all(path, trial):
 
 
 if __name__=="__main__":
-    for trial in os.listdir(folder_path  + '/'):
-        path = folder_path + '/' + trial + '/'
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--experiment-path', type=str, help='Path to experiment folder', required=True)
+
+    args = parser.parse_args()
+
+    for trial in os.listdir(args.experiment_path  + '/'):
+        path = args.experiment_path + '/' + trial + '/'
         plot_all(path, trial)

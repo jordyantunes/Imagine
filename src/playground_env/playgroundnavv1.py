@@ -49,6 +49,10 @@ class PlayGroundNavigationV1(gym.Env):
                  plants=None,
                  animals=None,
                  supplies=None,
+                 furniture=None,
+                 plant=None,
+                 animal=None,
+                 supply=None,
                  **others
                  ):
 
@@ -67,7 +71,11 @@ class PlayGroundNavigationV1(gym.Env):
                     furnitures=furnitures,
                     plants=plants,
                     animals=animals,
-                    supplies=supplies)
+                    supplies=supplies,
+                    furniture=furniture,
+                    plant=plant,
+                    animal=animal,
+                    supply=supply)
         self.params = get_env_params()
         self.adm_attributes = self.params['admissible_attributes']
         self.adm_abs_attributes = [a for a in self.adm_attributes if 'relative' not in a]

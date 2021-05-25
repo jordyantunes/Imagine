@@ -19,6 +19,9 @@ from src.imagine.goal_generator.simple_sentence_generator import SentenceGenerat
 from src.imagine.language_model import LanguageModelLSTM
 from pathlib import Path
 
+if os.getenv('HOME') is None:
+    os.environ['HOME'] = str(Path.home())
+
 HOME = os.environ['HOME']
 if 'flowers' in HOME:
     USE_LOCAL_CONFIG = True
@@ -115,7 +118,6 @@ def configure_everything(rank, seed, num_cpu, env, trial_id, n_epochs, reward_fu
         return gym.make(params['conditions']['env_name'],
                         display=display,
                         admissible_attributes=admissible_attributes,
-                        cuda=kwargs.get('cuda', False),
                         **kwargs)
 
     # Get info from environment and configure dimensions dict

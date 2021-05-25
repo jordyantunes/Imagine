@@ -1,7 +1,7 @@
 from src.playground_env.env_params import get_env_params
 import re
 from typing import List, Union, Dict
-
+from itertools import chain
 
 descriptions_cache = None
 
@@ -128,7 +128,7 @@ def generate_all_descriptions(env_params):
     test_descriptions = []
     for descr in all_descriptions:
         to_remove = False
-        for w in p['words_test_set_def']: # words_test_set_def is the set of occurrences that is reserved to the testing set.
+        for w in chain.from_iterable(p['words_test_set_def'].values()): # words_test_set_def is the set of occurrences that is reserved to the testing set.
             if isinstance(w, re.Pattern):
                 r = w.search(descr)
                 if r is not None:
