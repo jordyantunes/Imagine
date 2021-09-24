@@ -97,8 +97,6 @@ class PlayGroundNavigationV1(gym.Env):
         self.categories = self.params['categories']
         self.screen_size = self.params['screen_size']
 
-        print("Tipo screen_size:", type(self.screen_size))
-
         self.viz_data_collection = viz_data_collection
         self.show_imagination_bubble = False
         self.reward_screen = reward_screen
@@ -295,7 +293,6 @@ class PlayGroundNavigationV1(gym.Env):
         return self.observation.copy()
 
     def get_pixel_coordinates(self, xpos, ypos):
-        # print("Tipo screen_size:", type(self.screen_size), type(self.params['screen_size']), type(xpos), type(ypos))
         return ((xpos + 1) / 2 * (self.params['screen_size'] * 2 / 3) + 1 / 6 * self.params['screen_size']).astype(
             np.int), \
                ((-ypos + 1) / 2 * (self.params['screen_size'] * 2 / 3) + 1 / 6 * self.params['screen_size']).astype(

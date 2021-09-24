@@ -124,7 +124,7 @@ class GoalSampler:
             new_imagined_goals = []
             inds_not_imagined = np.argwhere(np.array(self.feedback_memory['imagined']) == 0).flatten()
             self.goal_generator.update_model(np.array(self.feedback_memory['string'])[inds_not_imagined])
-            generated_goals = self.goal_generator.generate_sentences(n='all')
+            generated_goals = self.goal_generator.generate_sentences(n='all', epoch=epoch)
             for gen_g in generated_goals:
                 if gen_g not in self.imagined_goals['string']:
                     self.imagined_goals['string'].append(gen_g)

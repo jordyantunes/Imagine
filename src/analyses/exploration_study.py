@@ -4,24 +4,40 @@ import pickle
 import os
 import pandas as pd
 import matplotlib
+import argparse
 import json
+
 
 font = {'size'   : 25}
 matplotlib.rc('font', **font)
 matplotlib.rcParams['pdf.fonttype'] = 42
 matplotlib.rcParams['ps.fonttype'] = 42
 
-folder = '/home/flowers/Desktop/Scratch/Curious-nlp/src/results/PlaygroundNavigation-v1/'
+parser = argparse.ArgumentParser()
+parser.add_argument('-p', '--path', type=str, help="Caminho para pasta do experimento")
+parser.add_argument('-t', '--trial-ids', nargs='+', help="Ids dos experimento para utilizar")
+parser.add_argument('-l', '--trial-legends', nargs='+', help="Legendas dos experimento")
+
+args = parser.parse_args()
+
+folder = args.path
+trial_ids = args.trial_ids
+legs = args.trial_legends
+
+if len(trial_ids) != len(legs):
+    raise Exception('O número de trial ids deve ser o mesmo que o número de trial legends')
+
+# folder = '/home/flowers/Desktop/Scratch/Curious-nlp/src/results/PlaygroundNavigation-v1/'
 # trial_ids = [160, 161, 162, 163]
 # trial_ids = [184, 189, 188, 190]
 # legs = ['goal sampler, goal invention 50',
 #         'goal sampler, no goal invention',
 #         'goal sampler, goal invention 10',
 #         'no goal sampler, no goal invention']
-trial_ids = [201, 203, 202]
-legs = ['goal invention 80',
-        'goal invention 500',
-        'goal invention 10']
+# trial_ids = [201, 203, 202]
+# legs = ['goal invention 80',
+#         'goal invention 500',
+#         'goal invention 10']
 
 # trial_ids = [160, 165, 179, 181]
 # legs = ['old gs cost', 'new gs rar2, prob1 cost', 'new gs rar2 prob2, cost', 'new gs rar3 prob2, cost']
@@ -45,7 +61,7 @@ for t_id in trial_ids:
     if t_id_last > last:
         last = t_id_last
 
-with open(folder + str(trial_ids[0]) + '/params.json', 'r') as f:
+with open(os.path.join(folder, str(trial_ids[0]), 'params.json'), 'r') as f:
     params = json.load(f)
 
 special_goals = ['Feed dark unicorn', 'Feed dark dragon', 'Feed dark phoenix']
@@ -129,13 +145,13 @@ for t_i, trial_id in enumerate(trial_ids):
         exploration_score_extra[t_i, k] = explo_score_extra
         exploration_score_all[t_i, k] = explo_score_all
 
-        dist_per_obj[t_i, k] = metrics['dist_per_obj']
+        # dist_per_obj[t_i, k] = metrics['dist_per_obj']
         count_reward_test_set[t_i, k] = metrics['count_reward_test_set']
         count_reward_train_set[t_i, k] = metrics['count_reward_train_set']
         count_reward_extra_set[t_i, k] = metrics['count_reward_extra_set']
         counter_rew_train_test[t_i, k] = metrics['count_reward_test_set'] + metrics['count_reward_train_set']
-        var_obj_pos[t_i, k] = metrics['var_obj_pos']
-        var_states[t_i, k] = metrics['var_states']
+        # var_obj_pos[t_i, k] = metrics['var_obj_pos']
+        # var_states[t_i, k] = metrics['var_states']
     stop = 1
 
 for i in range(len(to_plot_str)):

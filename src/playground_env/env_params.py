@@ -239,12 +239,11 @@ def get_env_params(max_nb_objects=None,
             (re.compile(r"light.*cactus"),) + \
             (re.compile(r"lightest.*cactus"),),
         2: ('flower',),
-        3: tuple('Grasp {} animal'.format(c) for c in colors + ('any',)),
-        4: tuple('Grasp {} fly'.format(c) for c in colors + ('any',)),
-        5: tuple('Grow {} {}'.format(c, p) for c in colors + ('any',) for p in plants + ('plant', 'living_thing'))
+        3: (re.compile(r"Grasp.*animal"),), # 3: tuple('Grasp {} animal'.format(c) for c in colors + ('any',)),
+        4: (re.compile(r"Grasp.*fly"),), # 4: tuple('Grasp {} fly'.format(c) for c in colors + ('any',)),
+        5: tuple(re.compile(f"Grow.+{w}") for w in plants + ('plant', 'living_thing')) # 5: tuple('Grow {} {}'.format(c, p) for c in colors + ('any',) for p in plants + ('plant', 'living_thing'))
     }
-                         
-
+                        
     # get indices of attributes in object feature vector
     dim_body_features = 3
     agent_position_inds = np.arange(2)

@@ -19,6 +19,7 @@ import gym
 import argparse
 import torch
 import re
+from itertools import chain
 
 font = {'size'   : 25}
 matplotlib.rc('font', **font)
@@ -57,7 +58,15 @@ def init_test_set(params):
 def run_generalization_study(path, freq=10):
     first = True
 
-    for t_id, trial in enumerate(os.listdir(path)):
+    ignore_list = []
+    ignore_path = os.path.join(path, '.ignore')
+    if os.path.isfile(ignore_path):
+        with open(ignore_path, 'r') as f:
+            ignore_list = [i.strip() for i in f.readlines()]
+
+    dirs = [d for d in os.listdir(path) if os.path.isdir(os.path.join(path, d)) and d not in ignore_list]
+
+    for t_id, trial in enumerate(dirs):
         print(trial)
         t_init = time.time()
         trial_folder = path + '/' + trial + '/'
@@ -109,7 +118,6 @@ def run_generalization_study(path, freq=10):
                                                             admissible_attributes=params['env_params'].get('admissible_attributes'),
                                                             cuda=params['env_params'].get('cuda'),
                                                             **params['env_params'].get('categories', {}))
-
 
             policy_language_model, reward_language_model = config.get_language_models(params)
 
@@ -176,6 +184,7 @@ def run_generalization_study(path, freq=10):
                 # Run evaluation.
                 evaluation_worker.clear_history()
                 successes_per_descr = np.zeros([len(test_descriptions)])
+
                 for ind_inst, instruction in enumerate(test_descriptions):
                     # instruction = 'Grasp any fly'
                     success_instruction = []
@@ -197,7 +206,23 @@ def run_generalization_study(path, freq=10):
                 np.savetxt(trial_folder + 'generalization_success_rates.txt', success_rates)
 
 def plot_generalization(path, freq):
-    for trial in os.listdir(path):
+    ignore_list = []
+    ignore_path = os.path.join(path, '.ignore')
+    if os.path.isfile(ignore_path):
+        with open(ignore_path, 'r') as f:
+            ignore_list = [i.strip() for i in f.readlines()]
+
+    dirs = [d for d in os.listdir(path) if os.path.isdir(os.path.join(path, d)) and d not in ignore_list]
+    fig = plt.figure(figsize=(22, 15), frameon=False)
+    ax = fig.add_subplot(111)
+    ax.spines['top'].set_linewidth(6)
+    ax.spines['right'].set_linewidth(6)
+    ax.spines['bottom'].set_linewidth(6)
+    ax.spines['left'].set_linewidth(6)
+    ax.tick_params(width=4, direction='in', length=10, labelsize='small')
+    
+
+    for i, trial in enumerate(dirs):
         print(trial)
         t_init = time.time()
         trial_folder = path + '/' + trial + '/'
@@ -226,80 +251,71 @@ def plot_generalization(path, freq):
 
         success_rates = np.loadtxt(path + '/' + trial + '/generalization_success_rates.txt')
 
+        to_plot = success_rates
+        # TODO remove -------------------------------------------------------------
+        # params = get_env_params(max_nb_objects=params['env_params'].get('max_nb_objects'),
+        #             admissible_actions=params['env_params'].get('admissible_actions'),
+        #             admissible_attributes=params['env_params'].get('admissible_attributes'),
+        #             min_max_sizes=params['env_params'].get('min_max_sizes'),
+        #             agent_size=params['env_params'].get('agent_size'),
+        #             epsilon_initial_pos=params['env_params'].get('epsilon_initial_pos'),
+        #             screen_size=params['env_params'].get('screen_size'),
+        #             next_to_epsilon=params['env_params'].get('next_to_epsilon'),
+        #             attribute_combinations=params['env_params'].get('attribute_combinations'),
+        #             obj_size_update=params['env_params'].get('obj_size_update'),
+        #             render_mode=params['env_params'].get('render_mode'),
+        #             cuda=params['env_params'].get('cuda'),
+        #             furnitures=params['env_params'].get('furnitures'),
+        #             plants=params['env_params'].get('plants'),
+        #             animals=params['env_params'].get('animals'),
+        #             supplies=params['env_params'].get('supplies'))
+        # _, type_legends, _, test_set_def = init_test_set(params)
+
+        # test_descriptions_df = pd.Series(test_descriptions)
+        # test_type_mapping = {}
+
+        # for type_index, type_descriptions in test_set_def.items():
+        #     inds_desc = []
+        #     for i_test_d, test_descr in test_descriptions_df.items():
+        #         for type_d in type_descriptions:
+        #             to_add = None
+        #             if isinstance(type_d, re.Pattern):
+        #                 r = type_d.search(test_descr)
+        #                 if r is not None:
+        #                     to_add = i_test_d
+        #             elif type_d in test_descr:
+        #                 to_add = i_test_d
+        #             if not type_index in (2, 3, 4, 5):
+        #                 if type_index == 1 and re.match('Grow.+door', test_descr):
+        #                     print("Removing unachievable", test_descr)
+        #                 else:
+        #                     continue
+        #             if to_add is not None:
+        #                 print("Removing Type", type_index,test_descr)
+        #                 inds_desc.append(to_add)
+        #                 break
+        #     test_type_mapping[type_index] = inds_desc
+        
+        # to_remove_ids = list(set(chain.from_iterable(test_type_mapping.values())))
+        # test_descriptions_df = test_descriptions_df.drop(index=to_remove_ids)
+
+        # print("Original test_descriptions", len(test_descriptions), "after removal", test_descriptions_df.shape[0])
+        # print("To plot", to_plot.shape)
+        # to_plot = to_plot[np.array(test_descriptions_df.index),:]
+        # print("To plot", to_plot.shape)
+        # TODO remove -------------------------------------------------------------
+
         line, err_min, err_max = get_stat_func(LINE, ERR)
         first = False
         # plot
-        fig = plt.figure(figsize=(22, 15), frameon=False)
-        ax = fig.add_subplot(111)
-        ax.spines['top'].set_linewidth(6)
-        ax.spines['right'].set_linewidth(6)
-        ax.spines['bottom'].set_linewidth(6)
-        ax.spines['left'].set_linewidth(6)
-        ax.tick_params(width=4, direction='in', length=10, labelsize='small')
-        plt.plot(np.array(episodes) / 1000, line(success_rates), linewidth=10)
-        plt.fill_between(np.array(episodes) / 1000, err_min(success_rates), err_max(success_rates), alpha=0.2)
-        if goal_invention < 100:
-            plt.vlines(goal_invention * 0.6, ymin=0, ymax=1, linestyles='--', color='k', linewidth=5)
-        lab = plt.xlabel('Episodes (x$10^3$)')
-        plt.ylim([-0.01, 1.01])
-        plt.yticks([0.25, 0.50, 0.75, 1])
-        lab2 = plt.ylabel('Average success rate')
-        plt.savefig(os.path.join(trial_folder, 'generalization_test_set_policy.pdf'), bbox_extra_artists=(lab, lab2), bbox_inches='tight',
-                    dpi=50)  # add leg
-
-        # plot per group
-
-        params = get_env_params(max_nb_objects=params['env_params'].get('max_nb_objects'),
-                    admissible_actions=params['env_params'].get('admissible_actions'),
-                    admissible_attributes=params['env_params'].get('admissible_attributes'),
-                    min_max_sizes=params['env_params'].get('min_max_sizes'),
-                    agent_size=params['env_params'].get('agent_size'),
-                    epsilon_initial_pos=params['env_params'].get('epsilon_initial_pos'),
-                    screen_size=params['env_params'].get('screen_size'),
-                    next_to_epsilon=params['env_params'].get('next_to_epsilon'),
-                    attribute_combinations=params['env_params'].get('attribute_combinations'),
-                    obj_size_update=params['env_params'].get('obj_size_update'),
-                    render_mode=params['env_params'].get('render_mode'),
-                    cuda=params['env_params'].get('cuda'),
-                    furnitures=params['env_params'].get('furnitures'),
-                    plants=params['env_params'].get('plants'),
-                    animals=params['env_params'].get('animals'),
-                    supplies=params['env_params'].get('supplies'))
-        _, type_legends, _, test_set_def = init_test_set(params)
-
-        test_type_mappig = {}
-
-        for type_index, type_descriptions in test_set_def.items():
-            inds_desc = []
-            for i_test_d, test_descr in enumerate(test_descriptions):
-                for type_d in type_descriptions:
-                    if isinstance(type_d, re.Pattern):
-                        r = type_d.search(test_descr)
-                        if r is not None:
-                            inds_desc.append((i_test_d, test_descr))
-                    elif type_d in test_descr:
-                        inds_desc.append((i_test_d, test_descr))
-            test_type_mappig[type_index] = dict(inds_desc)
-
-        fig = plt.figure(figsize=(22, 15), frameon=False)
-        ax = fig.add_subplot(111)
-        ax.spines['top'].set_linewidth(6)
-        ax.spines['right'].set_linewidth(6)
-        ax.spines['bottom'].set_linewidth(6)
-        ax.spines['left'].set_linewidth(6)
-        ax.tick_params(width=4, direction='in', length=10, labelsize='small')
-        for i, mapping in test_type_mappig.items():
-            to_plot = success_rates[np.array(list(mapping.keys())), :]
-            plt.plot(np.array(episodes) / 1000 , line(to_plot), linewidth=8, c=colors[i])
-            plt.fill_between(np.array(episodes) / 1000 , err_min(to_plot), err_max(to_plot), color=colors[i], alpha=0.2)
-        if goal_invention < 100:
-            plt.vlines(goal_invention * 0.6, ymin=0, ymax=1, linestyles='--', color='k', linewidth=5)
-        leg = plt.legend(type_legends, frameon=False)
-        lab = plt.xlabel('Episodes (x$10^3$)')
-        plt.ylim([-0.01, 1.01])
-        plt.yticks([0.25, 0.50, 0.75, 1])
-        lab2 = plt.ylabel('Average success rate')
-        plt.savefig(os.path.join(trial_folder, 'generalization_test_set_policy_per_type.pdf'), bbox_extra_artists=(lab, lab2), bbox_inches='tight',
+        plt.plot(np.array(episodes) / 1000, line(to_plot), linewidth=10, c=colors[i])
+        plt.fill_between(np.array(episodes) / 1000, err_min(to_plot), err_max(to_plot), color=colors[i], alpha=0.2)
+    leg = plt.legend(dirs, frameon=False)
+    lab = plt.xlabel('Episodes (x$10^3$)')
+    plt.ylim([-0.01, 1.01])
+    plt.yticks([0.25, 0.50, 0.75, 1])
+    lab2 = plt.ylabel('Average success rate')
+    plt.savefig(os.path.join(path, 'all_generalization_test_set_policy.pdf'), bbox_extra_artists=(lab, lab2), bbox_inches='tight',
                     dpi=50)  # add leg
 
 

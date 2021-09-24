@@ -1,4 +1,5 @@
 from nltk import word_tokenize
+from itertools import chain
 import numpy as np
 
 
@@ -19,8 +20,8 @@ class SentenceGenerator:
         for new_sentence in new_sentence_tokenized:
             if len(new_sentence) < self.max_len:
                 new_sentence += [' ' for _ in range(self.max_len - len(new_sentence))]
-        self.sentences_set_tokenized += new_sentence_tokenized
-        return new_sentence_tokenized
+        self.sentences_set_tokenized += sorted(new_sentence_tokenized)
+        return sorted(new_sentence_tokenized)
 
     def generate_sentences(self, n=1):
         pass
@@ -77,7 +78,7 @@ class RandomGoalGenerator(SentenceGenerator):
         return list(new_generated)
 
 class SentenceGeneratorHeuristic(SentenceGenerator):
-    def __init__(self,  train_descriptions, test_descriptions, sentences=None, method='CGH'):
+    def __init__(self,  train_descriptions, test_descriptions, sentences=None, method='CGH', oracle_epoch_limit=20):
         super().__init__()
         self.sentence_types = []
         self.word_equivalence = []
@@ -89,6 +90,13 @@ class SentenceGeneratorHeuristic(SentenceGenerator):
         self.generated_garbage = set()
         self.train_descriptions = train_descriptions
         self.test_descriptions = test_descriptions
+
+        words_in_train = set(chain.from_iterable([t.split(' ') for t in train_descriptions]))
+        words_in_test = set(chain.from_iterable([t.split(' ') for t in test_descriptions]))
+        self.words_only_in_test = words_in_test - words_in_train
+        self.descriptions_impossible_to_imagine = [t for t in test_descriptions if len(set(t.split()) & self.words_only_in_test) > 0]
+
+        self.oracle_epoch_limit = oracle_epoch_limit
 
         if method == 'CGH':
             self.coverage = self.precision = None
@@ -116,8 +124,12 @@ class SentenceGeneratorHeuristic(SentenceGenerator):
                 type_sent += [' ' for _ in range(self.max_len - len(type_sent))]
 
         if len(self.sentence_types) == 0:
+            # self.sentence_types = new_sentences_tokenized
+            print(new_sentences_tokenized[0], new_sentences_tokenized[1])
             self.sentence_types.append(new_sentences_tokenized[0])
             new_sentences_tokenized = new_sentences_tokenized[1:]
+        # else:
+        #     self.sentence_types = list(set(self.sentence_types) | set(new_sentences_tokenized))
         # for each sentence type, compute semantic distances with every new sentences tokenized
         for s_new in new_sentences_tokenized:
             match = False
@@ -136,7 +148,7 @@ class SentenceGeneratorHeuristic(SentenceGenerator):
                             if not set_match:
                                 if equivalent_words[0] in eq_set and equivalent_words[1] in eq_set:
                                     set_match = True
-                                    # TODO break
+                                    break
                                 else:
                                     if equivalent_words[0] in eq_set:
                                         set_match = True
@@ -149,6 +161,7 @@ class SentenceGeneratorHeuristic(SentenceGenerator):
                             self.word_equivalence.append(set(equivalent_words))
                 elif semantic_dist == 0:
                     match = True
+            # removed because all new sentences are sentence types
             if not match:
                 self.sentence_types.append(s_new)
 
@@ -175,6 +188,8 @@ class SentenceGeneratorHeuristic(SentenceGenerator):
                 if not not_new:
                     word_equivalence_new.append(self.word_equivalence[j])
         self.word_equivalence = word_equivalence_new
+        # TODO remove
+        print("Sentence types:", len(self.sentence_types), "word equivalence", [len(w) for w in self.word_equivalence])
 
     def split_test_not_test(self, sentence_set):
         sents_in_test = []
@@ -186,16 +201,19 @@ class SentenceGeneratorHeuristic(SentenceGenerator):
                 sents_not_in_test.append(s)
         return sents_in_test.copy(), sents_not_in_test.copy()
 
-    def update_generated_set(self, new_sentences):
+    def update_generated_set(self, new_sentences, epoch=None):
         sents_in_test, sents_not_in_test = self.split_test_not_test(new_sentences)
+        force_test_set = False
 
         if self.coverage is None:
             desired_counter_test = len(sents_in_test)
         else:
             # if self.tc = 1, we want the oracle and imagine flower goals when all other are discovered
             if self.coverage == 1:
-                if len(sents_in_test) == 64 - 8:
-                    desired_counter_test = 64
+                if (len(sents_in_test) == len(self.test_descriptions) - len(self.descriptions_impossible_to_imagine)) or \
+                    (epoch is not None and epoch >= self.oracle_epoch_limit): # 64 - 8:
+                    force_test_set = True
+                    desired_counter_test = len(self.test_descriptions) # 64
                 else:
                     desired_counter_test = len(sents_in_test)
             elif self.coverage == 'low':
@@ -233,11 +251,12 @@ class SentenceGeneratorHeuristic(SentenceGenerator):
                     break
 
             if desired_counter_test != counter_test:
-                if counter_test == 64 - 8:
-                    for s in self.test_descriptions:
-                        if 'flower' in s:
-                            out.append(s)
-                            counter_test += 1
+                if force_test_set: # 64 - 8:
+                    out = list(set(self.test_descriptions) | set(out)) # self.descriptions_impossible_to_imagine
+                    # for s in self.test_descriptions:
+                    #     if 'flower' in s:
+                    #         out.append(s)
+                    #         counter_test += 1
             else:
                 print('Weird')
 
@@ -260,7 +279,7 @@ class SentenceGeneratorHeuristic(SentenceGenerator):
         return out.copy()
 
 
-    def generate_sentences(self, n=1):
+    def generate_sentences(self, n=1, epoch=None):
         new_sentences = set()
         for sent_type in self.sentence_types:
             for i, word in enumerate(sent_type):
@@ -276,7 +295,7 @@ class SentenceGeneratorHeuristic(SentenceGenerator):
                                     new_sent = ' '.join(new_sent.copy())
                                     if new_sent not in self.sentences_set:
                                         new_sentences.add(new_sent)
-        out = self.update_generated_set(list(new_sentences))
+        out = self.update_generated_set(list(new_sentences), epoch=epoch)
         return out
 
 if __name__ == '__main__':

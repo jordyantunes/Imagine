@@ -1,9 +1,22 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+        {
+            "name": "Python: eval_gen",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "cwd": "${fileDirname}",
+            "env": {
+                "HOME": "C:/Users/jordy"
+            },
+            "args": [
+                "--path",
+                "C:\\Users\\jordy\\OneDrive\\UTFPR\\Mestrado\\experimentos\\noimagination\\_data\\expe\\PlaygroundNavigation-v1",
+                "--run", "False"
+                ]
+        },
         {
             "name": "Python: Arquivo Atual",
             "type": "python",
@@ -14,6 +27,28 @@
             "env": {
                 "HOME": "C:/Users/jordy"
             }
-        }
+        },
+        {
+            "name": "Python: train",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/imagine/experiment/train.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/src/imagine/experiment/",
+            "env": {
+                "HOME": "C:/Users/jordy"
+            },
+            "args": [
+                "--num_cpu=6",
+                "--policy_architecture=modular_attention",
+                "--imagination_method=CGH",
+                "--reward_function=learned_lstm ",
+                "--goal_invention=from_epoch_10",
+                "--n_epochs=167",
+                "--admissible_attributes", "colors", "categories", "types", "sizes", "relative_sizes",
+                "--furnitures", "door", "chair", "desk", "lamp",
+                "--plants", "flower", "tree", "grass", "rose",
+                "--animals", "dog", "cat", "human", "fly"]
+        },
     ]
 }

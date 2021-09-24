@@ -146,7 +146,7 @@ def plot_all(path, trial):
     counter_rew_train_test = np.zeros([n_steps])
 
     for k, ep in enumerate(steps):
-        with open(path + 'goal_info/info_' + str(ep) + '.pk', 'rb') as f:
+        with open(os.path.join(path, 'goal_info', 'info_' + str(ep) + '.pk'), 'rb') as f:
             data = pickle.load(f)
         metrics = data['exploration_metrics']
 
@@ -207,7 +207,7 @@ def plot_all(path, trial):
                                var_states=var_states,
                                counter_rew_train_test=counter_rew_train_test
                                )
-    with open(path + 'exploration_metrics.pk', 'wb') as f:
+    with open(os.path.join(path, 'exploration_metrics.pk'), 'wb') as f:
         pickle.dump(exploration_metrics, f)
 
 
@@ -219,5 +219,7 @@ if __name__=="__main__":
     args = parser.parse_args()
 
     for trial in os.listdir(args.experiment_path  + '/'):
-        path = args.experiment_path + '/' + trial + '/'
+        path = os.path.join(args.experiment_path, trial)
+        if not os.path.isdir(path):
+            continue
         plot_all(path, trial)

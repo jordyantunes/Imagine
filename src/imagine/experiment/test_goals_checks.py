@@ -4,33 +4,55 @@ import pygame
 import sys
 import gym
 import time
-import argparse
-
-
-parser = argparse.ArgumentParser()
-parser.add_argument('--render', action='store_true', default=False)
-
-args = parser.parse_args()
+import re
+from itertools import chain
 
 sys.path.append('../../../')
 from src.playground_env.descriptions import generate_all_descriptions
 from src.playground_env.env_params import get_env_params, init_params
 from src.playground_env.reward_function import sample_descriptions_from_state, get_reward_from_state
 
-admissible_attributes=['colors', 'categories', 'types', 'sizes', 'relative_sizes']
 # admissible_attributes=['colors', 'categories', 'types']
+input_params = {
+    "admissible_attributes": ['colors', 'categories', 'types', 'sizes', 'relative_sizes'],
+    "furnitures": ['door', 'chair', 'desk', 'lamp'],
+    "plants": ['flower', 'tree', 'bush', 'rose'],
+    "animals": ['dog', 'cat', 'human', 'fly']
+}
 
-furnitures = ['door', 'chair', 'desk', 'lamp']
-plants = ['flower', 'tree', 'bush', 'rose']
-animals = ['dog', 'cat', 'human', 'fly']
-
-init_params(admissible_attributes=admissible_attributes,
-            furnitures=furnitures,
-            plants=plants,
-            animals=animals)
-params = get_env_params(render_mode=args.render)
+init_params(**input_params)
+params = get_env_params(render_mode=True)
 train, test, extra = generate_all_descriptions(params)
 
+grow = [t.split(' ') for t in train if t.startswith("Grow")]
+grow = list(set([g[0] + ' ' + g[-1] for g in grow]))
+
+print("Types of grow")
+print("Grow", grow)
+
+wrong = [
+    *[re.compile(f'Grow.+{w}') for w in params['categories']['furniture'] + params['categories']['supply'] + ('furniture', 'supply')],
+    re.compile('Grasp.+animal'),
+    re.compile('Grasp.+fly'),
+    re.compile('Grow.+plants'),
+    *[re.compile(f'Grow.+{w}') for w in params['categories']['plant'] + ('plant', 'living_thing')]
+]
+
+print("Wrong goals")
+print([t for t in train for w in wrong if w.match(t)])
+
+print("length = 2 goals")
+print([g for g in train if len(g.split(' ')) == 2])
+
+print("Train", len(train), "test", len(test))
+
+words_in_train = set(chain.from_iterable([t.split(' ') for t in train]))
+words_in_test = set(chain.from_iterable([t.split(' ') for t in test]))
+
+print("Words only in test")
+print(words_in_test - words_in_train)
+
+exit(0)
 
 if not params['render_mode']:
     env_name = 'PlaygroundNavigation-v1'
@@ -42,7 +64,7 @@ env = gym.make(env_name,
                admissible_attributes=params["admissible_attributes"])
 
 env.reset()
-env.unwrapped.reset_with_goal("Grow red dog")
+env.unwrapped.reset_with_goal("Grow biggest red tree")
 
 stop = False
 while not stop:
