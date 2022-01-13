@@ -11,7 +11,7 @@ from src.imagine.goal_sampler import GoalSampler, EvalGoalSampler
 from src.playground_env.reward_function import sample_descriptions_from_state, get_reward_from_state
 
 input_params = {
-    "admissible_attributes": ['colors', 'categories', 'types', 'sizes', 'relative_sizes'],
+    "admissible_attributes": ['colors', 'categories', 'types', 'sizes', 'relative_sizes', 'status'],
     "furnitures": ['door', 'chair', 'desk', 'lamp'],
     "plants": ['flower', 'tree', 'bush', 'rose'],
     "animals": ['dog', 'cat', 'human', 'fly']

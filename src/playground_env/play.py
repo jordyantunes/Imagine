@@ -11,6 +11,7 @@ ENV_NAME = 'PlaygroundNavigationHuman-v1'
 from src.playground_env.reward_function import sample_descriptions_from_state, get_reward_from_state
 from src.playground_env.descriptions import generate_all_descriptions
 from src.playground_env.env_params import get_env_params
+from src.playground_env.playgroundnavv1 import PlayGroundNavigationV1
 """
 Playing script. Control the agent with the arrows, close the gripper with the space bar.
 """
@@ -26,9 +27,19 @@ all_descriptions = train_descriptions +  test_descriptions
 goal_str = np.random.choice(all_descriptions)
 
 env.reset()
-env.unwrapped.reset_with_goal(goal_str)
+playground : PlayGroundNavigationV1 = env.unwrapped
+playground.reset_scene([
+    {
+        "categories": "furniture",
+        "types": "lamp",
+        "colors": "blue",
+        "status": "off"
+    }
+])
+# env.unwrapped.reset_with_goal(goal_str)
 
-while True:
+stop= False
+while not stop:
     # init_render
 
     action = np.zeros([3])
@@ -65,6 +76,8 @@ while True:
     train_descr, test_descr, extra_descr = sample_descriptions_from_state(out[0], env.unwrapped.params)
     descr = train_descr + test_descr
     print(descr)
+
+    print(playground.objects)
 
     # assert that the reward function works, should give positive rewards for descriptions sampled, negative for others.
     for d in descr:

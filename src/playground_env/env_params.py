@@ -23,7 +23,7 @@ CATEGORIES_MAPPING = {
 
 global_params = dict(max_nb_objects=3,
                      admissible_actions=('Move', 'Grasp', 'Grow'),
-                     admissible_attributes=('colors', 'categories', 'types'),
+                     admissible_attributes=('colors', 'categories', 'types', 'status'),
                      min_max_sizes=((0.2, 0.25), (0.25, 0.3)),
                      agent_size=0.05,
                      epsilon_initial_pos=0.3,
@@ -173,6 +173,7 @@ def get_env_params(max_nb_objects=None,
     relative_shades = ('lightest', 'darkest')
     relative_sizes = ('smallest', 'biggest')
     relative_positions = ('leftest', 'rightest', 'highest', 'lowest')
+    status = ('on', 'off')
     attributes = dict(types=types,
                       categories=tuple(categories.keys()),
                       colors=colors,
@@ -181,7 +182,8 @@ def get_env_params(max_nb_objects=None,
                       positions=positions,
                       relative_shades=relative_shades,
                       relative_sizes=relative_sizes,
-                      relative_positions=relative_positions)
+                      relative_positions=relative_positions,
+                      status=status)
 
     # Adjective combinations
     attribute_type_combinations_temp = [
@@ -247,12 +249,13 @@ def get_env_params(max_nb_objects=None,
     # get indices of attributes in object feature vector
     dim_body_features = 3
     agent_position_inds = np.arange(2)
-    dim_obj_features = nb_types + 7
+    dim_obj_features = nb_types + 8
     type_inds = np.arange(0, nb_types)
     position_inds = np.arange(nb_types, nb_types + 2)
     size_inds = np.array(nb_types + 2)
     color_inds = np.arange(nb_types + 3, nb_types + 6)
     grasped_inds = np.array([nb_types + 6])
+    status_inds = np.array([nb_types + 7])
 
     params = dict(nb_types=nb_types,
                   max_nb_objects=max_nb_objects,
@@ -311,6 +314,12 @@ def get_env_params(max_nb_objects=None,
             if obj_type in categories[k]:
                 cats.append(k)
         return cats
+
+    def get_obj_status(all_obj_features, i_obj):
+        obj_features = all_obj_features[i_obj]
+        status = obj_features[status_inds]
+        
+        return ['on'] if status == 1 else ['off']
 
     def get_obj_color(all_obj_features, i_obj):
         obj_features = all_obj_features[i_obj]
@@ -430,7 +439,8 @@ def get_env_params(max_nb_objects=None,
                                     shades=get_obj_shade,
                                     sizes=get_obj_size,
                                     types=get_obj_type,
-                                    categories=get_obj_cat)
+                                    categories=get_obj_cat,
+                                    status=get_obj_status)
     assert sorted(list(get_attributes_functions.keys())) == sorted(list(attributes))
 
     # List all attributes of all objects from state

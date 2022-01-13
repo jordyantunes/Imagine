@@ -45,12 +45,14 @@ class Thing:
         self.type = None
         self.grasped = False
         self.scene_objects = []  # list of refs to other objects from the scene
+        self.status = None # On/off
 
         # initialize values for the type, position color and size.
         self._get_type_encoding()
         self._sample_position()
         self._sample_color()
         self._sample_size()
+        self._sample_status()
         self.initial_rgb_code = self.rgb_code.copy()
 
         # rendering
@@ -131,7 +133,28 @@ class Thing:
             if ok:
                 self._update_position(candidate_position)
 
+    def _sample_status(self):
+        """
+        Sample a status for the object
+
+        """
+        if 'status' in self.admissible_attributes:
+            if self.object_initial_attributes['status'][0] == 'on':
+                status = np.array([1])
+            elif self.object_initial_attributes['status'][0]  == 'off':
+                status = np.array([0])
+            else:
+                raise NotImplementedError
+        else:
+            print("Status not admissible")
+            status = 0
+        self._update_status(status)
+
     # Update physical attributes of the object
+    def _update_status(self, new_status):
+        self.status = new_status
+        self._update_attribute('status')
+
     def _update_size(self, new_size):
         self.size = new_size
         self.size_pixels = int(self.params['ratio_size'] * self.size)
@@ -176,6 +199,9 @@ class Thing:
         self.type = np.zeros([self.params['nb_types']])
         self.type[self.params['attributes']['types'].index(self.object_initial_attributes['types'][0])] = 1
 
+
+    def _is_hand_over(self, agent_position):
+        return np.linalg.norm(self.position - agent_position) < (self.size + self.agent_size) / 2
 
     def enforce_relative_attributes(self):
         """
@@ -249,7 +275,7 @@ class Thing:
         update_object_grasped = object_grasped
 
         # if the hand is close enough
-        if np.linalg.norm(self.position - agent_position) < (self.size + self.agent_size) / 2:
+        if self._is_hand_over(agent_position):
 
             # if an object is grasped
             if object_grasped:
@@ -276,7 +302,7 @@ class Thing:
         Form features of the object.
         """
         grasped_feature = np.array([1]) if self.grasped else np.array([-1])
-        features = np.concatenate([self.type, self.position, np.array([self.size]), self.rgb_code, grasped_feature])
+        features = np.concatenate([self.type, self.position, np.array([self.size]), self.rgb_code, grasped_feature, self.status])
         return features
 
     def _color_surface(self, surface, rgb):
@@ -541,6 +567,19 @@ class Flower(Plants):
 # Furniture
 # # # # # # # # # # # # # # # # # #
 
+class ActionableFurniture(Furnitures):
+    def __init__(self, object_descr, object_id_int, params):
+        super().__init__(object_descr, object_id_int, params)
+
+    def update_state(self, hand_position, gripper_state, objects, object_grasped, action):
+        """
+        Lamps objects can be grown. This function checks whether a water object is put in contact with the plant. If it is, the plant grows.
+
+        """
+        if self._is_hand_over(hand_position) and gripper_state:
+            self._update_status(np.array([0]) if self.status == 1 else np.array([1]))
+
+
 class Chair(Furnitures):
     def __init__(self, object_descr, object_id_int, params):
         super().__init__(object_descr, object_id_int, params)
@@ -565,7 +604,7 @@ class Sink(Furnitures):
             self.icon = pygame.transform.scale(self.icon, (self.size_pixels, self.size_pixels)) 
 
 
-class Window(Furnitures):
+class Window(ActionableFurniture):
     def __init__(self, object_descr, object_id_int, params):
         super().__init__(object_descr, object_id_int, params)
         if params['render_mode']:
@@ -597,15 +636,15 @@ class Desk(Furnitures):
             self.icon = pygame.transform.scale(self.icon, (self.size_pixels, self.size_pixels)) 
 
 
-class Lamp(Furnitures):
+class Lamp(ActionableFurniture):
     def __init__(self, object_descr, object_id_int, params):
         super().__init__(object_descr, object_id_int, params)
         if params['render_mode']:
             self.icon = pygame.image.load(self.img_path + 'lamp.png')
-            self.icon = pygame.transform.scale(self.icon, (self.size_pixels, self.size_pixels)) 
+            self.icon = pygame.transform.scale(self.icon, (self.size_pixels, self.size_pixels))
 
 
-class Door(Furnitures):
+class Door(ActionableFurniture):
     def __init__(self, object_descr, object_id_int, params):
         super().__init__(object_descr, object_id_int, params)
         if params['render_mode']:

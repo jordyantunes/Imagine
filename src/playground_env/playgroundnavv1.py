@@ -32,7 +32,7 @@ class PlayGroundNavigationV1(gym.Env):
                  max_nb_objects=3,  # number of objects in the scene
                  random_nb_obj=False,
                  admissible_actions=('Move', 'Grasp', 'Grow'),  # which types of actions are admissible
-                 admissible_attributes=('colors', 'categories', 'types'),
+                 admissible_attributes=('colors', 'categories', 'types', 'status'),
                  # , 'relative_sizes', 'shades', 'relative_shades', 'sizes', 'relative_positions'),
                  # which object attributes
                  # can be used

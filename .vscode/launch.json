@@ -50,5 +50,16 @@
                 "--plants", "flower", "tree", "grass", "rose",
                 "--animals", "dog", "cat", "human", "fly"]
         },
+        {
+            "name": "Python: play",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/playground_env/play.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/src",
+            "env": {
+                "HOME": "C:/Users/jordy"
+            },
+        },
     ]
 }
