@@ -3,6 +3,7 @@ import sys
 import time
 import argparse
 from pathlib import Path
+from typing import Union
 
 if os.getenv("HOME") is None:
     os.environ['HOME'] = str(Path.home())
@@ -23,6 +24,9 @@ from src.utils.util import fork, get_time_tracker
 from src.imagine.goal_sampler import GoalSampler, EvalGoalSampler
 from src.imagine.data_processor import DataProcessor
 from src.stats_logger import StatsLogger
+from src.imagine.reward_function.classifier_reward_function_lstm_learned import RewardFunctionLSTM
+from src.imagine.reward_function.classifier_reward_function_lstm_pretrained import RewardFunctionLSTMPretrained
+from src.imagine.reward_function.oracle_reward_function_playground import OracleRewardFunction
 import json
 
 NUM_CPU = 1
@@ -39,8 +43,8 @@ RL_RATIO_POSITIVE = 0.5
 REWARD_CHECKPOINT = 'model_0.pk'  # 'pre_trained/reward_func_checkpoint_270'
 
 
-def train(policy, training_worker, evaluation_worker, data_processor, goal_sampler, eval_goal_sampler, reward_function,
-          n_epochs, n_test_rollouts, n_cycles, n_batches, social_partner,
+def train(policy, training_worker:RolloutWorker, evaluation_worker:RolloutWorker, data_processor:DataProcessor, goal_sampler:GoalSampler, eval_goal_sampler:EvalGoalSampler, reward_function:Union[RewardFunctionLSTM, RewardFunctionLSTM, OracleRewardFunction],
+          n_epochs:int, n_test_rollouts:int, n_cycles:int, n_batches:int, social_partner:SocialPartner,
           stats_logger, params, **kwargs):
     print('\n\n')
     print(params['conditions'])
