@@ -19,7 +19,7 @@ Playing script. Control the agent with the arrows, close the gripper with the sp
 env = gym.make(ENV_NAME, reward_screen=False, viz_data_collection=True)
 pygame.init()
 
-env_params = get_env_params()
+env_params = get_env_params(admissible_attributes=('colors', 'categories', 'types', 'status'))
 train_descriptions, test_descriptions, extra_descriptions = generate_all_descriptions(env_params)
 all_descriptions = train_descriptions +  test_descriptions
 
@@ -75,7 +75,7 @@ while not stop:
     # Sample descriptions of the current state
     train_descr, test_descr, extra_descr = sample_descriptions_from_state(out[0], env.unwrapped.params)
     descr = train_descr + test_descr
-    print(descr)
+    # print(descr)
 
     print(playground.objects)
 

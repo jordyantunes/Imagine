@@ -3,8 +3,9 @@ import gym
 from gym import spaces
 import numpy as np
 import pygame
-from src.playground_env.objects import generate_objects
+from src.playground_env.objects import generate_objects, Light
 from src.playground_env.env_params import get_env_params, init_params
+from src.playground_env.env_controller import EnvController
 
 
 class PlayGroundNavigationV1(gym.Env):
@@ -29,7 +30,7 @@ class PlayGroundNavigationV1(gym.Env):
                  agent_step_size=0.15,
                  agent_initial_pos=np.array((0, 0)),
                  agent_initial_pos_range=0.6,
-                 max_nb_objects=3,  # number of objects in the scene
+                 max_nb_objects=4,  # number of objects in the scene
                  random_nb_obj=False,
                  admissible_actions=('Move', 'Grasp', 'Grow'),  # which types of actions are admissible
                  admissible_attributes=('colors', 'categories', 'types', 'status'),
@@ -80,6 +81,8 @@ class PlayGroundNavigationV1(gym.Env):
         self.adm_attributes = self.params['admissible_attributes']
         self.adm_abs_attributes = [a for a in self.adm_attributes if 'relative' not in a]
         self.adm_rel_attributes = [a for a in self.adm_attributes if a not in self.adm_abs_attributes]
+
+        self.gripper_change = False
 
         self.rel_attributes_mapping = {
             # rel_attr: (abs_corresp, abs_opposite)
@@ -157,6 +160,10 @@ class PlayGroundNavigationV1(gym.Env):
 	                self.viewer = pygame.Surface((self.screen_size, self.screen_size))
             self.viewer_started = False
         self.background = None
+
+        Controller = EnvController(self)
+
+        self.observation = None
 
         self.reset()
 
@@ -273,6 +280,22 @@ class PlayGroundNavigationV1(gym.Env):
         else:
             self.gripper_state = -1
 
+        objects = objects or []
+        if len([o for o in objects if o['types'] == 'light']) == 0:
+            objects.append({
+                "categories": "env_objects",
+                "types": "light",
+                "colors": "blue",
+                "status": "on"
+            })
+
+            objects.append({
+                "categories": "furniture",
+                "types": "lamp",
+                "colors": "blue",
+                "status": "on"
+            })
+
         self.objects = self.sample_objects(objects)
 
         # Print objects
@@ -318,6 +341,8 @@ class PlayGroundNavigationV1(gym.Env):
 
     def observe(self):
 
+        if not self.is_env_light_on():
+            print("observe lights on")
         obj_features = np.array([obj.get_features() for obj in self.objects]).flatten()
         obs = np.concatenate([self.agent_pos,  # size 2
                               np.array([self.gripper_state]),
@@ -355,12 +380,14 @@ class PlayGroundNavigationV1(gym.Env):
             self.gripper_change = new_gripper == self.gripper_state
             self.gripper_state = new_gripper
 
+        any_object_grasped = []
         for obj in self.objects:
-            self.object_grasped = obj.update_state(self.agent_pos,
+            any_object_grasped.append(obj.update_state(self.agent_pos,
                                                    self.gripper_state > 0,
                                                    self.objects,
                                                    self.object_grasped,
-                                                   action)
+                                                   action))
+        self.object_grasped = any(any_object_grasped)
 
         self.observation[:self.half_dim_obs] = self.observe()
         self.observation[self.half_dim_obs:] = self.observation[:self.half_dim_obs] - self.initial_observation
@@ -371,10 +398,20 @@ class PlayGroundNavigationV1(gym.Env):
 
         return self.observation.copy(), 0, False, {}
 
+    def is_env_light_on(self):
+        if self.objects is None or len(self.objects) == 0:
+            return True
+
+        return self.objects[0].is_light_on()
+
     def render(self, goal_str, mode='human', close=False):
 
         background_color = [220, 220, 220]
         FONT = pygame.font.Font(None, 25)
+        lights = [o for o in self.objects if isinstance(o, Light)]
+        if len(lights) > 0:
+            if lights[0].status == 0:
+                background_color = [150, 150, 150]
         self.viewer.fill(background_color)
         self.shapes = {}
         self.anchors = {}

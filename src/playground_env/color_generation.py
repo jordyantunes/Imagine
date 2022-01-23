@@ -24,7 +24,7 @@ def plot_colors(color, shade):
     plt.imshow(array)
 
 class Color:
-    def __init__(self, color, shade):
+    def __init__(self, color, shade, lights_on:bool=True):
         """
         Implements a color class characterized by a color and shade attributes.
         Parameters
@@ -36,32 +36,34 @@ class Color:
         """
         self.color = color
         self.shade = shade
+
+        self.multiplier = 0.5 if not lights_on else 1.0
         if color == 'blue':
             if shade == 'light':
-                self.space = Box(low=np.array([0.3, 0.7, 0.9]), high=np.array([0.5, 0.8, 1.]), dtype=np.float32)
+                self.space = Box(low=np.array([0.3, 0.7, 0.9])*self.multiplier, high=np.array([0.5, 0.8, 1.])*self.multiplier, dtype=np.float32)
             elif shade == 'dark':
-                self.space = Box(low=np.array([0.0, 0., 0.8]), high=np.array([0.2, 0.2, 0.9]), dtype=np.float32)
+                self.space = Box(low=np.array([0.0, 0., 0.8])*self.multiplier, high=np.array([0.2, 0.2, 0.9])*self.multiplier, dtype=np.float32)
             else:
                 raise NotImplementedError("shade is either 'light' or 'dark'")
         elif color == 'red':
             if shade == 'light':
-                self.space = Box(low=np.array([0.9, 0.4, 0.35]), high=np.array([1, 0.6, 0.65]), dtype=np.float32)
+                self.space = Box(low=np.array([0.9, 0.4, 0.35])*self.multiplier, high=np.array([1, 0.6, 0.65])*self.multiplier, dtype=np.float32)
             elif shade == 'dark':
-                self.space = Box(low=np.array([0.5, 0., 0.]), high=np.array([0.7, 0.1, 0.1]), dtype=np.float32)
+                self.space = Box(low=np.array([0.5, 0., 0.])*self.multiplier, high=np.array([0.7, 0.1, 0.1])*self.multiplier, dtype=np.float32)
             else:
                 raise NotImplementedError("shade is either 'light' or 'dark'")
         elif color == 'green':
             if shade == 'light':
-                self.space = Box(low=np.array([0.4, 0.8, 0.4]), high=np.array([0.6, 1, 0.5]), dtype=np.float32)
+                self.space = Box(low=np.array([0.4, 0.8, 0.4])*self.multiplier, high=np.array([0.6, 1, 0.5])*self.multiplier, dtype=np.float32)
             elif shade == 'dark':
-                self.space = Box(low=np.array([0., 0.4, 0.]), high=np.array([0.1, 0.6, 0.1]), dtype=np.float32)
+                self.space = Box(low=np.array([0., 0.4, 0.])*self.multiplier, high=np.array([0.1, 0.6, 0.1])*self.multiplier, dtype=np.float32)
             else:
                 raise NotImplementedError
         elif color == 'dark':
             if shade == 'dark':
-                self.space = Box(low=np.array([0., 0., 0.]), high=np.array([0.3, 0.3, 0.3]), dtype=np.float32)
+                self.space = Box(low=np.array([0., 0., 0.])*self.multiplier, high=np.array([0.3, 0.3, 0.3])*self.multiplier, dtype=np.float32)
             elif shade == 'light':
-                self.space = Box(low=np.array([1., 1., 1.]), high=np.array([2., 2., 2.]), dtype=np.float32)
+                self.space = Box(low=np.array([1., 1., 1.])*self.multiplier, high=np.array([2., 2., 2.])*self.multiplier, dtype=np.float32)
             else:
                 raise NotImplementedError
         else:

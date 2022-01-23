@@ -1,5 +1,6 @@
 import pygame
 import numpy as np
+from typing import List
 
 from src.playground_env.color_generation import sample_color
 
@@ -38,13 +39,15 @@ class Thing:
         for a in self.adm_rel_attributes:
             self.object_initial_attributes[a] = []
 
+        self.__finished_initialization = False
+
         # Initialize physical attributes of the object that will compose its features.
         self.rgb_code = None
         self.position = None
         self.size = None
         self.type = None
         self.grasped = False
-        self.scene_objects = []  # list of refs to other objects from the scene
+        self.scene_objects:List[Thing] = []  # list of refs to other objects from the scene
         self.status = None # On/off
 
         # initialize values for the type, position color and size.
@@ -58,6 +61,9 @@ class Thing:
         # rendering
         self.view = False
         self.patch = None
+
+        self.off_icon = None
+        self.__finished_initialization = True
 
     def update_ref_to_scene_objects(self, scene_objects):
         """
@@ -149,6 +155,26 @@ class Thing:
             print("Status not admissible")
             status = 0
         self._update_status(status)
+
+    # getter
+    @property
+    def rgb_code(self) -> tuple:
+        print("RGB: ", self.__rgb_code)
+        if self.__finished_initialization and not self.is_light_on() and self.__rgb_code is not None:
+            print("Returning dimmed color")
+            print("RGB: ", self.__rgb_code * 0.5)
+            return self.__rgb_code * 0.5
+        return self.__rgb_code
+
+    @rgb_code.setter
+    def rgb_code(self, rgb_code: np.array):
+        self.__rgb_code = rgb_code
+
+    def is_light_on(self) -> bool:
+        for o in self.scene_objects:
+            if isinstance(o, Light) and o.status == np.array([1]):
+                return True
+        return False
 
     # Update physical attributes of the object
     def _update_status(self, new_status):
@@ -272,28 +298,26 @@ class Thing:
             The action of the agent.
 
         """
-        update_object_grasped = object_grasped
+        update_object_grasped = False
 
         # if the hand is close enough
         if self._is_hand_over(agent_position):
-
-            # if an object is grasped
-            if object_grasped:
-                # check if it's that one, if it's still grasped
-                if self.grasped:
-                    if not gripper_state:
-                        update_object_grasped = False
-                        self.grasped = False
             # if not object is grasped, check if this one is being grasped
-            else:
-                if gripper_state:
-                    self.grasped = True
-                    update_object_grasped = True
-
+            if gripper_state and not object_grasped:
+                self.grasped = True
+                update_object_grasped = True
+        
+        # if an object is grasped
+        # check if it's that one, if it's still grasped
+        if object_grasped and self.grasped and not gripper_state:
+            update_object_grasped = False
+            self.grasped = False
 
         # if grasped, the object follows the hand
         if self.grasped:
             self._update_position(agent_position.copy())
+            update_object_grasped = True
+
         self.features = self.get_features()
         return update_object_grasped
 
@@ -323,7 +347,7 @@ class Thing:
         color = tuple(self.rgb_code * 255)
         # pygame.draw.rect(self.icon, color, (0, 0, self.size_pixels - 1, self.size_pixels - 1), 6)
         self.icon = pygame.transform.scale(self.icon, (self.size_pixels, self.size_pixels)) 
-        self.surface = self.icon.copy()
+        self.surface = self.off_icon.copy() if self.status == 0 and self.off_icon else self.icon.copy()
         self._color_surface(self.surface, color)
         viewer.blit(self.surface,(left,top))
         # viewer.blit(self.icon, (left, top))
@@ -562,10 +586,25 @@ class Flower(Plants):
             self.icon = pygame.image.load(self.img_path + 'flower.png')
             self.icon = pygame.transform.scale(self.icon, (self.size_pixels, self.size_pixels)) 
 
-
 # # # # # # # # # # # # # # # # # #
 # Furniture
 # # # # # # # # # # # # # # # # # #
+
+# # # # # # # # # # # # # # # # # #
+# Light
+# # # # # # # # # # # # # # # # # #
+
+class Light(Thing):
+    def __init__(self, object_descr, object_id_int, params):
+        super().__init__(object_descr, object_id_int, params)
+        self.off_icon = 1
+        if params['render_mode']:
+            self.icon = pygame.image.load(self.img_path + 'lightbulb.png')
+            self.icon = pygame.transform.scale(self.icon, (self.size_pixels, self.size_pixels))
+            self.off_icon = pygame.image.load(self.img_path + 'lightbulb-off.png')
+            self.off_icon = pygame.transform.scale(self.off_icon, (self.size_pixels, self.size_pixels))
+        # self._update_status(np.array([1]))
+        # self._update_position(np.array([0, 0]))
 
 class ActionableFurniture(Furnitures):
     def __init__(self, object_descr, object_id_int, params):
@@ -577,7 +616,18 @@ class ActionableFurniture(Furnitures):
 
         """
         if self._is_hand_over(hand_position) and gripper_state:
-            self._update_status(np.array([0]) if self.status == 1 else np.array([1]))
+            self._update_status(np.array([0]) if self.status == np.array([1]) else np.array([1]))
+            light_object = None
+            if self.scene_objects:
+                lights_on = False
+                for o in self.scene_objects:
+                    if isinstance(o, ActionableFurniture) and o.status == np.array([1]):
+                        lights_on = True
+                    elif isinstance(o, Light):
+                        light_object = o
+                if light_object:
+                    light_object._update_status(np.array([1]) if lights_on else np.array([0]))
+                
 
 
 class Chair(Furnitures):
@@ -680,6 +730,7 @@ class Food(Supplies):
             self.icon = pygame.transform.scale(self.icon, (self.size_pixels, self.size_pixels)) 
 
 
+
 obj_type_to_obj = dict(dog=Dog,
                        cat=Cat,
                        chameleon=Cameleon,
@@ -711,7 +762,8 @@ obj_type_to_obj = dict(dog=Dog,
                        sofa=Sofa,
                        carpet=Carpet,
                        food=Food,
-                       water=Water)
+                       water=Water,
+                       light=Light)
 
 
 

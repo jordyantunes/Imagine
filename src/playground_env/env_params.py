@@ -3,6 +3,8 @@ from itertools import product
 from src.playground_env.color_generation import *
 import re
 
+from src.playground_env.env_controller import EnvController
+
 
 params_init = False
 
@@ -11,6 +13,7 @@ AVAILABLE_OBJECTS = {
     "plants": ('cactus', 'carnivorous', 'flower', 'tree', 'bush', 'grass', 'algae', 'tea', 'rose', 'bonsai'),
     "animals": ('dog', 'cat', 'chameleon', 'human', 'fly', 'parrot', 'mouse', 'lion', 'pig', 'cow'),
     "supplies": ('food', 'water'),
+    "env_objects": ("light",)
 }
 
 # todo remove need for mapping please
@@ -18,7 +21,8 @@ CATEGORIES_MAPPING = {
     "furniture":"furnitures",
     "plant":"plants",
     "animal":"animals",
-    "supply":"supplies"
+    "supply":"supplies",
+    "env_objects": "env_objects"
 }
 
 global_params = dict(max_nb_objects=3,
@@ -36,7 +40,8 @@ global_params = dict(max_nb_objects=3,
                      furnitures = AVAILABLE_OBJECTS['furnitures'],
                      plants = AVAILABLE_OBJECTS['plants'],
                      animals = AVAILABLE_OBJECTS['animals'],
-                     supplies = AVAILABLE_OBJECTS['supplies'])
+                     supplies = AVAILABLE_OBJECTS['supplies'],
+                     env_objects = AVAILABLE_OBJECTS['env_objects'])
 
 cache_env_params = None
 
@@ -78,7 +83,8 @@ def get_env_params(max_nb_objects=None,
                    furnitures=None,
                    plants=None,
                    animals=None,
-                   supplies=None
+                   supplies=None,
+                   env_objects=None
                    ):
     """
     Builds the set of environment parameters, and the set of function to extract information from the state.
@@ -152,12 +158,14 @@ def get_env_params(max_nb_objects=None,
     plants = plants or global_params['plants']
     animals = animals or global_params['animals']
     supplies = supplies or global_params['supplies']
+    env_objects = env_objects or global_params['env_objects']
     living_things = animals + plants
     categories = dict(animal=animals,
                       plant=plants,
                       furniture=furnitures,
                       living_thing=living_things,
-                      supply=supplies)
+                      supply=supplies,
+                      env_objects=env_objects)
     # List types
     types = ()
     for k_c in categories.keys():
@@ -322,21 +330,39 @@ def get_env_params(max_nb_objects=None,
         return ['on'] if status == 1 else ['off']
 
     def get_obj_color(all_obj_features, i_obj):
+        controller = EnvController.getInstance()
+
+        if controller.env.observation is None:
+            lights_on = True
+        else:
+            lights_on = controller.env.is_env_light_on()
+
         obj_features = all_obj_features[i_obj]
         rgb = obj_features[color_inds]
+        # print("RGB:", rgb)
         for c in colors:
             for s in shades:
-                color_class = Color(c, s)
+                if not lights_on:
+                    print("lights off")
+                color_class = Color(c, s, lights_on)
                 if color_class.contains(rgb):
                     return [c]
         raise ValueError
 
     def get_obj_shade(all_obj_features, i_obj):
+        controller = EnvController.getInstance()
+
+        if controller.env.observation is None:
+            lights_on = True
+        else:
+            lights_on = controller.env.is_env_light_on()
+
+
         obj_features = all_obj_features[i_obj]
         rgb = obj_features[color_inds]
         for c in colors:
             for s in shades:
-                color_class = Color(c, s)
+                color_class = Color(c, s, lights_on)
                 if color_class.contains(rgb):
                     return [s]
         raise ValueError
