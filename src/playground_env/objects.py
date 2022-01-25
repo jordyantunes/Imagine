@@ -403,13 +403,14 @@ class Plants(LivingThings):
         Plant objects can be grown. This function checks whether a water object is put in contact with the plant. If it is, the plant grows.
 
         """
-        for obj in objects:
-            if obj.object_descr['types'] == 'water':
-                # check distance
-                if np.linalg.norm(obj.position - self.position) < (self.size + obj.size) / 2:
-                    # check action
-                    size = min(self.size + self.obj_size_update, self.min_max_sizes[1][1] + self.obj_size_update)
-                    self._update_size(size)
+        if self.is_light_on():
+            for obj in objects:
+                if obj.object_descr['types'] == 'water':
+                    # check distance
+                    if np.linalg.norm(obj.position - self.position) < (self.size + obj.size) / 2:
+                        # check action
+                        size = min(self.size + self.obj_size_update, self.min_max_sizes[1][1] + self.obj_size_update)
+                        self._update_size(size)
         return super().update_state(hand_position, gripper_state, objects, object_grasped, action)
 
 
