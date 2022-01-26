@@ -25,7 +25,8 @@ from src.playground_env.env_controller import EnvController
 # animals = ['dog', 'cat', 'human', 'fly']
 
 init_params(
-            max_nb_objects = 4
+            max_nb_objects = 4,
+            admissible_actions = ('Move', 'Grasp', 'Grow', 'Turn')
             # admissible_attributes=admissible_attributes,
             # furnitures=furnitures,
             # plants=plants,

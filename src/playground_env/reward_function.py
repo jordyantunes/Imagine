@@ -92,6 +92,43 @@ def get_grow_descriptions(get_grown_ids, initial_state, current_state, params, o
 
     return grow_descriptions.copy()
 
+def get_toggle_descriptions(get_toggled_ids, initial_state, current_state, params, obj_attributes, sort_attributes, combine_two, check_if_relative):
+    """
+    Get all Grow descriptions from the current state (if any).
+
+    Parameters
+    ----------
+    get_grown_ids: function
+        Function that extracts the id of objects that are being grown.
+    initial_state: nd.array
+        Initial state of the environment.
+    current_state: nd.array
+        Current state of the environment.
+    sort_attributes: function
+        Function that separates adjective and name attributes.
+    obj_attributes: list of list
+        List of the list of object attributes for each object.
+    params: dict
+        Environment params.
+    check_if_relative: function
+        Checks whether an attribute is a relative attribute.
+    combine_two: function
+        Function that combines two attributes to form new attributes.
+
+    Returns
+    -------
+    descr: list of str
+        List of Grasp descriptions satisfied by the current state.
+    """
+    obj_switched = get_toggled_ids(initial_state, current_state)
+    turn_descriptions = []
+    for i_obj in obj_switched:
+        att = obj_attributes[i_obj]
+        turn_descriptions += generate_any_description('Turn', att)
+
+    return turn_descriptions.copy()
+
+
 def get_extra_grow_descriptions(get_supply_contact_ids, initial_state, current_state, params, obj_attributes, sort_attributes, combine_two, check_if_relative):
     """
     Equivalent of the grow description for attempting to grow furniture (track funny behavior of the agent).
@@ -122,6 +159,7 @@ def sample_descriptions_from_state(state, params):
     """
     get_grasped_ids = params['extract_functions']['get_interactions']['get_grasped']
     get_grown_ids = params['extract_functions']['get_interactions']['get_grown']
+    get_toggled_ids = params['extract_functions']['get_interactions']['get_toggled']
     get_supply_contact = params['extract_functions']['get_interactions']['get_supply_contact']
     get_attributes_functions=params['extract_functions']['get_attributes_functions']
     admissible_attributes = params['admissible_attributes']
@@ -168,6 +206,10 @@ def sample_descriptions_from_state(state, params):
     if 'Grasp' in admissible_actions:
         descriptions += get_grasp_descriptions(get_grasped_ids, current_state, sort_attributes, obj_attributes, params, check_if_relative, combine_two)
 
+    # Add Grasp descriptions
+    if 'Turn' in admissible_actions:
+        descriptions += get_toggle_descriptions(get_toggled_ids, initial_state, current_state, params, obj_attributes, sort_attributes, combine_two, check_if_relative)
+
     # Add Grow descriptions
     if 'Grow' in admissible_actions:
         descriptions += get_grow_descriptions(get_grown_ids, initial_state, current_state, params, obj_attributes, sort_attributes, combine_two, check_if_relative)
@@ -211,6 +253,7 @@ def get_reward_from_state(state, goal, params):
     """
     get_grasped_ids = params['extract_functions']['get_interactions']['get_grasped']
     get_grown_ids = params['extract_functions']['get_interactions']['get_grown']
+    get_toggled_ids = params['extract_functions']['get_interactions']['get_toggled']
     get_attributes_functions = params['extract_functions']['get_attributes_functions']
     admissible_attributes = params['admissible_attributes']
     admissible_actions = params['admissible_actions']
@@ -245,6 +288,11 @@ def get_reward_from_state(state, goal, params):
             reward = True
 
     if words[0] == 'Grasp':
+        grasp_descr = get_grasp_descriptions(get_grasped_ids, current_state, sort_attributes, obj_attributes, params, check_if_relative, combine_two)
+        if goal in grasp_descr:
+            reward = True
+
+    if words[0] == 'Turn':
         grasp_descr = get_grasp_descriptions(get_grasped_ids, current_state, sort_attributes, obj_attributes, params, check_if_relative, combine_two)
         if goal in grasp_descr:
             reward = True

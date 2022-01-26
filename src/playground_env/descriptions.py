@@ -55,6 +55,17 @@ def generate_any_description(action: str, attributes: Union[List[str],Dict[str,L
     elif action == 'Go':
         for pos in attributes:
             descriptions.append('Go {}'.format(pos))
+    elif action == 'Turn':
+        if isinstance(attributes, dict):
+            adjective_attributes, name_attributes = attributes['adjective_attributes'], attributes['name_attributes']
+        else:
+            adjective_attributes, name_attributes = sort_attributes(attributes)
+        
+        for a in adjective_attributes:
+            if a not in ('on', 'off'):
+                continue
+
+            descriptions.append(f"Turn {a} light")
 
     return descriptions.copy()
 
@@ -117,6 +128,10 @@ def generate_all_descriptions(env_params):
     if 'Grasp' in p['admissible_actions']:
         grasp_descriptions = generate_any_description('Grasp', attributes)
         all_descriptions += tuple(grasp_descriptions)
+
+    if 'Turn' in p['admissible_actions']:
+        turn_descriptions = generate_any_description('Turn', attributes)
+        all_descriptions += tuple(turn_descriptions)
     
     
     if 'Grow' in p['admissible_actions']:

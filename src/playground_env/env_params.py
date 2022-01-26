@@ -342,8 +342,8 @@ def get_env_params(max_nb_objects=None,
         # print("RGB:", rgb)
         for c in colors:
             for s in shades:
-                if not lights_on:
-                    print("lights off")
+                # if not lights_on:
+                #     print("lights off")
                 color_class = Color(c, s, lights_on)
                 if color_class.contains(rgb):
                     return [c]
@@ -549,6 +549,49 @@ def get_env_params(max_nb_objects=None,
                 grown_ids.append(i_obj)
         return np.array(grown_ids)
 
+    def get_toggled_obj_ids(initial_state, state):
+        """
+        Get Windows and Doors that were closed/open and Lamps that
+        were switched on/off
+        """
+        nb_objs = count_objects(state)
+
+        on = 0
+        off = 0
+        switched_off = []
+        switched_on = []
+
+        for i_obj in range(nb_objs):
+            initial_obj_features = get_obj_features(initial_state, i_obj)
+            # check object type
+            type_encoding = initial_obj_features[type_inds]
+            ind = type_encoding.tolist().index(1)
+            obj_type = types[ind]
+
+            if not obj_type == 'light':
+                continue
+
+            obj_features = get_obj_features(state, i_obj)
+            initial_status = initial_obj_features[status_inds]
+            status = obj_features[status_inds]
+
+            if status == np.array([0]):
+                off +=1
+                if initial_status == np.array([1]):
+                    switched_off.append(i_obj)
+            elif status == np.array([1]):
+                on +=1
+                if initial_status == np.array([0]):
+                    switched_on.append(i_obj)
+
+        if on > 0:
+            if len(switched_on) > 0:
+                return np.array(switched_on)
+        elif off > 0 and len(switched_off) > 0:
+                return np.array(switched_off)
+
+        return np.array([])
+
     # Whether a supply is in contact with some non living thing object (to track funny behaviors where agents try to grow furtniture etc).
     def get_supply_contact_ids(state):
         nb_objs = count_objects(state)
@@ -577,7 +620,8 @@ def get_env_params(max_nb_objects=None,
     get_interactions = dict(get_touched=get_touched_obj_ids,
                             get_grasped=get_grasped_obj_ids,
                             get_grown=get_grown_obj_ids,
-                            get_supply_contact=get_supply_contact_ids)
+                            get_supply_contact=get_supply_contact_ids,
+                            get_toggled=get_toggled_obj_ids)
 
 
     # extract category of a type attribute

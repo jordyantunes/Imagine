@@ -159,10 +159,10 @@ class Thing:
     # getter
     @property
     def rgb_code(self) -> tuple:
-        print("RGB: ", self.__rgb_code)
+        # print("RGB: ", self.__rgb_code)
         if self.__finished_initialization and not self.is_light_on() and self.__rgb_code is not None:
-            print("Returning dimmed color")
-            print("RGB: ", self.__rgb_code * 0.5)
+            # print("Returning dimmed color")
+            # print("RGB: ", self.__rgb_code * 0.5)
             return self.__rgb_code * 0.5
         return self.__rgb_code
 

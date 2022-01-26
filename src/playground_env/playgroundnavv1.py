@@ -342,7 +342,7 @@ class PlayGroundNavigationV1(gym.Env):
     def observe(self):
 
         if not self.is_env_light_on():
-            print("observe lights on")
+            print("observe lights off")
         obj_features = np.array([obj.get_features() for obj in self.objects]).flatten()
         obs = np.concatenate([self.agent_pos,  # size 2
                               np.array([self.gripper_state]),
