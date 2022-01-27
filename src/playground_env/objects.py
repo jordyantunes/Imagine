@@ -3,6 +3,7 @@ import numpy as np
 from typing import List
 
 from src.playground_env.color_generation import sample_color
+from src.playground_env.env_controller import EnvController
 
 
 class Thing:
@@ -359,7 +360,23 @@ class Thing:
         return msg
 
 
+class UsedSupply:
+    obj: Thing
+    supply: Thing
 
+    def __init__(self, obj: Thing, supply: Thing) -> None:
+        self.obj = obj
+        self.supply = supply
+
+    def __repr__(self):
+        return "Item({}, {})".format(str(self.obj), str(self.supply))
+
+    def __eq__(self, other):
+        if isinstance(other, UsedSupply):
+            return ((self.obj.object_id_int == other.obj.object_id_int) and (self.supply.object_id_int == other.supply.object_id_int))
+
+    def __hash__(self):
+        return hash(self.__repr__())
 
 
 class LivingThings(Thing):
@@ -403,21 +420,26 @@ class Plants(LivingThings):
         Plant objects can be grown. This function checks whether a water object is put in contact with the plant. If it is, the plant grows.
 
         """
+        controller = EnvController.getInstance()
+
         if self.is_light_on():
             for obj in objects:
                 if obj.object_descr['types'] == 'water':
+                    if UsedSupply(self, obj) in controller.env.used_supplies:
+                        # print("Supply already used, skip")
+                        continue
                     # check distance
                     if np.linalg.norm(obj.position - self.position) < (self.size + obj.size) / 2:
                         # check action
                         size = min(self.size + self.obj_size_update, self.min_max_sizes[1][1] + self.obj_size_update)
                         self._update_size(size)
+                        controller.env.add_used_supply(self, obj)
         return super().update_state(hand_position, gripper_state, objects, object_grasped, action)
 
 
 class Supplies(Thing):
     def __init__(self, object_descr, object_id_int, params):
         super().__init__(object_descr, object_id_int, params)
-
 
 
 # # # # # # # # # # # # # # # # # #

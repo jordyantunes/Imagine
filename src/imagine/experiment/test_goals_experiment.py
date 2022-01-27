@@ -46,7 +46,7 @@ env = gym.make(env_name,
                admissible_attributes=params["admissible_attributes"])
 
 env.reset()
-env.unwrapped.reset_with_goal("Grow red dog")
+env.unwrapped.reset_with_goal("Grow red plant")
 
 stop = False
 while not stop:
@@ -81,6 +81,7 @@ while not stop:
     out = env.step(action)
     env.render()
 
+    print(env.used_supplies)
     # Sample descriptions of the current state
     train_descr, test_descr, extra_descr = sample_descriptions_from_state(out[0], env.unwrapped.params)
     descr = train_descr + test_descr

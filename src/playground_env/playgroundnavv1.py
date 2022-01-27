@@ -3,10 +3,10 @@ import gym
 from gym import spaces
 import numpy as np
 import pygame
-from src.playground_env.objects import generate_objects, Light
+from src.playground_env.objects import generate_objects, Light, Thing, Supplies, UsedSupply
 from src.playground_env.env_params import get_env_params, init_params
 from src.playground_env.env_controller import EnvController
-
+from typing import List, Set
 
 class PlayGroundNavigationV1(gym.Env):
     metadata = {
@@ -172,6 +172,8 @@ class PlayGroundNavigationV1(gym.Env):
         self.initial_observation = None
         self.done = None
 
+        self.used_supplies : Set[UsedSupply] = set()
+
     def regularize_type_and_attribute(self, object):
         if object['categories'] is None and object['types'] is not None:
             for k in self.categories.keys():
@@ -269,6 +271,9 @@ class PlayGroundNavigationV1(gym.Env):
         self.SP_feedback = False
         self.known_goals_update = False
         return self.reset_scene()
+
+    def add_used_supply(self, obj: Thing, supply: Supplies):
+        self.used_supplies.add(UsedSupply(obj, supply))
 
     def reset_scene(self, objects=None):
 
