@@ -153,7 +153,7 @@ class Thing:
                 raise NotImplementedError
         else:
             print("Status not admissible")
-            status = 0
+            status = np.array([0])
         self._update_status(status)
 
     # getter
@@ -616,7 +616,7 @@ class ActionableFurniture(Furnitures):
         Lamps objects can be grown. This function checks whether a water object is put in contact with the plant. If it is, the plant grows.
 
         """
-        if self._is_hand_over(hand_position) and gripper_state:
+        if self._is_hand_over(hand_position) and gripper_state and not object_grasped:
             self._update_status(np.array([0]) if self.status == np.array([1]) else np.array([1]))
             light_object = None
             if self.scene_objects:
