@@ -75,9 +75,9 @@ while not stop:
     # Sample descriptions of the current state
     train_descr, test_descr, extra_descr = sample_descriptions_from_state(out[0], env.unwrapped.params)
     descr = train_descr + test_descr
-    # print(descr)
+    print(descr)
 
-    print(playground.objects)
+    # print(playground.objects)
 
     # assert that the reward function works, should give positive rewards for descriptions sampled, negative for others.
     for d in descr:

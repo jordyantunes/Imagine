@@ -24,11 +24,11 @@ def generate_any_description(action: str, attributes: Union[List[str],Dict[str,L
     descriptions = []
 
     if action in ('Grasp', 'Grow', 'Attempt grow'):
-        list_excluded = []
+        list_excluded = ['on', 'off']
         if action == 'Grow':
-            list_excluded = env_params['categories']['furniture'] + env_params['categories']['supply'] + ('furniture', 'supply')
+            list_excluded += env_params['categories']['furniture'] + env_params['categories']['supply'] + ('furniture', 'supply')
         elif action == 'Attempted grow':
-            list_excluded = env_params['categories']['living_thing'] + ('living_thing', 'animal', 'plant')
+            list_excluded += env_params['categories']['living_thing'] + ('living_thing', 'animal', 'plant')
 
         if isinstance(attributes, dict):
             adjective_attributes, name_attributes = attributes['adjective_attributes'], attributes['name_attributes']
