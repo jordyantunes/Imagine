@@ -165,6 +165,8 @@ class PlayGroundNavigationV1(gym.Env):
 
         self.observation = None
 
+        self.used_supplies : Set[UsedSupply] = set()
+        
         self.reset()
 
         # We set to None to rush error if reset not called
@@ -172,7 +174,6 @@ class PlayGroundNavigationV1(gym.Env):
         self.initial_observation = None
         self.done = None
 
-        self.used_supplies : Set[UsedSupply] = set()
 
     def regularize_type_and_attribute(self, object):
         if object['categories'] is None and object['types'] is not None:
@@ -291,14 +292,16 @@ class PlayGroundNavigationV1(gym.Env):
                 "categories": "env_objects",
                 "types": "light",
                 "colors": "blue",
-                "status": "on"
+                "status": "on",
+                "sizes": "big"
             })
 
             objects.append({
                 "categories": "furniture",
                 "types": "lamp",
                 "colors": "blue",
-                "status": "on"
+                "status": "on",
+                "sizes": "big"
             })
 
         self.objects = self.sample_objects(objects)

@@ -18,7 +18,7 @@ from src.playground_env.env_params import get_env_params, init_params
 from src.playground_env.reward_function import sample_descriptions_from_state, get_reward_from_state
 from src.playground_env.env_controller import EnvController
 
-# admissible_attributes=['colors', 'categories', 'types', 'sizes', 'relative_sizes']
+admissible_attributes=['colors', 'categories', 'types', 'sizes'] # , 'relative_sizes']
 
 # furnitures = ['door', 'chair', 'desk', 'lamp']
 # plants = ['flower', 'tree', 'bush', 'rose']
@@ -26,7 +26,7 @@ from src.playground_env.env_controller import EnvController
 
 init_params(
             max_nb_objects = 4,
-            admissible_actions = ('Move', 'Grasp', 'Grow', 'Turn')
+            admissible_actions = ('Move', 'Grasp', 'Grow', 'Turn'),
             # admissible_attributes=admissible_attributes,
             # furnitures=furnitures,
             # plants=plants,

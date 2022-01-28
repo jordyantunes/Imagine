@@ -140,6 +140,9 @@ class Thing:
             if ok:
                 self._update_position(candidate_position)
 
+    def get_obj_size_string(self):
+        return 'small' if self.size < self.min_max_sizes[0][1] else 'big'
+
     def _sample_status(self):
         """
         Sample a status for the object
@@ -415,7 +418,7 @@ class Plants(LivingThings):
         super().__init__(object_descr, object_id_int, params)
        
 
-    def update_state(self, hand_position, gripper_state, objects, object_grasped, action):
+    def update_state(self, hand_position, gripper_state, objects:List[Thing], object_grasped, action):
         """
         Plant objects can be grown. This function checks whether a water object is put in contact with the plant. If it is, the plant grows.
 
@@ -431,7 +434,10 @@ class Plants(LivingThings):
                     # check distance
                     if np.linalg.norm(obj.position - self.position) < (self.size + obj.size) / 2:
                         # check action
-                        size = min(self.size + self.obj_size_update, self.min_max_sizes[1][1] + self.obj_size_update)
+                        size_update = self.obj_size_update
+                        if obj.get_obj_size_string() == 'small':
+                            size_update /= 2
+                        size = min(self.size + size_update, self.min_max_sizes[1][1] + size_update)
                         self._update_size(size)
                         controller.env.add_used_supply(self, obj)
         return super().update_state(hand_position, gripper_state, objects, object_grasped, action)
