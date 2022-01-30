@@ -28,7 +28,7 @@ CATEGORIES_MAPPING = {
 global_params = dict(max_nb_objects=3,
                      admissible_actions=('Move', 'Grasp', 'Grow'),
                      admissible_attributes=('colors', 'categories', 'types', 'status'),
-                     min_max_sizes=((0.2, 0.25), (0.25, 0.3)),
+                     min_max_sizes=((0.15, 0.25), (0.25, 0.3)),
                      agent_size=0.05,
                      epsilon_initial_pos=0.3,
                      screen_size=800,
@@ -545,7 +545,7 @@ def get_env_params(max_nb_objects=None,
             obj_features = get_obj_features(state, i_obj)
             initial_size = initial_obj_features[size_inds]
             size = obj_features[size_inds]
-            if size > initial_size + 0.001:
+            if size > initial_size + 0.04:
                 grown_ids.append(i_obj)
         return np.array(grown_ids)
 

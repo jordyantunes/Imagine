@@ -81,7 +81,7 @@ while not stop:
     out = env.step(action)
     env.render()
 
-    print(env.used_supplies)
+    # print(env.used_supplies)
     # Sample descriptions of the current state
     train_descr, test_descr, extra_descr = sample_descriptions_from_state(out[0], env.unwrapped.params)
     descr = train_descr + test_descr
