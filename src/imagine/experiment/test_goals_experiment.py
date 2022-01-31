@@ -26,7 +26,7 @@ admissible_attributes=['colors', 'categories', 'types', 'sizes'] # , 'relative_s
 
 init_params(
             max_nb_objects = 4,
-            admissible_actions = ('Move', 'Grasp', 'Grow', 'Turn'),
+            admissible_actions = ('Move', 'Grasp', 'Grow', 'Turn', 'Pour'),
             # admissible_attributes=admissible_attributes,
             # furnitures=furnitures,
             # plants=plants,
@@ -52,7 +52,7 @@ stop = False
 while not stop:
     # init_render
 
-    action = np.zeros([3])
+    action = np.zeros([4])
     for event in pygame.event.get():
         if hasattr(event, 'key'):
             # J1
@@ -68,6 +68,9 @@ while not stop:
             # J3
             elif event.key == K_SPACE:
                 action[2] = 1
+            # J4
+            elif event.key == K_p:
+                action[3] = 1
 
             elif event.key == K_q:
                 stop = True

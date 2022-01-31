@@ -92,6 +92,42 @@ def get_grow_descriptions(get_grown_ids, initial_state, current_state, params, o
 
     return grow_descriptions.copy()
 
+def get_pour_descriptions(get_poured_ids, initial_state, current_state, params, obj_attributes):
+    """
+    Get all Pour descriptions from the current state (if any).
+
+    Parameters
+    ----------
+    get_poured_ids: function
+        Function that extracts the id of objects that are being poured.
+    initial_state: nd.array
+        Initial state of the environment.
+    current_state: nd.array
+        Current state of the environment.
+    sort_attributes: function
+        Function that separates adjective and name attributes.
+    obj_attributes: list of list
+        List of the list of object attributes for each object.
+    params: dict
+        Environment params.
+    check_if_relative: function
+        Checks whether an attribute is a relative attribute.
+    combine_two: function
+        Function that combines two attributes to form new attributes.
+
+    Returns
+    -------
+    descr: list of str
+        List of Pour descriptions satisfied by the current state.
+    """
+    obj_poured = get_poured_ids(initial_state, current_state)
+    poured_descriptions = []
+    for i_obj in obj_poured:
+        att = obj_attributes[i_obj]
+        poured_descriptions += generate_any_description('Pour', att)
+
+    return poured_descriptions.copy()
+
 def get_toggle_descriptions(get_toggled_ids, initial_state, current_state, params, obj_attributes, sort_attributes, combine_two, check_if_relative):
     """
     Get all Grow descriptions from the current state (if any).
@@ -159,6 +195,7 @@ def sample_descriptions_from_state(state, params):
     """
     get_grasped_ids = params['extract_functions']['get_interactions']['get_grasped']
     get_grown_ids = params['extract_functions']['get_interactions']['get_grown']
+    get_poured_ids = params['extract_functions']['get_interactions']['get_poured']
     get_toggled_ids = params['extract_functions']['get_interactions']['get_toggled']
     get_supply_contact = params['extract_functions']['get_interactions']['get_supply_contact']
     get_attributes_functions=params['extract_functions']['get_attributes_functions']
@@ -214,8 +251,10 @@ def sample_descriptions_from_state(state, params):
     if 'Grow' in admissible_actions:
         descriptions += get_grow_descriptions(get_grown_ids, initial_state, current_state, params, obj_attributes, sort_attributes, combine_two, check_if_relative)
 
-        descriptions += get_extra_grow_descriptions(get_supply_contact, initial_state, current_state, params, obj_attributes, sort_attributes, combine_two,
-                                                         check_if_relative)
+    # Add Pour descriptions
+    if 'Pour' in admissible_actions:
+        descriptions += get_pour_descriptions(get_poured_ids, initial_state, current_state, params, obj_attributes)
+
     train_descr = []
     test_descr = []
     extra_descr = []
@@ -253,6 +292,7 @@ def get_reward_from_state(state, goal, params):
     """
     get_grasped_ids = params['extract_functions']['get_interactions']['get_grasped']
     get_grown_ids = params['extract_functions']['get_interactions']['get_grown']
+    get_poured_ids = params['extract_functions']['get_interactions']['get_poured']
     get_toggled_ids = params['extract_functions']['get_interactions']['get_toggled']
     get_attributes_functions = params['extract_functions']['get_attributes_functions']
     admissible_attributes = params['admissible_attributes']
@@ -303,7 +343,10 @@ def get_reward_from_state(state, goal, params):
         if goal in grow_descr:
             reward = True
 
+    if words[0] == 'Pour':
+        pour_descriptions = get_pour_descriptions(get_poured_ids, initial_state, current_state, obj_attributes, params)
+        if goal in pour_descriptions:
+            reward = True
+
     return reward
-
-
 

@@ -364,6 +364,7 @@ class PlayGroundNavigationV1(gym.Env):
         # 0 = x
         # 1 = y
         # 2 = gripper
+        # 3 = pour 
 
         """
         Run one timestep of the environment's dynamics.

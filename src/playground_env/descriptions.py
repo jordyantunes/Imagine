@@ -23,7 +23,7 @@ def generate_any_description(action: str, attributes: Union[List[str],Dict[str,L
 
     descriptions = []
 
-    if action in ('Grasp', 'Grow', 'Attempt grow'):
+    if action in ('Grasp', 'Grow', 'Attempt grow', 'Pour'):
         list_excluded = ['on', 'off']
         if action == 'Grow':
             list_excluded += env_params['categories']['furniture'] + env_params['categories']['supply'] + ('furniture', 'supply')
@@ -133,11 +133,14 @@ def generate_all_descriptions(env_params):
         turn_descriptions = generate_any_description('Turn', attributes)
         all_descriptions += tuple(turn_descriptions)
     
-    
     if 'Grow' in p['admissible_actions']:
         grow_descriptions = generate_any_description('Grow', attributes)
         all_descriptions += tuple(grow_descriptions)
         attempted_grow_descriptions = tuple(generate_any_description('Attempt grow', attributes))
+
+    if 'Pour' in p['admissible_actions']:
+        pour_descriptions = generate_any_description('Pour', attributes)
+        all_descriptions += tuple(pour_descriptions)
 
     train_descriptions = []
     test_descriptions = []

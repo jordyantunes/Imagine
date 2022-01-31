@@ -549,6 +549,25 @@ def get_env_params(max_nb_objects=None,
                 grown_ids.append(i_obj)
         return np.array(grown_ids)
 
+    def get_poured_obj_ids(initial_state, state):
+        nb_objs = count_objects(state)
+        poured_ids = []
+        for i_obj in range(nb_objs):
+            initial_obj_features = get_obj_features(initial_state, i_obj)
+            type_encoding = initial_obj_features[type_inds]
+            ind = type_encoding.tolist().index(1)
+            obj_type = types[ind]
+
+            if not obj_type == 'water':
+                continue
+
+            obj_features = get_obj_features(state, i_obj)
+            initial_size = initial_obj_features[size_inds]
+            size = obj_features[size_inds]
+            if size < initial_size - 0.01:
+                poured_ids.append(i_obj)
+        return np.array(poured_ids)
+
     def get_toggled_obj_ids(initial_state, state):
         """
         Get Windows and Doors that were closed/open and Lamps that
@@ -620,6 +639,7 @@ def get_env_params(max_nb_objects=None,
     get_interactions = dict(get_touched=get_touched_obj_ids,
                             get_grasped=get_grasped_obj_ids,
                             get_grown=get_grown_obj_ids,
+                            get_poured=get_poured_obj_ids,
                             get_supply_contact=get_supply_contact_ids,
                             get_toggled=get_toggled_obj_ids)
 

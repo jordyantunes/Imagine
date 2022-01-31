@@ -750,6 +750,15 @@ class Water(Supplies):
             self.icon = pygame.image.load(self.img_path + 'water.png')
             self.icon = pygame.transform.scale(self.icon, (self.size_pixels, self.size_pixels)) 
 
+    def update_state(self, agent_position, gripper_state, objects, object_grasped, action):
+
+        if action.shape[0] == 4 and action[3] > 0:
+            if self._is_hand_over(agent_position):
+                size = max(self.size - self.obj_size_update, self.min_max_sizes[0][0])
+                self._update_size(size)
+
+        return super().update_state(agent_position, gripper_state, objects, object_grasped, action)
+
 
 class Food(Supplies):
     def __init__(self, object_descr, object_id_int, params):
