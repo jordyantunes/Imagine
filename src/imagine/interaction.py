@@ -2,6 +2,17 @@ from collections import deque
 import pickle
 import numpy as np
 from mpi4py import MPI
+from typing import TypedDict, List
+
+class Episode(TypedDict):
+    obs:np.array
+    acts:np.array
+    g_encoding:np.array
+    g_id:int
+    g_str:str
+    exploit:bool
+    imagined:bool
+
 
 class RolloutWorker:
     """Rollout worker generates experience by interacting with one or many environments.
@@ -29,7 +40,7 @@ class RolloutWorker:
                  eval_bool,
                  reward_function,
                  rollout_batch_size=1,
-                 exploit=False,
+                 exploit:bool=False,
                  use_target_net=False,
                  compute_Q=False,
                  noise_eps=0,
@@ -45,7 +56,7 @@ class RolloutWorker:
         self.reward_function = reward_function
         self.eval = eval_bool
         self.rollout_batch_size = rollout_batch_size
-        self.exploit = exploit
+        self.exploit:bool = exploit
         self.use_target_net = use_target_net
         self.compute_Q = compute_Q
         self.noise_eps = noise_eps
@@ -62,7 +73,7 @@ class RolloutWorker:
         self.Q_history = deque(maxlen=history_len)
 
 
-    def generate_rollouts(self, exploit, imagined, goals_str, goals_encodings, goals_ids):
+    def generate_rollouts(self, exploit, imagined, goals_str, goals_encodings, goals_ids) -> List[Episode]:
         """Performs `rollout_batch_size` rollouts in parallel for time horizon `T` with the current
         policy acting on it accordingly.
         """
