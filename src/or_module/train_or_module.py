@@ -13,7 +13,7 @@ cuda = torch.cuda.is_available()
 n_points = 500000
 batch_size = 64
 lr = 0.005
-n_objs = 2
+n_objs = 4
 n_epochs = 15
 
 # balanced train set
@@ -193,17 +193,22 @@ if __name__ == "__main__":
 
         print(message)
 
-    or_params = dict(fc1_weight=model.fc1.weight.data.numpy(),
-                     fc1_bias=model.fc1.bias.data.numpy(),
-                     fc2_weight=model.fc2.weight.data.numpy(),
-                     fc2_bias=model.fc2.bias.data.numpy(),
-                     fc3_weight=model.fc3.weight.data.numpy(),
-                     fc3_bias=model.fc3.bias.data.numpy(),
-                     description='fc1:[n_obj, 16]->tanh->fc2:[16, 16]->tanh->fc3:[16, 1]-> sigmoid',
-                     layers=[[n_objs, 16], [16, 16], [16, 1]],
-                     activations=['tanh', 'tanh', 'sigmoid']
-                     )
+    # or_params = dict(**{
+    #         "fc1.weight":model.fc1.weight.data.numpy(),
+    #         "fc1.bias":model.fc1.bias.data.numpy(),
+    #         "fc2.weight":model.fc2.weight.data.numpy(),
+    #         "fc2.bias":model.fc2.bias.data.numpy(),
+    #         "fc3.weight":model.fc3.weight.data.numpy(),
+    #         "fc3.bias":model.fc3.bias.data.numpy()
+    #     },
+    #     description='fc1:[n_obj, 16]->tanh->fc2:[16, 16]->tanh->fc3:[16, 1]-> sigmoid',
+    #     layers=[[n_objs, 16], [16, 16], [16, 1]],
+    #     activations=['tanh', 'tanh', 'sigmoid']
+    # )
+
+    # with open(os.path.dirname(os.path.realpath(__file__)) + '/or_params_{}objs.pk'.format(n_objs), 'wb') as f:
+    #     pickle.dump(or_params, f)
 
     with open(os.path.dirname(os.path.realpath(__file__)) + '/or_params_{}objs.pk'.format(n_objs), 'wb') as f:
-        pickle.dump(or_params, f)
+        torch.save(model.state_dict(), f)
     stop = 1

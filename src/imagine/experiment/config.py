@@ -242,7 +242,7 @@ def configure_everything(rank, seed, num_cpu, env, trial_id, n_epochs, reward_fu
     params['lstm_reward_checkpoint_path'] = REPO_PATH + '/src/data/lstm_checkpoints/{}'.format(
         params['conditions']['reward_checkpoint'])
     params['or_params_path'] = dict()
-    for n_obj in [3]:
+    for n_obj in range(10):
         params['or_params_path'][n_obj] = REPO_PATH + '/src/data/or_function/or_params_{}objs.pk'.format(n_obj)
 
     # Save parameter dict

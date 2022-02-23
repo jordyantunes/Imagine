@@ -347,6 +347,9 @@ def get_env_params(max_nb_objects=None,
                 color_class = Color(c, s, lights_on)
                 if color_class.contains(rgb):
                     return [c]
+
+        # if didnt work, try without lights
+        print("Values with error", rgb)
         raise ValueError
 
     def get_obj_shade(all_obj_features, i_obj):

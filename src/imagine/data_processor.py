@@ -4,6 +4,8 @@ from collections import deque
 import numpy as np
 from mpi4py import MPI
 from src.utils.util import mpi_average
+from .reward_function.oracle_reward_function_playground import OracleRewardFunction
+from .goal_sampler import GoalSampler
 
 
 class ExplorationTracker:
@@ -51,7 +53,7 @@ class ExplorationTracker:
 
 
 class DataProcessor:
-    def __init__(self, reward_function, oracle_reward_function, goal_sampler, params):
+    def __init__(self, reward_function, oracle_reward_function: OracleRewardFunction, goal_sampler: GoalSampler, params):
 
         # from the data generated through environment interactions and social partner's feedbacks
         # This object infers positive and negative samples and create examples to learn the reward function,
@@ -60,8 +62,8 @@ class DataProcessor:
         # can save a dataset of episodes to learn the reward function offline
 
         self.reward_function = reward_function
-        self.oracle_reward_function = oracle_reward_function
-        self.goal_sampler = goal_sampler
+        self.oracle_reward_function:OracleRewardFunction = oracle_reward_function
+        self.goal_sampler:GoalSampler = goal_sampler
         self.params = params
         self.rank = MPI.COMM_WORLD.Get_rank()
         self.rollout_batch_size = params['experiment_params']['rollout_batch_size']
@@ -200,7 +202,13 @@ class DataProcessor:
                     for el in np.array(self.goal_sampler.feedback_memory['oracle_id']):
                         if el is not None:
                             oracle_inds.append(el)
+                    
+                    if len(oracle_inds) == 0:
+                        print("No oracle inds")
+                        return
+
                     oracle_inds = np.array(oracle_inds)
+
                     oracle_successes = self.oracle_reward_function.eval_all_goals_from_episode(ep)[oracle_inds]
                     learned_successes = self.reward_function.eval_all_goals_from_episode(ep)
                     for g in range(oracle_inds.size):

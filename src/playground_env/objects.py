@@ -2,7 +2,7 @@ import pygame
 import numpy as np
 from typing import List
 
-from src.playground_env.color_generation import sample_color
+from src.playground_env.color_generation import sample_color, Color
 from src.playground_env.env_controller import EnvController
 
 
@@ -164,11 +164,33 @@ class Thing:
     @property
     def rgb_code(self) -> tuple:
         # print("RGB: ", self.__rgb_code)
-        if self.__finished_initialization and not self.is_light_on() and self.__rgb_code is not None:
-            # print("Returning dimmed color")
-            # print("RGB: ", self.__rgb_code * 0.5)
-            return self.__rgb_code * 0.5
-        return self.__rgb_code
+        # TODO remove
+        lights_on = self.is_light_on()
+        # print(self.object_attributes['colors'], "on" if lights_on else "off", self.__rgb_code.astype(np.float32), (self.__rgb_code * 0.5).astype(np.float32))
+        if self.__finished_initialization and not lights_on and self.__rgb_code is not None:
+            rgb = np.maximum(self.__rgb_code - 0.1, 0).astype(np.float32)
+        else:
+            rgb = self.__rgb_code.astype(np.float32)
+
+        # controller = EnvController.getInstance()
+
+        # if controller.stage != 'creation':
+        #     colors = self.params['attributes']['colors']
+        #     shades = self.params['attributes']['shades']
+
+        #     for c in colors:
+        #         for s in shades:
+        #             # if not lights_on:
+        #             #     print("lights off")
+        #             color_class = Color(c, s, lights_on)
+        #             if color_class.contains(rgb):
+        #                 return rgb
+
+        #     # if didnt work, try without lights
+        #     print("Values with error", rgb)
+        #     raise ValueError
+
+        return rgb 
 
     @rgb_code.setter
     def rgb_code(self, rgb_code: np.array):
@@ -222,7 +244,10 @@ class Thing:
         if len(self.scene_objects) > 0:
             object_features = [o.get_features() for o in self.scene_objects]
             for att in all_attributes:
-                self.object_attributes[att] = self.get_attributes_functions[att](object_features, self.object_id_int)
+                try:
+                    self.object_attributes[att] = self.get_attributes_functions[att](object_features, self.object_id_int)
+                except Exception as e:
+                    print("ERROR updating attributes", e)
 
     # Get type one hot code
     def _get_type_encoding(self):

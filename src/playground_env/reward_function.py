@@ -221,6 +221,11 @@ def sample_descriptions_from_state(state, params):
         obj_att = []
         for k in admissible_attributes:
             obj_att += get_attributes_functions[k](obj_features, i_obj)
+            # try:
+            #     obj_att += get_attributes_functions[k](obj_features, i_obj)
+            # except Exception as e:
+            #     print("ERROR getting attribute", e)
+            #     raise Exception(e)
         obj_attributes.append(obj_att)
 
     def sort_attributes(attributes):
@@ -309,14 +314,18 @@ def get_reward_from_state(state, goal, params):
     assert len(current_state) == len(initial_state)
 
     nb_objs = count_objects(current_state)
-    obj_features = [get_obj_features(initial_state, i_obj) for i_obj in range(nb_objs)]
+    obj_features = [get_obj_features(current_state, i_obj) for i_obj in range(nb_objs)]
 
     # extract object attributes
     obj_attributes = []
     for i_obj in range(nb_objs):
         obj_att = []
         for k in admissible_attributes:
-            obj_att += get_attributes_functions[k](obj_features, i_obj)
+            try:
+                obj_att += get_attributes_functions[k](obj_features, i_obj)
+            except Exception as e:
+                print("Error getting attribute", k, "for reward")
+                raise Exception(e)
         obj_attributes.append(obj_att)
 
     words = goal.split(' ')

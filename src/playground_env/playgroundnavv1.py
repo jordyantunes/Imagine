@@ -277,6 +277,8 @@ class PlayGroundNavigationV1(gym.Env):
         self.used_supplies.add(UsedSupply(obj, supply))
 
     def reset_scene(self, objects=None):
+        controller = EnvController.getInstance()
+        controller.stage = 'creation'
 
         self.agent_pos = self.agent_initial_pos
 
@@ -321,6 +323,8 @@ class PlayGroundNavigationV1(gym.Env):
         self.initial_observation = self.observation[:self.half_dim_obs].copy()
         self.env_step = 0
         self.done = False
+
+        controller.stage = 'created'
         return self.observation.copy()
 
     def get_pixel_coordinates(self, xpos, ypos):
@@ -349,8 +353,10 @@ class PlayGroundNavigationV1(gym.Env):
 
     def observe(self):
 
-        if not self.is_env_light_on():
-            print("observe lights off")
+        # if not self.is_env_light_on():
+        #     print("observe lights off")
+        # else:
+        #     print("observe lights on")
         obj_features = np.array([obj.get_features() for obj in self.objects]).flatten()
         obs = np.concatenate([self.agent_pos,  # size 2
                               np.array([self.gripper_state]),
