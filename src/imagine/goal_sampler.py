@@ -1,6 +1,7 @@
 import numpy as np
 from mpi4py import MPI
 from src.imagine.goal_generator.simple_sentence_generator import SentenceGeneratorHeuristic
+from src.compound.manager import ProbabilityManager
 from src import logger
 
 class GoalSampler:
@@ -9,12 +10,14 @@ class GoalSampler:
                  reward_language_model,
                  goal_dim,
                  one_hot_encoder,
-                 params):
+                 params,
+                 probability_manager:ProbabilityManager):
 
         self.policy_language_model = policy_language_model
         self.reward_language_model = reward_language_model
         self.goal_dim = goal_dim
         self.params = params
+        self.probs_manager = probability_manager
 
         self.nb_feedbacks = 0
         self.nb_positive_feedbacks = 0
@@ -206,7 +209,7 @@ class GoalSampler:
 
 
 
-    def sample_targets(self, epoch):
+    def sample_targets(self, epoch:int):
         """
         Sample targets for all cpus and all batch, then scatter to the different cpus
         """

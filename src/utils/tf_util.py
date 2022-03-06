@@ -267,7 +267,9 @@ def flattenallbut0(x):
 # ================================================================
 
 def display_var_info(vars):
-    from baselines import logger
+    # from baselines import logger
+    from logging import Logger
+
     count_params = 0
     for v in vars:
         name = v.name
@@ -275,9 +277,9 @@ def display_var_info(vars):
         v_params = np.prod(v.shape.as_list())
         count_params += v_params
         if "/b:" in name or "/biases" in name: continue    # Wx+b, bias is not interesting to look at => count params, but not print
-        logger.info("   %s%s %i params %s" % (name, " "*(55-len(name)), v_params, str(v.shape)))
+        Logger.info("   %s%s %i params %s" % (name, " "*(55-len(name)), v_params, str(v.shape)))
 
-    logger.info("Total model parameters: %0.2f million" % (count_params*1e-6))
+    Logger.info("Total model parameters: %0.2f million" % (count_params*1e-6))
 
 
 def get_available_gpus():

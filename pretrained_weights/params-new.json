@@ -12,7 +12,7 @@
     "save_obs": false,
     "method_test": "robin",
     "n_test_rollouts": 191,
-    "admissible_attributes": ["colors", "categories", "types", "status"]
+    "admissible_attributes": ["colors", "categories", "types", "status", "under_lighting"]
   },
   "conditions": {
     "imagination_method": "CGH",

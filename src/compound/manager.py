@@ -4,7 +4,7 @@ from copy import copy, deepcopy
 import numpy as np
 
 
-OutcomeList = List[Tuple(str, Union[str,None], List[np.array])]
+OutcomeList = List[Tuple[str, Union[str,None], List[np.array]]]
 
 class ProbabilityManager:
     epochs:List[int]

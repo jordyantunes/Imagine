@@ -1,1 +1,1 @@
-from probability import MarkovChain
+from .probability import MarkovChain

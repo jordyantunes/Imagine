@@ -28,15 +28,15 @@ goal_str = np.random.choice(all_descriptions)
 
 env.reset()
 playground : PlayGroundNavigationV1 = env.unwrapped
-playground.reset_scene([
-    {
-        "categories": "furniture",
-        "types": "lamp",
-        "colors": "blue",
-        "status": "off"
-    }
-])
-# env.unwrapped.reset_with_goal(goal_str)
+# playground.reset_scene([
+#     {
+#         "categories": "furniture",
+#         "types": "lamp",
+#         "colors": "blue",
+#         "status": "off"
+#     }
+# ])
+env.unwrapped.reset_with_goal("Grow red tree")
 
 stop= False
 while not stop:

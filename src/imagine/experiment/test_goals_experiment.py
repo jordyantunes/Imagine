@@ -20,7 +20,7 @@ from src.imagine.goal_sampler import GoalSampler
 import src.imagine.experiment.config as config
 from src.playground_env.env_controller import EnvController
 
-admissible_attributes=['colors', 'categories', 'types', 'sizes'] # , 'relative_sizes']
+admissible_attributes=['colors', 'categories', 'types', 'under_lighting', 'status'] # , 'relative_sizes']
 
 # furnitures = ['door', 'chair', 'desk', 'lamp']
 # plants = ['flower', 'tree', 'bush', 'rose']
@@ -29,7 +29,7 @@ admissible_attributes=['colors', 'categories', 'types', 'sizes'] # , 'relative_s
 init_params(
             max_nb_objects = 4,
             admissible_actions = ('Move', 'Grasp', 'Grow', 'Turn', 'Pour'),
-            # admissible_attributes=admissible_attributes,
+            admissible_attributes=admissible_attributes,
             # furnitures=furnitures,
             # plants=plants,
             # animals=animals
@@ -62,9 +62,9 @@ params['dims'] = {
     "obs": 240,
     "g_encoding": 100,
     "g_id": 1,
-    "acts": 3,
+    "acts": 4,
     "g_str": None,
-    "nb_obj": 3,
+    "nb_obj": 4,
     "inds_objs": [
       [
         3,
@@ -240,7 +240,8 @@ env = gym.make(env_name,
                admissible_attributes=params["admissible_attributes"])
 
 env.reset()
-env.unwrapped.reset_with_goal("Grow red plant")
+# env.unwrapped.reset_with_goal("Grow red plant")
+env.unwrapped.reset_with_goal("Random goal")
 
 policy_language_model, reward_language_model = config.get_language_models(params)
 onehot_encoder = config.get_one_hot_encoder(params['all_descriptions'])

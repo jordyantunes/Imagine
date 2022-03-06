@@ -5,8 +5,9 @@ import numpy as np
 import pygame
 from src.playground_env.objects import generate_objects, Light, Thing, Supplies, UsedSupply
 from src.playground_env.env_params import get_env_params, init_params
-from src.playground_env.env_controller import EnvController
 from typing import List, Set
+from copy import deepcopy
+
 
 class PlayGroundNavigationV1(gym.Env):
     metadata = {
@@ -161,8 +162,6 @@ class PlayGroundNavigationV1(gym.Env):
             self.viewer_started = False
         self.background = None
 
-        Controller = EnvController(self)
-
         self.observation = None
 
         self.used_supplies : Set[UsedSupply] = set()
@@ -277,9 +276,6 @@ class PlayGroundNavigationV1(gym.Env):
         self.used_supplies.add(UsedSupply(obj, supply))
 
     def reset_scene(self, objects=None):
-        controller = EnvController.getInstance()
-        controller.stage = 'creation'
-
         self.agent_pos = self.agent_initial_pos
 
         if self.random_init:
@@ -295,7 +291,8 @@ class PlayGroundNavigationV1(gym.Env):
                 "types": "light",
                 "colors": "blue",
                 "status": "on",
-                "sizes": "big"
+                "sizes": "big",
+                "under_lighting": True
             })
 
             objects.append({
@@ -303,10 +300,17 @@ class PlayGroundNavigationV1(gym.Env):
                 "types": "lamp",
                 "colors": "blue",
                 "status": "on",
-                "sizes": "big"
+                "sizes": "big",
+                "under_lighting": True
             })
 
         self.objects = self.sample_objects(objects)
+
+        # TODO remove
+        features = [o.get_features() for o in self.objects]
+
+        for i in range(len(features)):
+            self.params['extract_functions']['get_attributes_functions']['colors'](features, i)
 
         # Print objects
         self.object_grasped = False
@@ -323,8 +327,6 @@ class PlayGroundNavigationV1(gym.Env):
         self.initial_observation = self.observation[:self.half_dim_obs].copy()
         self.env_step = 0
         self.done = False
-
-        controller.stage = 'created'
         return self.observation.copy()
 
     def get_pixel_coordinates(self, xpos, ypos):
@@ -358,13 +360,19 @@ class PlayGroundNavigationV1(gym.Env):
         # else:
         #     print("observe lights on")
         obj_features = np.array([obj.get_features() for obj in self.objects]).flatten()
+
+        # TODO remove
+        obj_features_list = np.reshape(obj_features, (len(self.objects), 42))
+        for i in range(obj_features_list.shape[0]):
+            self.params['extract_functions']['get_attributes_functions']['colors'](obj_features_list, i)
+
         obs = np.concatenate([self.agent_pos,  # size 2
                               np.array([self.gripper_state]),
                               obj_features,
                               ])
 
         return obs.copy()
-
+    
     def step(self, action):
         # actions
         # 0 = x
@@ -395,6 +403,7 @@ class PlayGroundNavigationV1(gym.Env):
             self.gripper_change = new_gripper == self.gripper_state
             self.gripper_state = new_gripper
 
+        # copy_objs = deepcopy(self.objects)
         any_object_grasped = []
         for obj in self.objects:
             any_object_grasped.append(obj.update_state(self.agent_pos,
@@ -404,7 +413,18 @@ class PlayGroundNavigationV1(gym.Env):
                                                    action))
         self.object_grasped = any(any_object_grasped)
 
-        self.observation[:self.half_dim_obs] = self.observe()
+        # TODO remove try catch
+        try:
+            self.observation[:self.half_dim_obs] = self.observe()
+        except Exception as e:
+            print(e)
+            # for obj in copy_objs:
+            #     obj.update_state(self.agent_pos,
+            #                     self.gripper_state > 0,
+            #                     self.objects,
+            #                     self.object_grasped,
+            #                     action)
+
         self.observation[self.half_dim_obs:] = self.observation[:self.half_dim_obs] - self.initial_observation
 
         self.env_step += 1

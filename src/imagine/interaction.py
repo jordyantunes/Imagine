@@ -2,7 +2,7 @@ from collections import deque
 import pickle
 import numpy as np
 from mpi4py import MPI
-from typing import TypedDict, List
+from typing import TypedDict, List, Union, Tuple
 
 class Episode(TypedDict):
     obs:np.array
@@ -73,7 +73,7 @@ class RolloutWorker:
         self.Q_history = deque(maxlen=history_len)
 
 
-    def generate_rollouts(self, exploit, imagined, goals_str, goals_encodings, goals_ids) -> List[Episode]:
+    def generate_rollouts(self, exploit, imagined, goals_str:Union[List[str], List[Tuple[str, str]]], goals_encodings, goals_ids) -> List[Episode]:
         """Performs `rollout_batch_size` rollouts in parallel for time horizon `T` with the current
         policy acting on it accordingly.
         """

@@ -38,7 +38,7 @@ class Color:
         self.shade = shade
 
         # self.multiplier = 0.5 if not lights_on else 1.0
-        self.subtraction = 0.1 if not lights_on else 0.0
+        self.subtraction = 0.07 if not lights_on else 0.0
         if color == 'blue':
             if shade == 'light':
                 self.space = Box(low=np.maximum(np.array([0.3, 0.7, 0.9])-self.subtraction, 0), high=np.maximum(np.array([0.5, 0.8, 1.])-self.subtraction, 0), dtype=np.float32)

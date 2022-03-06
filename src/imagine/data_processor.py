@@ -132,6 +132,8 @@ class DataProcessor:
                 goals_reached_str, goals_not_reached_str, new_goals_str = out
                 time_dict.update(time_infer_social_partner=time.time() - timee)
 
+                if len(goals_reached_str[0]) > 0:
+                    print("stop")
                 # # # # # #
                 # Update the goal sampler
                 # # # # # #

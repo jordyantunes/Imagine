@@ -213,7 +213,7 @@ def sample_descriptions_from_state(state, params):
     assert len(current_state) == len(initial_state)
 
     nb_objs = count_objects(current_state)
-    obj_features = [get_obj_features(current_state, i_obj) for i_obj in range(nb_objs)]
+    obj_features = [get_obj_features(initial_state, i_obj) for i_obj in range(nb_objs)]
 
     # extract object attributes
     obj_attributes = []

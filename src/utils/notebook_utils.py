@@ -14,8 +14,8 @@ import src.imagine.experiment.config as config
 from src.imagine.goal_sampler import GoalSampler
 
 
-def get_params_for_notebook(path):
-    PARAMS_FILE = path + 'params.json'
+def get_params_for_notebook(path, params_file_name='params.json'):
+    PARAMS_FILE = path + params_file_name
     with open(PARAMS_FILE) as json_file:
         params = json.load(json_file)
 

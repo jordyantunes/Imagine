@@ -1,0 +1,4030 @@
+[
+    [
+        "Grasp any water",
+        "Grow any thing"
+    ],
+    [
+        "Grasp any water",
+        "Grow any blue thing"
+    ],
+    [
+        "Grasp any water",
+        "Grow blue thing"
+    ],
+    [
+        "Grasp any water",
+        "Grow any green thing"
+    ],
+    [
+        "Grasp any water",
+        "Grow any red thing"
+    ],
+    [
+        "Grasp any water",
+        "Grow red thing"
+    ],
+    [
+        "Grasp any water",
+        "Grow green thing"
+    ],
+    [
+        "Grasp blue water",
+        "Grow any thing"
+    ],
+    [
+        "Grasp blue water",
+        "Grow any blue thing"
+    ],
+    [
+        "Grasp blue water",
+        "Grow blue thing"
+    ],
+    [
+        "Grasp blue water",
+        "Grow any green thing"
+    ],
+    [
+        "Grasp blue water",
+        "Grow any red thing"
+    ],
+    [
+        "Grasp blue water",
+        "Grow red thing"
+    ],
+    [
+        "Grasp blue water",
+        "Grow green thing"
+    ],
+    [
+        "Grasp green water",
+        "Grow any thing"
+    ],
+    [
+        "Grasp green water",
+        "Grow any blue thing"
+    ],
+    [
+        "Grasp green water",
+        "Grow blue thing"
+    ],
+    [
+        "Grasp green water",
+        "Grow any green thing"
+    ],
+    [
+        "Grasp green water",
+        "Grow any red thing"
+    ],
+    [
+        "Grasp green water",
+        "Grow red thing"
+    ],
+    [
+        "Grasp green water",
+        "Grow green thing"
+    ],
+    [
+        "Grasp red water",
+        "Grow any thing"
+    ],
+    [
+        "Grasp red water",
+        "Grow any blue thing"
+    ],
+    [
+        "Grasp red water",
+        "Grow blue thing"
+    ],
+    [
+        "Grasp red water",
+        "Grow any green thing"
+    ],
+    [
+        "Grasp red water",
+        "Grow any red thing"
+    ],
+    [
+        "Grasp red water",
+        "Grow red thing"
+    ],
+    [
+        "Grasp red water",
+        "Grow green thing"
+    ],
+    [
+        "Grasp any food",
+        "Grow any animal"
+    ],
+    [
+        "Grasp any food",
+        "Grow any cat"
+    ],
+    [
+        "Grasp any food",
+        "Grow any chameleon"
+    ],
+    [
+        "Grasp any food",
+        "Grow any cow"
+    ],
+    [
+        "Grasp any food",
+        "Grow any dog"
+    ],
+    [
+        "Grasp any food",
+        "Grow any fly"
+    ],
+    [
+        "Grasp any food",
+        "Grow any human"
+    ],
+    [
+        "Grasp any food",
+        "Grow any lion"
+    ],
+    [
+        "Grasp any food",
+        "Grow any mouse"
+    ],
+    [
+        "Grasp any food",
+        "Grow any parrot"
+    ],
+    [
+        "Grasp any food",
+        "Grow any pig"
+    ],
+    [
+        "Grasp any food",
+        "Grow blue animal"
+    ],
+    [
+        "Grasp any food",
+        "Grow blue cat"
+    ],
+    [
+        "Grasp any food",
+        "Grow blue chameleon"
+    ],
+    [
+        "Grasp any food",
+        "Grow blue cow"
+    ],
+    [
+        "Grasp any food",
+        "Grow blue dog"
+    ],
+    [
+        "Grasp any food",
+        "Grow blue fly"
+    ],
+    [
+        "Grasp any food",
+        "Grow blue human"
+    ],
+    [
+        "Grasp any food",
+        "Grow blue lion"
+    ],
+    [
+        "Grasp any food",
+        "Grow blue mouse"
+    ],
+    [
+        "Grasp any food",
+        "Grow blue parrot"
+    ],
+    [
+        "Grasp any food",
+        "Grow blue pig"
+    ],
+    [
+        "Grasp any food",
+        "Grow green animal"
+    ],
+    [
+        "Grasp any food",
+        "Grow green cat"
+    ],
+    [
+        "Grasp any food",
+        "Grow green chameleon"
+    ],
+    [
+        "Grasp any food",
+        "Grow green cow"
+    ],
+    [
+        "Grasp any food",
+        "Grow green fly"
+    ],
+    [
+        "Grasp any food",
+        "Grow green human"
+    ],
+    [
+        "Grasp any food",
+        "Grow green lion"
+    ],
+    [
+        "Grasp any food",
+        "Grow green mouse"
+    ],
+    [
+        "Grasp any food",
+        "Grow green parrot"
+    ],
+    [
+        "Grasp any food",
+        "Grow green pig"
+    ],
+    [
+        "Grasp any food",
+        "Grow red animal"
+    ],
+    [
+        "Grasp any food",
+        "Grow red cat"
+    ],
+    [
+        "Grasp any food",
+        "Grow red chameleon"
+    ],
+    [
+        "Grasp any food",
+        "Grow red cow"
+    ],
+    [
+        "Grasp any food",
+        "Grow red dog"
+    ],
+    [
+        "Grasp any food",
+        "Grow red fly"
+    ],
+    [
+        "Grasp any food",
+        "Grow red human"
+    ],
+    [
+        "Grasp any food",
+        "Grow red lion"
+    ],
+    [
+        "Grasp any food",
+        "Grow red mouse"
+    ],
+    [
+        "Grasp any food",
+        "Grow red parrot"
+    ],
+    [
+        "Grasp any food",
+        "Grow red pig"
+    ],
+    [
+        "Grasp blue food",
+        "Grow any animal"
+    ],
+    [
+        "Grasp blue food",
+        "Grow any cat"
+    ],
+    [
+        "Grasp blue food",
+        "Grow any chameleon"
+    ],
+    [
+        "Grasp blue food",
+        "Grow any cow"
+    ],
+    [
+        "Grasp blue food",
+        "Grow any dog"
+    ],
+    [
+        "Grasp blue food",
+        "Grow any fly"
+    ],
+    [
+        "Grasp blue food",
+        "Grow any human"
+    ],
+    [
+        "Grasp blue food",
+        "Grow any lion"
+    ],
+    [
+        "Grasp blue food",
+        "Grow any mouse"
+    ],
+    [
+        "Grasp blue food",
+        "Grow any parrot"
+    ],
+    [
+        "Grasp blue food",
+        "Grow any pig"
+    ],
+    [
+        "Grasp blue food",
+        "Grow blue animal"
+    ],
+    [
+        "Grasp blue food",
+        "Grow blue cat"
+    ],
+    [
+        "Grasp blue food",
+        "Grow blue chameleon"
+    ],
+    [
+        "Grasp blue food",
+        "Grow blue cow"
+    ],
+    [
+        "Grasp blue food",
+        "Grow blue dog"
+    ],
+    [
+        "Grasp blue food",
+        "Grow blue fly"
+    ],
+    [
+        "Grasp blue food",
+        "Grow blue human"
+    ],
+    [
+        "Grasp blue food",
+        "Grow blue lion"
+    ],
+    [
+        "Grasp blue food",
+        "Grow blue mouse"
+    ],
+    [
+        "Grasp blue food",
+        "Grow blue parrot"
+    ],
+    [
+        "Grasp blue food",
+        "Grow blue pig"
+    ],
+    [
+        "Grasp blue food",
+        "Grow green animal"
+    ],
+    [
+        "Grasp blue food",
+        "Grow green cat"
+    ],
+    [
+        "Grasp blue food",
+        "Grow green chameleon"
+    ],
+    [
+        "Grasp blue food",
+        "Grow green cow"
+    ],
+    [
+        "Grasp blue food",
+        "Grow green fly"
+    ],
+    [
+        "Grasp blue food",
+        "Grow green human"
+    ],
+    [
+        "Grasp blue food",
+        "Grow green lion"
+    ],
+    [
+        "Grasp blue food",
+        "Grow green mouse"
+    ],
+    [
+        "Grasp blue food",
+        "Grow green parrot"
+    ],
+    [
+        "Grasp blue food",
+        "Grow green pig"
+    ],
+    [
+        "Grasp blue food",
+        "Grow red animal"
+    ],
+    [
+        "Grasp blue food",
+        "Grow red cat"
+    ],
+    [
+        "Grasp blue food",
+        "Grow red chameleon"
+    ],
+    [
+        "Grasp blue food",
+        "Grow red cow"
+    ],
+    [
+        "Grasp blue food",
+        "Grow red dog"
+    ],
+    [
+        "Grasp blue food",
+        "Grow red fly"
+    ],
+    [
+        "Grasp blue food",
+        "Grow red human"
+    ],
+    [
+        "Grasp blue food",
+        "Grow red lion"
+    ],
+    [
+        "Grasp blue food",
+        "Grow red mouse"
+    ],
+    [
+        "Grasp blue food",
+        "Grow red parrot"
+    ],
+    [
+        "Grasp blue food",
+        "Grow red pig"
+    ],
+    [
+        "Grasp green food",
+        "Grow any animal"
+    ],
+    [
+        "Grasp green food",
+        "Grow any cat"
+    ],
+    [
+        "Grasp green food",
+        "Grow any chameleon"
+    ],
+    [
+        "Grasp green food",
+        "Grow any cow"
+    ],
+    [
+        "Grasp green food",
+        "Grow any dog"
+    ],
+    [
+        "Grasp green food",
+        "Grow any fly"
+    ],
+    [
+        "Grasp green food",
+        "Grow any human"
+    ],
+    [
+        "Grasp green food",
+        "Grow any lion"
+    ],
+    [
+        "Grasp green food",
+        "Grow any mouse"
+    ],
+    [
+        "Grasp green food",
+        "Grow any parrot"
+    ],
+    [
+        "Grasp green food",
+        "Grow any pig"
+    ],
+    [
+        "Grasp green food",
+        "Grow blue animal"
+    ],
+    [
+        "Grasp green food",
+        "Grow blue cat"
+    ],
+    [
+        "Grasp green food",
+        "Grow blue chameleon"
+    ],
+    [
+        "Grasp green food",
+        "Grow blue cow"
+    ],
+    [
+        "Grasp green food",
+        "Grow blue dog"
+    ],
+    [
+        "Grasp green food",
+        "Grow blue fly"
+    ],
+    [
+        "Grasp green food",
+        "Grow blue human"
+    ],
+    [
+        "Grasp green food",
+        "Grow blue lion"
+    ],
+    [
+        "Grasp green food",
+        "Grow blue mouse"
+    ],
+    [
+        "Grasp green food",
+        "Grow blue parrot"
+    ],
+    [
+        "Grasp green food",
+        "Grow blue pig"
+    ],
+    [
+        "Grasp green food",
+        "Grow green animal"
+    ],
+    [
+        "Grasp green food",
+        "Grow green cat"
+    ],
+    [
+        "Grasp green food",
+        "Grow green chameleon"
+    ],
+    [
+        "Grasp green food",
+        "Grow green cow"
+    ],
+    [
+        "Grasp green food",
+        "Grow green fly"
+    ],
+    [
+        "Grasp green food",
+        "Grow green human"
+    ],
+    [
+        "Grasp green food",
+        "Grow green lion"
+    ],
+    [
+        "Grasp green food",
+        "Grow green mouse"
+    ],
+    [
+        "Grasp green food",
+        "Grow green parrot"
+    ],
+    [
+        "Grasp green food",
+        "Grow green pig"
+    ],
+    [
+        "Grasp green food",
+        "Grow red animal"
+    ],
+    [
+        "Grasp green food",
+        "Grow red cat"
+    ],
+    [
+        "Grasp green food",
+        "Grow red chameleon"
+    ],
+    [
+        "Grasp green food",
+        "Grow red cow"
+    ],
+    [
+        "Grasp green food",
+        "Grow red dog"
+    ],
+    [
+        "Grasp green food",
+        "Grow red fly"
+    ],
+    [
+        "Grasp green food",
+        "Grow red human"
+    ],
+    [
+        "Grasp green food",
+        "Grow red lion"
+    ],
+    [
+        "Grasp green food",
+        "Grow red mouse"
+    ],
+    [
+        "Grasp green food",
+        "Grow red parrot"
+    ],
+    [
+        "Grasp green food",
+        "Grow red pig"
+    ],
+    [
+        "Grasp red food",
+        "Grow any animal"
+    ],
+    [
+        "Grasp red food",
+        "Grow any cat"
+    ],
+    [
+        "Grasp red food",
+        "Grow any chameleon"
+    ],
+    [
+        "Grasp red food",
+        "Grow any cow"
+    ],
+    [
+        "Grasp red food",
+        "Grow any dog"
+    ],
+    [
+        "Grasp red food",
+        "Grow any fly"
+    ],
+    [
+        "Grasp red food",
+        "Grow any human"
+    ],
+    [
+        "Grasp red food",
+        "Grow any lion"
+    ],
+    [
+        "Grasp red food",
+        "Grow any mouse"
+    ],
+    [
+        "Grasp red food",
+        "Grow any parrot"
+    ],
+    [
+        "Grasp red food",
+        "Grow any pig"
+    ],
+    [
+        "Grasp red food",
+        "Grow blue animal"
+    ],
+    [
+        "Grasp red food",
+        "Grow blue cat"
+    ],
+    [
+        "Grasp red food",
+        "Grow blue chameleon"
+    ],
+    [
+        "Grasp red food",
+        "Grow blue cow"
+    ],
+    [
+        "Grasp red food",
+        "Grow blue dog"
+    ],
+    [
+        "Grasp red food",
+        "Grow blue fly"
+    ],
+    [
+        "Grasp red food",
+        "Grow blue human"
+    ],
+    [
+        "Grasp red food",
+        "Grow blue lion"
+    ],
+    [
+        "Grasp red food",
+        "Grow blue mouse"
+    ],
+    [
+        "Grasp red food",
+        "Grow blue parrot"
+    ],
+    [
+        "Grasp red food",
+        "Grow blue pig"
+    ],
+    [
+        "Grasp red food",
+        "Grow green animal"
+    ],
+    [
+        "Grasp red food",
+        "Grow green cat"
+    ],
+    [
+        "Grasp red food",
+        "Grow green chameleon"
+    ],
+    [
+        "Grasp red food",
+        "Grow green cow"
+    ],
+    [
+        "Grasp red food",
+        "Grow green fly"
+    ],
+    [
+        "Grasp red food",
+        "Grow green human"
+    ],
+    [
+        "Grasp red food",
+        "Grow green lion"
+    ],
+    [
+        "Grasp red food",
+        "Grow green mouse"
+    ],
+    [
+        "Grasp red food",
+        "Grow green parrot"
+    ],
+    [
+        "Grasp red food",
+        "Grow green pig"
+    ],
+    [
+        "Grasp red food",
+        "Grow red animal"
+    ],
+    [
+        "Grasp red food",
+        "Grow red cat"
+    ],
+    [
+        "Grasp red food",
+        "Grow red chameleon"
+    ],
+    [
+        "Grasp red food",
+        "Grow red cow"
+    ],
+    [
+        "Grasp red food",
+        "Grow red dog"
+    ],
+    [
+        "Grasp red food",
+        "Grow red fly"
+    ],
+    [
+        "Grasp red food",
+        "Grow red human"
+    ],
+    [
+        "Grasp red food",
+        "Grow red lion"
+    ],
+    [
+        "Grasp red food",
+        "Grow red mouse"
+    ],
+    [
+        "Grasp red food",
+        "Grow red parrot"
+    ],
+    [
+        "Grasp red food",
+        "Grow red pig"
+    ],
+    [
+        "Grasp any food",
+        "Grow any thing"
+    ],
+    [
+        "Grasp any food",
+        "Grow any blue thing"
+    ],
+    [
+        "Grasp any food",
+        "Grow blue thing"
+    ],
+    [
+        "Grasp any food",
+        "Grow any green thing"
+    ],
+    [
+        "Grasp any food",
+        "Grow any red thing"
+    ],
+    [
+        "Grasp any food",
+        "Grow red thing"
+    ],
+    [
+        "Grasp any food",
+        "Grow green thing"
+    ],
+    [
+        "Grasp blue food",
+        "Grow any thing"
+    ],
+    [
+        "Grasp blue food",
+        "Grow any blue thing"
+    ],
+    [
+        "Grasp blue food",
+        "Grow blue thing"
+    ],
+    [
+        "Grasp blue food",
+        "Grow any green thing"
+    ],
+    [
+        "Grasp blue food",
+        "Grow any red thing"
+    ],
+    [
+        "Grasp blue food",
+        "Grow red thing"
+    ],
+    [
+        "Grasp blue food",
+        "Grow green thing"
+    ],
+    [
+        "Grasp green food",
+        "Grow any thing"
+    ],
+    [
+        "Grasp green food",
+        "Grow any blue thing"
+    ],
+    [
+        "Grasp green food",
+        "Grow blue thing"
+    ],
+    [
+        "Grasp green food",
+        "Grow any green thing"
+    ],
+    [
+        "Grasp green food",
+        "Grow any red thing"
+    ],
+    [
+        "Grasp green food",
+        "Grow red thing"
+    ],
+    [
+        "Grasp green food",
+        "Grow green thing"
+    ],
+    [
+        "Grasp red food",
+        "Grow any thing"
+    ],
+    [
+        "Grasp red food",
+        "Grow any blue thing"
+    ],
+    [
+        "Grasp red food",
+        "Grow blue thing"
+    ],
+    [
+        "Grasp red food",
+        "Grow any green thing"
+    ],
+    [
+        "Grasp red food",
+        "Grow any red thing"
+    ],
+    [
+        "Grasp red food",
+        "Grow red thing"
+    ],
+    [
+        "Grasp red food",
+        "Grow green thing"
+    ],
+    [
+        "Grasp any blue thing",
+        "Grow any animal"
+    ],
+    [
+        "Grasp any blue thing",
+        "Grow any blue thing"
+    ],
+    [
+        "Grasp any blue thing",
+        "Grow any cat"
+    ],
+    [
+        "Grasp any blue thing",
+        "Grow any chameleon"
+    ],
+    [
+        "Grasp any blue thing",
+        "Grow any cow"
+    ],
+    [
+        "Grasp any blue thing",
+        "Grow any dog"
+    ],
+    [
+        "Grasp any blue thing",
+        "Grow any fly"
+    ],
+    [
+        "Grasp any blue thing",
+        "Grow any green thing"
+    ],
+    [
+        "Grasp any blue thing",
+        "Grow any human"
+    ],
+    [
+        "Grasp any blue thing",
+        "Grow any lion"
+    ],
+    [
+        "Grasp any blue thing",
+        "Grow any mouse"
+    ],
+    [
+        "Grasp any blue thing",
+        "Grow any parrot"
+    ],
+    [
+        "Grasp any blue thing",
+        "Grow any pig"
+    ],
+    [
+        "Grasp any blue thing",
+        "Grow any red thing"
+    ],
+    [
+        "Grasp any blue thing",
+        "Grow any thing"
+    ],
+    [
+        "Grasp any blue thing",
+        "Grow blue animal"
+    ],
+    [
+        "Grasp any blue thing",
+        "Grow blue cat"
+    ],
+    [
+        "Grasp any blue thing",
+        "Grow blue chameleon"
+    ],
+    [
+        "Grasp any blue thing",
+        "Grow blue cow"
+    ],
+    [
+        "Grasp any blue thing",
+        "Grow blue dog"
+    ],
+    [
+        "Grasp any blue thing",
+        "Grow blue fly"
+    ],
+    [
+        "Grasp any blue thing",
+        "Grow blue human"
+    ],
+    [
+        "Grasp any blue thing",
+        "Grow blue lion"
+    ],
+    [
+        "Grasp any blue thing",
+        "Grow blue mouse"
+    ],
+    [
+        "Grasp any blue thing",
+        "Grow blue parrot"
+    ],
+    [
+        "Grasp any blue thing",
+        "Grow blue pig"
+    ],
+    [
+        "Grasp any blue thing",
+        "Grow blue thing"
+    ],
+    [
+        "Grasp any blue thing",
+        "Grow green animal"
+    ],
+    [
+        "Grasp any blue thing",
+        "Grow green cat"
+    ],
+    [
+        "Grasp any blue thing",
+        "Grow green chameleon"
+    ],
+    [
+        "Grasp any blue thing",
+        "Grow green cow"
+    ],
+    [
+        "Grasp any blue thing",
+        "Grow green fly"
+    ],
+    [
+        "Grasp any blue thing",
+        "Grow green human"
+    ],
+    [
+        "Grasp any blue thing",
+        "Grow green lion"
+    ],
+    [
+        "Grasp any blue thing",
+        "Grow green mouse"
+    ],
+    [
+        "Grasp any blue thing",
+        "Grow green parrot"
+    ],
+    [
+        "Grasp any blue thing",
+        "Grow green pig"
+    ],
+    [
+        "Grasp any blue thing",
+        "Grow green thing"
+    ],
+    [
+        "Grasp any blue thing",
+        "Grow red animal"
+    ],
+    [
+        "Grasp any blue thing",
+        "Grow red cat"
+    ],
+    [
+        "Grasp any blue thing",
+        "Grow red chameleon"
+    ],
+    [
+        "Grasp any blue thing",
+        "Grow red cow"
+    ],
+    [
+        "Grasp any blue thing",
+        "Grow red dog"
+    ],
+    [
+        "Grasp any blue thing",
+        "Grow red fly"
+    ],
+    [
+        "Grasp any blue thing",
+        "Grow red human"
+    ],
+    [
+        "Grasp any blue thing",
+        "Grow red lion"
+    ],
+    [
+        "Grasp any blue thing",
+        "Grow red mouse"
+    ],
+    [
+        "Grasp any blue thing",
+        "Grow red parrot"
+    ],
+    [
+        "Grasp any blue thing",
+        "Grow red pig"
+    ],
+    [
+        "Grasp any blue thing",
+        "Grow red thing"
+    ],
+    [
+        "Grasp any green thing",
+        "Grow any animal"
+    ],
+    [
+        "Grasp any green thing",
+        "Grow any blue thing"
+    ],
+    [
+        "Grasp any green thing",
+        "Grow any cat"
+    ],
+    [
+        "Grasp any green thing",
+        "Grow any chameleon"
+    ],
+    [
+        "Grasp any green thing",
+        "Grow any cow"
+    ],
+    [
+        "Grasp any green thing",
+        "Grow any dog"
+    ],
+    [
+        "Grasp any green thing",
+        "Grow any fly"
+    ],
+    [
+        "Grasp any green thing",
+        "Grow any green thing"
+    ],
+    [
+        "Grasp any green thing",
+        "Grow any human"
+    ],
+    [
+        "Grasp any green thing",
+        "Grow any lion"
+    ],
+    [
+        "Grasp any green thing",
+        "Grow any mouse"
+    ],
+    [
+        "Grasp any green thing",
+        "Grow any parrot"
+    ],
+    [
+        "Grasp any green thing",
+        "Grow any pig"
+    ],
+    [
+        "Grasp any green thing",
+        "Grow any red thing"
+    ],
+    [
+        "Grasp any green thing",
+        "Grow any thing"
+    ],
+    [
+        "Grasp any green thing",
+        "Grow blue animal"
+    ],
+    [
+        "Grasp any green thing",
+        "Grow blue cat"
+    ],
+    [
+        "Grasp any green thing",
+        "Grow blue chameleon"
+    ],
+    [
+        "Grasp any green thing",
+        "Grow blue cow"
+    ],
+    [
+        "Grasp any green thing",
+        "Grow blue dog"
+    ],
+    [
+        "Grasp any green thing",
+        "Grow blue fly"
+    ],
+    [
+        "Grasp any green thing",
+        "Grow blue human"
+    ],
+    [
+        "Grasp any green thing",
+        "Grow blue lion"
+    ],
+    [
+        "Grasp any green thing",
+        "Grow blue mouse"
+    ],
+    [
+        "Grasp any green thing",
+        "Grow blue parrot"
+    ],
+    [
+        "Grasp any green thing",
+        "Grow blue pig"
+    ],
+    [
+        "Grasp any green thing",
+        "Grow blue thing"
+    ],
+    [
+        "Grasp any green thing",
+        "Grow green animal"
+    ],
+    [
+        "Grasp any green thing",
+        "Grow green cat"
+    ],
+    [
+        "Grasp any green thing",
+        "Grow green chameleon"
+    ],
+    [
+        "Grasp any green thing",
+        "Grow green cow"
+    ],
+    [
+        "Grasp any green thing",
+        "Grow green fly"
+    ],
+    [
+        "Grasp any green thing",
+        "Grow green human"
+    ],
+    [
+        "Grasp any green thing",
+        "Grow green lion"
+    ],
+    [
+        "Grasp any green thing",
+        "Grow green mouse"
+    ],
+    [
+        "Grasp any green thing",
+        "Grow green parrot"
+    ],
+    [
+        "Grasp any green thing",
+        "Grow green pig"
+    ],
+    [
+        "Grasp any green thing",
+        "Grow green thing"
+    ],
+    [
+        "Grasp any green thing",
+        "Grow red animal"
+    ],
+    [
+        "Grasp any green thing",
+        "Grow red cat"
+    ],
+    [
+        "Grasp any green thing",
+        "Grow red chameleon"
+    ],
+    [
+        "Grasp any green thing",
+        "Grow red cow"
+    ],
+    [
+        "Grasp any green thing",
+        "Grow red dog"
+    ],
+    [
+        "Grasp any green thing",
+        "Grow red fly"
+    ],
+    [
+        "Grasp any green thing",
+        "Grow red human"
+    ],
+    [
+        "Grasp any green thing",
+        "Grow red lion"
+    ],
+    [
+        "Grasp any green thing",
+        "Grow red mouse"
+    ],
+    [
+        "Grasp any green thing",
+        "Grow red parrot"
+    ],
+    [
+        "Grasp any green thing",
+        "Grow red pig"
+    ],
+    [
+        "Grasp any green thing",
+        "Grow red thing"
+    ],
+    [
+        "Grasp any red thing",
+        "Grow any animal"
+    ],
+    [
+        "Grasp any red thing",
+        "Grow any blue thing"
+    ],
+    [
+        "Grasp any red thing",
+        "Grow any cat"
+    ],
+    [
+        "Grasp any red thing",
+        "Grow any chameleon"
+    ],
+    [
+        "Grasp any red thing",
+        "Grow any cow"
+    ],
+    [
+        "Grasp any red thing",
+        "Grow any dog"
+    ],
+    [
+        "Grasp any red thing",
+        "Grow any fly"
+    ],
+    [
+        "Grasp any red thing",
+        "Grow any green thing"
+    ],
+    [
+        "Grasp any red thing",
+        "Grow any human"
+    ],
+    [
+        "Grasp any red thing",
+        "Grow any lion"
+    ],
+    [
+        "Grasp any red thing",
+        "Grow any mouse"
+    ],
+    [
+        "Grasp any red thing",
+        "Grow any parrot"
+    ],
+    [
+        "Grasp any red thing",
+        "Grow any pig"
+    ],
+    [
+        "Grasp any red thing",
+        "Grow any red thing"
+    ],
+    [
+        "Grasp any red thing",
+        "Grow any thing"
+    ],
+    [
+        "Grasp any red thing",
+        "Grow blue animal"
+    ],
+    [
+        "Grasp any red thing",
+        "Grow blue cat"
+    ],
+    [
+        "Grasp any red thing",
+        "Grow blue chameleon"
+    ],
+    [
+        "Grasp any red thing",
+        "Grow blue cow"
+    ],
+    [
+        "Grasp any red thing",
+        "Grow blue dog"
+    ],
+    [
+        "Grasp any red thing",
+        "Grow blue fly"
+    ],
+    [
+        "Grasp any red thing",
+        "Grow blue human"
+    ],
+    [
+        "Grasp any red thing",
+        "Grow blue lion"
+    ],
+    [
+        "Grasp any red thing",
+        "Grow blue mouse"
+    ],
+    [
+        "Grasp any red thing",
+        "Grow blue parrot"
+    ],
+    [
+        "Grasp any red thing",
+        "Grow blue pig"
+    ],
+    [
+        "Grasp any red thing",
+        "Grow blue thing"
+    ],
+    [
+        "Grasp any red thing",
+        "Grow green animal"
+    ],
+    [
+        "Grasp any red thing",
+        "Grow green cat"
+    ],
+    [
+        "Grasp any red thing",
+        "Grow green chameleon"
+    ],
+    [
+        "Grasp any red thing",
+        "Grow green cow"
+    ],
+    [
+        "Grasp any red thing",
+        "Grow green fly"
+    ],
+    [
+        "Grasp any red thing",
+        "Grow green human"
+    ],
+    [
+        "Grasp any red thing",
+        "Grow green lion"
+    ],
+    [
+        "Grasp any red thing",
+        "Grow green mouse"
+    ],
+    [
+        "Grasp any red thing",
+        "Grow green parrot"
+    ],
+    [
+        "Grasp any red thing",
+        "Grow green pig"
+    ],
+    [
+        "Grasp any red thing",
+        "Grow green thing"
+    ],
+    [
+        "Grasp any red thing",
+        "Grow red animal"
+    ],
+    [
+        "Grasp any red thing",
+        "Grow red cat"
+    ],
+    [
+        "Grasp any red thing",
+        "Grow red chameleon"
+    ],
+    [
+        "Grasp any red thing",
+        "Grow red cow"
+    ],
+    [
+        "Grasp any red thing",
+        "Grow red dog"
+    ],
+    [
+        "Grasp any red thing",
+        "Grow red fly"
+    ],
+    [
+        "Grasp any red thing",
+        "Grow red human"
+    ],
+    [
+        "Grasp any red thing",
+        "Grow red lion"
+    ],
+    [
+        "Grasp any red thing",
+        "Grow red mouse"
+    ],
+    [
+        "Grasp any red thing",
+        "Grow red parrot"
+    ],
+    [
+        "Grasp any red thing",
+        "Grow red pig"
+    ],
+    [
+        "Grasp any red thing",
+        "Grow red thing"
+    ],
+    [
+        "Grasp any thing",
+        "Grow any animal"
+    ],
+    [
+        "Grasp any thing",
+        "Grow any blue thing"
+    ],
+    [
+        "Grasp any thing",
+        "Grow any cat"
+    ],
+    [
+        "Grasp any thing",
+        "Grow any chameleon"
+    ],
+    [
+        "Grasp any thing",
+        "Grow any cow"
+    ],
+    [
+        "Grasp any thing",
+        "Grow any dog"
+    ],
+    [
+        "Grasp any thing",
+        "Grow any fly"
+    ],
+    [
+        "Grasp any thing",
+        "Grow any green thing"
+    ],
+    [
+        "Grasp any thing",
+        "Grow any human"
+    ],
+    [
+        "Grasp any thing",
+        "Grow any lion"
+    ],
+    [
+        "Grasp any thing",
+        "Grow any mouse"
+    ],
+    [
+        "Grasp any thing",
+        "Grow any parrot"
+    ],
+    [
+        "Grasp any thing",
+        "Grow any pig"
+    ],
+    [
+        "Grasp any thing",
+        "Grow any red thing"
+    ],
+    [
+        "Grasp any thing",
+        "Grow any thing"
+    ],
+    [
+        "Grasp any thing",
+        "Grow blue animal"
+    ],
+    [
+        "Grasp any thing",
+        "Grow blue cat"
+    ],
+    [
+        "Grasp any thing",
+        "Grow blue chameleon"
+    ],
+    [
+        "Grasp any thing",
+        "Grow blue cow"
+    ],
+    [
+        "Grasp any thing",
+        "Grow blue dog"
+    ],
+    [
+        "Grasp any thing",
+        "Grow blue fly"
+    ],
+    [
+        "Grasp any thing",
+        "Grow blue human"
+    ],
+    [
+        "Grasp any thing",
+        "Grow blue lion"
+    ],
+    [
+        "Grasp any thing",
+        "Grow blue mouse"
+    ],
+    [
+        "Grasp any thing",
+        "Grow blue parrot"
+    ],
+    [
+        "Grasp any thing",
+        "Grow blue pig"
+    ],
+    [
+        "Grasp any thing",
+        "Grow blue thing"
+    ],
+    [
+        "Grasp any thing",
+        "Grow green animal"
+    ],
+    [
+        "Grasp any thing",
+        "Grow green cat"
+    ],
+    [
+        "Grasp any thing",
+        "Grow green chameleon"
+    ],
+    [
+        "Grasp any thing",
+        "Grow green cow"
+    ],
+    [
+        "Grasp any thing",
+        "Grow green fly"
+    ],
+    [
+        "Grasp any thing",
+        "Grow green human"
+    ],
+    [
+        "Grasp any thing",
+        "Grow green lion"
+    ],
+    [
+        "Grasp any thing",
+        "Grow green mouse"
+    ],
+    [
+        "Grasp any thing",
+        "Grow green parrot"
+    ],
+    [
+        "Grasp any thing",
+        "Grow green pig"
+    ],
+    [
+        "Grasp any thing",
+        "Grow green thing"
+    ],
+    [
+        "Grasp any thing",
+        "Grow red animal"
+    ],
+    [
+        "Grasp any thing",
+        "Grow red cat"
+    ],
+    [
+        "Grasp any thing",
+        "Grow red chameleon"
+    ],
+    [
+        "Grasp any thing",
+        "Grow red cow"
+    ],
+    [
+        "Grasp any thing",
+        "Grow red dog"
+    ],
+    [
+        "Grasp any thing",
+        "Grow red fly"
+    ],
+    [
+        "Grasp any thing",
+        "Grow red human"
+    ],
+    [
+        "Grasp any thing",
+        "Grow red lion"
+    ],
+    [
+        "Grasp any thing",
+        "Grow red mouse"
+    ],
+    [
+        "Grasp any thing",
+        "Grow red parrot"
+    ],
+    [
+        "Grasp any thing",
+        "Grow red pig"
+    ],
+    [
+        "Grasp any thing",
+        "Grow red thing"
+    ],
+    [
+        "Grasp blue thing",
+        "Grow any animal"
+    ],
+    [
+        "Grasp blue thing",
+        "Grow any blue thing"
+    ],
+    [
+        "Grasp blue thing",
+        "Grow any cat"
+    ],
+    [
+        "Grasp blue thing",
+        "Grow any chameleon"
+    ],
+    [
+        "Grasp blue thing",
+        "Grow any cow"
+    ],
+    [
+        "Grasp blue thing",
+        "Grow any dog"
+    ],
+    [
+        "Grasp blue thing",
+        "Grow any fly"
+    ],
+    [
+        "Grasp blue thing",
+        "Grow any green thing"
+    ],
+    [
+        "Grasp blue thing",
+        "Grow any human"
+    ],
+    [
+        "Grasp blue thing",
+        "Grow any lion"
+    ],
+    [
+        "Grasp blue thing",
+        "Grow any mouse"
+    ],
+    [
+        "Grasp blue thing",
+        "Grow any parrot"
+    ],
+    [
+        "Grasp blue thing",
+        "Grow any pig"
+    ],
+    [
+        "Grasp blue thing",
+        "Grow any red thing"
+    ],
+    [
+        "Grasp blue thing",
+        "Grow any thing"
+    ],
+    [
+        "Grasp blue thing",
+        "Grow blue animal"
+    ],
+    [
+        "Grasp blue thing",
+        "Grow blue cat"
+    ],
+    [
+        "Grasp blue thing",
+        "Grow blue chameleon"
+    ],
+    [
+        "Grasp blue thing",
+        "Grow blue cow"
+    ],
+    [
+        "Grasp blue thing",
+        "Grow blue dog"
+    ],
+    [
+        "Grasp blue thing",
+        "Grow blue fly"
+    ],
+    [
+        "Grasp blue thing",
+        "Grow blue human"
+    ],
+    [
+        "Grasp blue thing",
+        "Grow blue lion"
+    ],
+    [
+        "Grasp blue thing",
+        "Grow blue mouse"
+    ],
+    [
+        "Grasp blue thing",
+        "Grow blue parrot"
+    ],
+    [
+        "Grasp blue thing",
+        "Grow blue pig"
+    ],
+    [
+        "Grasp blue thing",
+        "Grow blue thing"
+    ],
+    [
+        "Grasp blue thing",
+        "Grow green animal"
+    ],
+    [
+        "Grasp blue thing",
+        "Grow green cat"
+    ],
+    [
+        "Grasp blue thing",
+        "Grow green chameleon"
+    ],
+    [
+        "Grasp blue thing",
+        "Grow green cow"
+    ],
+    [
+        "Grasp blue thing",
+        "Grow green fly"
+    ],
+    [
+        "Grasp blue thing",
+        "Grow green human"
+    ],
+    [
+        "Grasp blue thing",
+        "Grow green lion"
+    ],
+    [
+        "Grasp blue thing",
+        "Grow green mouse"
+    ],
+    [
+        "Grasp blue thing",
+        "Grow green parrot"
+    ],
+    [
+        "Grasp blue thing",
+        "Grow green pig"
+    ],
+    [
+        "Grasp blue thing",
+        "Grow green thing"
+    ],
+    [
+        "Grasp blue thing",
+        "Grow red animal"
+    ],
+    [
+        "Grasp blue thing",
+        "Grow red cat"
+    ],
+    [
+        "Grasp blue thing",
+        "Grow red chameleon"
+    ],
+    [
+        "Grasp blue thing",
+        "Grow red cow"
+    ],
+    [
+        "Grasp blue thing",
+        "Grow red dog"
+    ],
+    [
+        "Grasp blue thing",
+        "Grow red fly"
+    ],
+    [
+        "Grasp blue thing",
+        "Grow red human"
+    ],
+    [
+        "Grasp blue thing",
+        "Grow red lion"
+    ],
+    [
+        "Grasp blue thing",
+        "Grow red mouse"
+    ],
+    [
+        "Grasp blue thing",
+        "Grow red parrot"
+    ],
+    [
+        "Grasp blue thing",
+        "Grow red pig"
+    ],
+    [
+        "Grasp blue thing",
+        "Grow red thing"
+    ],
+    [
+        "Grasp green thing",
+        "Grow any animal"
+    ],
+    [
+        "Grasp green thing",
+        "Grow any blue thing"
+    ],
+    [
+        "Grasp green thing",
+        "Grow any cat"
+    ],
+    [
+        "Grasp green thing",
+        "Grow any chameleon"
+    ],
+    [
+        "Grasp green thing",
+        "Grow any cow"
+    ],
+    [
+        "Grasp green thing",
+        "Grow any dog"
+    ],
+    [
+        "Grasp green thing",
+        "Grow any fly"
+    ],
+    [
+        "Grasp green thing",
+        "Grow any green thing"
+    ],
+    [
+        "Grasp green thing",
+        "Grow any human"
+    ],
+    [
+        "Grasp green thing",
+        "Grow any lion"
+    ],
+    [
+        "Grasp green thing",
+        "Grow any mouse"
+    ],
+    [
+        "Grasp green thing",
+        "Grow any parrot"
+    ],
+    [
+        "Grasp green thing",
+        "Grow any pig"
+    ],
+    [
+        "Grasp green thing",
+        "Grow any red thing"
+    ],
+    [
+        "Grasp green thing",
+        "Grow any thing"
+    ],
+    [
+        "Grasp green thing",
+        "Grow blue animal"
+    ],
+    [
+        "Grasp green thing",
+        "Grow blue cat"
+    ],
+    [
+        "Grasp green thing",
+        "Grow blue chameleon"
+    ],
+    [
+        "Grasp green thing",
+        "Grow blue cow"
+    ],
+    [
+        "Grasp green thing",
+        "Grow blue dog"
+    ],
+    [
+        "Grasp green thing",
+        "Grow blue fly"
+    ],
+    [
+        "Grasp green thing",
+        "Grow blue human"
+    ],
+    [
+        "Grasp green thing",
+        "Grow blue lion"
+    ],
+    [
+        "Grasp green thing",
+        "Grow blue mouse"
+    ],
+    [
+        "Grasp green thing",
+        "Grow blue parrot"
+    ],
+    [
+        "Grasp green thing",
+        "Grow blue pig"
+    ],
+    [
+        "Grasp green thing",
+        "Grow blue thing"
+    ],
+    [
+        "Grasp green thing",
+        "Grow green animal"
+    ],
+    [
+        "Grasp green thing",
+        "Grow green cat"
+    ],
+    [
+        "Grasp green thing",
+        "Grow green chameleon"
+    ],
+    [
+        "Grasp green thing",
+        "Grow green cow"
+    ],
+    [
+        "Grasp green thing",
+        "Grow green fly"
+    ],
+    [
+        "Grasp green thing",
+        "Grow green human"
+    ],
+    [
+        "Grasp green thing",
+        "Grow green lion"
+    ],
+    [
+        "Grasp green thing",
+        "Grow green mouse"
+    ],
+    [
+        "Grasp green thing",
+        "Grow green parrot"
+    ],
+    [
+        "Grasp green thing",
+        "Grow green pig"
+    ],
+    [
+        "Grasp green thing",
+        "Grow green thing"
+    ],
+    [
+        "Grasp green thing",
+        "Grow red animal"
+    ],
+    [
+        "Grasp green thing",
+        "Grow red cat"
+    ],
+    [
+        "Grasp green thing",
+        "Grow red chameleon"
+    ],
+    [
+        "Grasp green thing",
+        "Grow red cow"
+    ],
+    [
+        "Grasp green thing",
+        "Grow red dog"
+    ],
+    [
+        "Grasp green thing",
+        "Grow red fly"
+    ],
+    [
+        "Grasp green thing",
+        "Grow red human"
+    ],
+    [
+        "Grasp green thing",
+        "Grow red lion"
+    ],
+    [
+        "Grasp green thing",
+        "Grow red mouse"
+    ],
+    [
+        "Grasp green thing",
+        "Grow red parrot"
+    ],
+    [
+        "Grasp green thing",
+        "Grow red pig"
+    ],
+    [
+        "Grasp green thing",
+        "Grow red thing"
+    ],
+    [
+        "Grasp red thing",
+        "Grow any animal"
+    ],
+    [
+        "Grasp red thing",
+        "Grow any blue thing"
+    ],
+    [
+        "Grasp red thing",
+        "Grow any cat"
+    ],
+    [
+        "Grasp red thing",
+        "Grow any chameleon"
+    ],
+    [
+        "Grasp red thing",
+        "Grow any cow"
+    ],
+    [
+        "Grasp red thing",
+        "Grow any dog"
+    ],
+    [
+        "Grasp red thing",
+        "Grow any fly"
+    ],
+    [
+        "Grasp red thing",
+        "Grow any green thing"
+    ],
+    [
+        "Grasp red thing",
+        "Grow any human"
+    ],
+    [
+        "Grasp red thing",
+        "Grow any lion"
+    ],
+    [
+        "Grasp red thing",
+        "Grow any mouse"
+    ],
+    [
+        "Grasp red thing",
+        "Grow any parrot"
+    ],
+    [
+        "Grasp red thing",
+        "Grow any pig"
+    ],
+    [
+        "Grasp red thing",
+        "Grow any red thing"
+    ],
+    [
+        "Grasp red thing",
+        "Grow any thing"
+    ],
+    [
+        "Grasp red thing",
+        "Grow blue animal"
+    ],
+    [
+        "Grasp red thing",
+        "Grow blue cat"
+    ],
+    [
+        "Grasp red thing",
+        "Grow blue chameleon"
+    ],
+    [
+        "Grasp red thing",
+        "Grow blue cow"
+    ],
+    [
+        "Grasp red thing",
+        "Grow blue dog"
+    ],
+    [
+        "Grasp red thing",
+        "Grow blue fly"
+    ],
+    [
+        "Grasp red thing",
+        "Grow blue human"
+    ],
+    [
+        "Grasp red thing",
+        "Grow blue lion"
+    ],
+    [
+        "Grasp red thing",
+        "Grow blue mouse"
+    ],
+    [
+        "Grasp red thing",
+        "Grow blue parrot"
+    ],
+    [
+        "Grasp red thing",
+        "Grow blue pig"
+    ],
+    [
+        "Grasp red thing",
+        "Grow blue thing"
+    ],
+    [
+        "Grasp red thing",
+        "Grow green animal"
+    ],
+    [
+        "Grasp red thing",
+        "Grow green cat"
+    ],
+    [
+        "Grasp red thing",
+        "Grow green chameleon"
+    ],
+    [
+        "Grasp red thing",
+        "Grow green cow"
+    ],
+    [
+        "Grasp red thing",
+        "Grow green fly"
+    ],
+    [
+        "Grasp red thing",
+        "Grow green human"
+    ],
+    [
+        "Grasp red thing",
+        "Grow green lion"
+    ],
+    [
+        "Grasp red thing",
+        "Grow green mouse"
+    ],
+    [
+        "Grasp red thing",
+        "Grow green parrot"
+    ],
+    [
+        "Grasp red thing",
+        "Grow green pig"
+    ],
+    [
+        "Grasp red thing",
+        "Grow green thing"
+    ],
+    [
+        "Grasp red thing",
+        "Grow red animal"
+    ],
+    [
+        "Grasp red thing",
+        "Grow red cat"
+    ],
+    [
+        "Grasp red thing",
+        "Grow red chameleon"
+    ],
+    [
+        "Grasp red thing",
+        "Grow red cow"
+    ],
+    [
+        "Grasp red thing",
+        "Grow red dog"
+    ],
+    [
+        "Grasp red thing",
+        "Grow red fly"
+    ],
+    [
+        "Grasp red thing",
+        "Grow red human"
+    ],
+    [
+        "Grasp red thing",
+        "Grow red lion"
+    ],
+    [
+        "Grasp red thing",
+        "Grow red mouse"
+    ],
+    [
+        "Grasp red thing",
+        "Grow red parrot"
+    ],
+    [
+        "Grasp red thing",
+        "Grow red pig"
+    ],
+    [
+        "Grasp red thing",
+        "Grow red thing"
+    ],
+    [
+        "Turn off light",
+        "Grasp any algae"
+    ],
+    [
+        "Turn off light",
+        "Grasp any blue thing"
+    ],
+    [
+        "Turn off light",
+        "Grasp any bonsai"
+    ],
+    [
+        "Turn off light",
+        "Grasp any bush"
+    ],
+    [
+        "Turn off light",
+        "Grasp any cactus"
+    ],
+    [
+        "Turn off light",
+        "Grasp any carnivorous"
+    ],
+    [
+        "Turn off light",
+        "Grasp any cat"
+    ],
+    [
+        "Turn off light",
+        "Grasp any chameleon"
+    ],
+    [
+        "Turn off light",
+        "Grasp any cow"
+    ],
+    [
+        "Turn off light",
+        "Grasp any dog"
+    ],
+    [
+        "Turn off light",
+        "Grasp any food"
+    ],
+    [
+        "Turn off light",
+        "Grasp any grass"
+    ],
+    [
+        "Turn off light",
+        "Grasp any green thing"
+    ],
+    [
+        "Turn off light",
+        "Grasp any human"
+    ],
+    [
+        "Turn off light",
+        "Grasp any lion"
+    ],
+    [
+        "Turn off light",
+        "Grasp any living_thing"
+    ],
+    [
+        "Turn off light",
+        "Grasp any mouse"
+    ],
+    [
+        "Turn off light",
+        "Grasp any parrot"
+    ],
+    [
+        "Turn off light",
+        "Grasp any pig"
+    ],
+    [
+        "Turn off light",
+        "Grasp any plant"
+    ],
+    [
+        "Turn off light",
+        "Grasp any red thing"
+    ],
+    [
+        "Turn off light",
+        "Grasp any rose"
+    ],
+    [
+        "Turn off light",
+        "Grasp any supply"
+    ],
+    [
+        "Turn off light",
+        "Grasp any tea"
+    ],
+    [
+        "Turn off light",
+        "Grasp any thing"
+    ],
+    [
+        "Turn off light",
+        "Grasp any tree"
+    ],
+    [
+        "Turn off light",
+        "Grasp any water"
+    ],
+    [
+        "Turn off light",
+        "Grasp blue algae"
+    ],
+    [
+        "Turn off light",
+        "Grasp blue bonsai"
+    ],
+    [
+        "Turn off light",
+        "Grasp blue bush"
+    ],
+    [
+        "Turn off light",
+        "Grasp blue cactus"
+    ],
+    [
+        "Turn off light",
+        "Grasp blue carnivorous"
+    ],
+    [
+        "Turn off light",
+        "Grasp blue cat"
+    ],
+    [
+        "Turn off light",
+        "Grasp blue chameleon"
+    ],
+    [
+        "Turn off light",
+        "Grasp blue cow"
+    ],
+    [
+        "Turn off light",
+        "Grasp blue dog"
+    ],
+    [
+        "Turn off light",
+        "Grasp blue food"
+    ],
+    [
+        "Turn off light",
+        "Grasp blue grass"
+    ],
+    [
+        "Turn off light",
+        "Grasp blue human"
+    ],
+    [
+        "Turn off light",
+        "Grasp blue lion"
+    ],
+    [
+        "Turn off light",
+        "Grasp blue living_thing"
+    ],
+    [
+        "Turn off light",
+        "Grasp blue mouse"
+    ],
+    [
+        "Turn off light",
+        "Grasp blue parrot"
+    ],
+    [
+        "Turn off light",
+        "Grasp blue pig"
+    ],
+    [
+        "Turn off light",
+        "Grasp blue plant"
+    ],
+    [
+        "Turn off light",
+        "Grasp blue rose"
+    ],
+    [
+        "Turn off light",
+        "Grasp blue supply"
+    ],
+    [
+        "Turn off light",
+        "Grasp blue tea"
+    ],
+    [
+        "Turn off light",
+        "Grasp blue thing"
+    ],
+    [
+        "Turn off light",
+        "Grasp blue tree"
+    ],
+    [
+        "Turn off light",
+        "Grasp blue water"
+    ],
+    [
+        "Turn off light",
+        "Grasp green algae"
+    ],
+    [
+        "Turn off light",
+        "Grasp green bonsai"
+    ],
+    [
+        "Turn off light",
+        "Grasp green bush"
+    ],
+    [
+        "Turn off light",
+        "Grasp green cactus"
+    ],
+    [
+        "Turn off light",
+        "Grasp green carnivorous"
+    ],
+    [
+        "Turn off light",
+        "Grasp green cat"
+    ],
+    [
+        "Turn off light",
+        "Grasp green chameleon"
+    ],
+    [
+        "Turn off light",
+        "Grasp green cow"
+    ],
+    [
+        "Turn off light",
+        "Grasp green food"
+    ],
+    [
+        "Turn off light",
+        "Grasp green grass"
+    ],
+    [
+        "Turn off light",
+        "Grasp green human"
+    ],
+    [
+        "Turn off light",
+        "Grasp green lion"
+    ],
+    [
+        "Turn off light",
+        "Grasp green living_thing"
+    ],
+    [
+        "Turn off light",
+        "Grasp green mouse"
+    ],
+    [
+        "Turn off light",
+        "Grasp green parrot"
+    ],
+    [
+        "Turn off light",
+        "Grasp green pig"
+    ],
+    [
+        "Turn off light",
+        "Grasp green plant"
+    ],
+    [
+        "Turn off light",
+        "Grasp green rose"
+    ],
+    [
+        "Turn off light",
+        "Grasp green supply"
+    ],
+    [
+        "Turn off light",
+        "Grasp green tea"
+    ],
+    [
+        "Turn off light",
+        "Grasp green thing"
+    ],
+    [
+        "Turn off light",
+        "Grasp green tree"
+    ],
+    [
+        "Turn off light",
+        "Grasp green water"
+    ],
+    [
+        "Turn off light",
+        "Grasp red algae"
+    ],
+    [
+        "Turn off light",
+        "Grasp red bonsai"
+    ],
+    [
+        "Turn off light",
+        "Grasp red bush"
+    ],
+    [
+        "Turn off light",
+        "Grasp red cactus"
+    ],
+    [
+        "Turn off light",
+        "Grasp red carnivorous"
+    ],
+    [
+        "Turn off light",
+        "Grasp red cat"
+    ],
+    [
+        "Turn off light",
+        "Grasp red chameleon"
+    ],
+    [
+        "Turn off light",
+        "Grasp red cow"
+    ],
+    [
+        "Turn off light",
+        "Grasp red dog"
+    ],
+    [
+        "Turn off light",
+        "Grasp red food"
+    ],
+    [
+        "Turn off light",
+        "Grasp red grass"
+    ],
+    [
+        "Turn off light",
+        "Grasp red human"
+    ],
+    [
+        "Turn off light",
+        "Grasp red lion"
+    ],
+    [
+        "Turn off light",
+        "Grasp red living_thing"
+    ],
+    [
+        "Turn off light",
+        "Grasp red mouse"
+    ],
+    [
+        "Turn off light",
+        "Grasp red parrot"
+    ],
+    [
+        "Turn off light",
+        "Grasp red pig"
+    ],
+    [
+        "Turn off light",
+        "Grasp red plant"
+    ],
+    [
+        "Turn off light",
+        "Grasp red rose"
+    ],
+    [
+        "Turn off light",
+        "Grasp red supply"
+    ],
+    [
+        "Turn off light",
+        "Grasp red tea"
+    ],
+    [
+        "Turn off light",
+        "Grasp red thing"
+    ],
+    [
+        "Turn off light",
+        "Grasp red water"
+    ],
+    [
+        "Turn on light",
+        "Grasp any algae"
+    ],
+    [
+        "Turn on light",
+        "Grasp any blue thing"
+    ],
+    [
+        "Turn on light",
+        "Grasp any bonsai"
+    ],
+    [
+        "Turn on light",
+        "Grasp any bush"
+    ],
+    [
+        "Turn on light",
+        "Grasp any cactus"
+    ],
+    [
+        "Turn on light",
+        "Grasp any carnivorous"
+    ],
+    [
+        "Turn on light",
+        "Grasp any cat"
+    ],
+    [
+        "Turn on light",
+        "Grasp any chameleon"
+    ],
+    [
+        "Turn on light",
+        "Grasp any cow"
+    ],
+    [
+        "Turn on light",
+        "Grasp any dog"
+    ],
+    [
+        "Turn on light",
+        "Grasp any food"
+    ],
+    [
+        "Turn on light",
+        "Grasp any grass"
+    ],
+    [
+        "Turn on light",
+        "Grasp any green thing"
+    ],
+    [
+        "Turn on light",
+        "Grasp any human"
+    ],
+    [
+        "Turn on light",
+        "Grasp any lion"
+    ],
+    [
+        "Turn on light",
+        "Grasp any living_thing"
+    ],
+    [
+        "Turn on light",
+        "Grasp any mouse"
+    ],
+    [
+        "Turn on light",
+        "Grasp any parrot"
+    ],
+    [
+        "Turn on light",
+        "Grasp any pig"
+    ],
+    [
+        "Turn on light",
+        "Grasp any plant"
+    ],
+    [
+        "Turn on light",
+        "Grasp any red thing"
+    ],
+    [
+        "Turn on light",
+        "Grasp any rose"
+    ],
+    [
+        "Turn on light",
+        "Grasp any supply"
+    ],
+    [
+        "Turn on light",
+        "Grasp any tea"
+    ],
+    [
+        "Turn on light",
+        "Grasp any thing"
+    ],
+    [
+        "Turn on light",
+        "Grasp any tree"
+    ],
+    [
+        "Turn on light",
+        "Grasp any water"
+    ],
+    [
+        "Turn on light",
+        "Grasp blue algae"
+    ],
+    [
+        "Turn on light",
+        "Grasp blue bonsai"
+    ],
+    [
+        "Turn on light",
+        "Grasp blue bush"
+    ],
+    [
+        "Turn on light",
+        "Grasp blue cactus"
+    ],
+    [
+        "Turn on light",
+        "Grasp blue carnivorous"
+    ],
+    [
+        "Turn on light",
+        "Grasp blue cat"
+    ],
+    [
+        "Turn on light",
+        "Grasp blue chameleon"
+    ],
+    [
+        "Turn on light",
+        "Grasp blue cow"
+    ],
+    [
+        "Turn on light",
+        "Grasp blue dog"
+    ],
+    [
+        "Turn on light",
+        "Grasp blue food"
+    ],
+    [
+        "Turn on light",
+        "Grasp blue grass"
+    ],
+    [
+        "Turn on light",
+        "Grasp blue human"
+    ],
+    [
+        "Turn on light",
+        "Grasp blue lion"
+    ],
+    [
+        "Turn on light",
+        "Grasp blue living_thing"
+    ],
+    [
+        "Turn on light",
+        "Grasp blue mouse"
+    ],
+    [
+        "Turn on light",
+        "Grasp blue parrot"
+    ],
+    [
+        "Turn on light",
+        "Grasp blue pig"
+    ],
+    [
+        "Turn on light",
+        "Grasp blue plant"
+    ],
+    [
+        "Turn on light",
+        "Grasp blue rose"
+    ],
+    [
+        "Turn on light",
+        "Grasp blue supply"
+    ],
+    [
+        "Turn on light",
+        "Grasp blue tea"
+    ],
+    [
+        "Turn on light",
+        "Grasp blue thing"
+    ],
+    [
+        "Turn on light",
+        "Grasp blue tree"
+    ],
+    [
+        "Turn on light",
+        "Grasp blue water"
+    ],
+    [
+        "Turn on light",
+        "Grasp green algae"
+    ],
+    [
+        "Turn on light",
+        "Grasp green bonsai"
+    ],
+    [
+        "Turn on light",
+        "Grasp green bush"
+    ],
+    [
+        "Turn on light",
+        "Grasp green cactus"
+    ],
+    [
+        "Turn on light",
+        "Grasp green carnivorous"
+    ],
+    [
+        "Turn on light",
+        "Grasp green cat"
+    ],
+    [
+        "Turn on light",
+        "Grasp green chameleon"
+    ],
+    [
+        "Turn on light",
+        "Grasp green cow"
+    ],
+    [
+        "Turn on light",
+        "Grasp green food"
+    ],
+    [
+        "Turn on light",
+        "Grasp green grass"
+    ],
+    [
+        "Turn on light",
+        "Grasp green human"
+    ],
+    [
+        "Turn on light",
+        "Grasp green lion"
+    ],
+    [
+        "Turn on light",
+        "Grasp green living_thing"
+    ],
+    [
+        "Turn on light",
+        "Grasp green mouse"
+    ],
+    [
+        "Turn on light",
+        "Grasp green parrot"
+    ],
+    [
+        "Turn on light",
+        "Grasp green pig"
+    ],
+    [
+        "Turn on light",
+        "Grasp green plant"
+    ],
+    [
+        "Turn on light",
+        "Grasp green rose"
+    ],
+    [
+        "Turn on light",
+        "Grasp green supply"
+    ],
+    [
+        "Turn on light",
+        "Grasp green tea"
+    ],
+    [
+        "Turn on light",
+        "Grasp green thing"
+    ],
+    [
+        "Turn on light",
+        "Grasp green tree"
+    ],
+    [
+        "Turn on light",
+        "Grasp green water"
+    ],
+    [
+        "Turn on light",
+        "Grasp red algae"
+    ],
+    [
+        "Turn on light",
+        "Grasp red bonsai"
+    ],
+    [
+        "Turn on light",
+        "Grasp red bush"
+    ],
+    [
+        "Turn on light",
+        "Grasp red cactus"
+    ],
+    [
+        "Turn on light",
+        "Grasp red carnivorous"
+    ],
+    [
+        "Turn on light",
+        "Grasp red cat"
+    ],
+    [
+        "Turn on light",
+        "Grasp red chameleon"
+    ],
+    [
+        "Turn on light",
+        "Grasp red cow"
+    ],
+    [
+        "Turn on light",
+        "Grasp red dog"
+    ],
+    [
+        "Turn on light",
+        "Grasp red food"
+    ],
+    [
+        "Turn on light",
+        "Grasp red grass"
+    ],
+    [
+        "Turn on light",
+        "Grasp red human"
+    ],
+    [
+        "Turn on light",
+        "Grasp red lion"
+    ],
+    [
+        "Turn on light",
+        "Grasp red living_thing"
+    ],
+    [
+        "Turn on light",
+        "Grasp red mouse"
+    ],
+    [
+        "Turn on light",
+        "Grasp red parrot"
+    ],
+    [
+        "Turn on light",
+        "Grasp red pig"
+    ],
+    [
+        "Turn on light",
+        "Grasp red plant"
+    ],
+    [
+        "Turn on light",
+        "Grasp red rose"
+    ],
+    [
+        "Turn on light",
+        "Grasp red supply"
+    ],
+    [
+        "Turn on light",
+        "Grasp red tea"
+    ],
+    [
+        "Turn on light",
+        "Grasp red thing"
+    ],
+    [
+        "Turn on light",
+        "Grasp red water"
+    ],
+    [
+        "Turn off light",
+        "Grow any animal"
+    ],
+    [
+        "Turn off light",
+        "Grow any blue thing"
+    ],
+    [
+        "Turn off light",
+        "Grow any cat"
+    ],
+    [
+        "Turn off light",
+        "Grow any chameleon"
+    ],
+    [
+        "Turn off light",
+        "Grow any cow"
+    ],
+    [
+        "Turn off light",
+        "Grow any dog"
+    ],
+    [
+        "Turn off light",
+        "Grow any fly"
+    ],
+    [
+        "Turn off light",
+        "Grow any green thing"
+    ],
+    [
+        "Turn off light",
+        "Grow any human"
+    ],
+    [
+        "Turn off light",
+        "Grow any lion"
+    ],
+    [
+        "Turn off light",
+        "Grow any mouse"
+    ],
+    [
+        "Turn off light",
+        "Grow any parrot"
+    ],
+    [
+        "Turn off light",
+        "Grow any pig"
+    ],
+    [
+        "Turn off light",
+        "Grow any red thing"
+    ],
+    [
+        "Turn off light",
+        "Grow any thing"
+    ],
+    [
+        "Turn off light",
+        "Grow blue animal"
+    ],
+    [
+        "Turn off light",
+        "Grow blue cat"
+    ],
+    [
+        "Turn off light",
+        "Grow blue chameleon"
+    ],
+    [
+        "Turn off light",
+        "Grow blue cow"
+    ],
+    [
+        "Turn off light",
+        "Grow blue dog"
+    ],
+    [
+        "Turn off light",
+        "Grow blue fly"
+    ],
+    [
+        "Turn off light",
+        "Grow blue human"
+    ],
+    [
+        "Turn off light",
+        "Grow blue lion"
+    ],
+    [
+        "Turn off light",
+        "Grow blue mouse"
+    ],
+    [
+        "Turn off light",
+        "Grow blue parrot"
+    ],
+    [
+        "Turn off light",
+        "Grow blue pig"
+    ],
+    [
+        "Turn off light",
+        "Grow blue thing"
+    ],
+    [
+        "Turn off light",
+        "Grow green animal"
+    ],
+    [
+        "Turn off light",
+        "Grow green cat"
+    ],
+    [
+        "Turn off light",
+        "Grow green chameleon"
+    ],
+    [
+        "Turn off light",
+        "Grow green cow"
+    ],
+    [
+        "Turn off light",
+        "Grow green fly"
+    ],
+    [
+        "Turn off light",
+        "Grow green human"
+    ],
+    [
+        "Turn off light",
+        "Grow green lion"
+    ],
+    [
+        "Turn off light",
+        "Grow green mouse"
+    ],
+    [
+        "Turn off light",
+        "Grow green parrot"
+    ],
+    [
+        "Turn off light",
+        "Grow green pig"
+    ],
+    [
+        "Turn off light",
+        "Grow green thing"
+    ],
+    [
+        "Turn off light",
+        "Grow red animal"
+    ],
+    [
+        "Turn off light",
+        "Grow red cat"
+    ],
+    [
+        "Turn off light",
+        "Grow red chameleon"
+    ],
+    [
+        "Turn off light",
+        "Grow red cow"
+    ],
+    [
+        "Turn off light",
+        "Grow red dog"
+    ],
+    [
+        "Turn off light",
+        "Grow red fly"
+    ],
+    [
+        "Turn off light",
+        "Grow red human"
+    ],
+    [
+        "Turn off light",
+        "Grow red lion"
+    ],
+    [
+        "Turn off light",
+        "Grow red mouse"
+    ],
+    [
+        "Turn off light",
+        "Grow red parrot"
+    ],
+    [
+        "Turn off light",
+        "Grow red pig"
+    ],
+    [
+        "Turn off light",
+        "Grow red thing"
+    ],
+    [
+        "Turn on light",
+        "Grow any animal"
+    ],
+    [
+        "Turn on light",
+        "Grow any blue thing"
+    ],
+    [
+        "Turn on light",
+        "Grow any cat"
+    ],
+    [
+        "Turn on light",
+        "Grow any chameleon"
+    ],
+    [
+        "Turn on light",
+        "Grow any cow"
+    ],
+    [
+        "Turn on light",
+        "Grow any dog"
+    ],
+    [
+        "Turn on light",
+        "Grow any fly"
+    ],
+    [
+        "Turn on light",
+        "Grow any green thing"
+    ],
+    [
+        "Turn on light",
+        "Grow any human"
+    ],
+    [
+        "Turn on light",
+        "Grow any lion"
+    ],
+    [
+        "Turn on light",
+        "Grow any mouse"
+    ],
+    [
+        "Turn on light",
+        "Grow any parrot"
+    ],
+    [
+        "Turn on light",
+        "Grow any pig"
+    ],
+    [
+        "Turn on light",
+        "Grow any red thing"
+    ],
+    [
+        "Turn on light",
+        "Grow any thing"
+    ],
+    [
+        "Turn on light",
+        "Grow blue animal"
+    ],
+    [
+        "Turn on light",
+        "Grow blue cat"
+    ],
+    [
+        "Turn on light",
+        "Grow blue chameleon"
+    ],
+    [
+        "Turn on light",
+        "Grow blue cow"
+    ],
+    [
+        "Turn on light",
+        "Grow blue dog"
+    ],
+    [
+        "Turn on light",
+        "Grow blue fly"
+    ],
+    [
+        "Turn on light",
+        "Grow blue human"
+    ],
+    [
+        "Turn on light",
+        "Grow blue lion"
+    ],
+    [
+        "Turn on light",
+        "Grow blue mouse"
+    ],
+    [
+        "Turn on light",
+        "Grow blue parrot"
+    ],
+    [
+        "Turn on light",
+        "Grow blue pig"
+    ],
+    [
+        "Turn on light",
+        "Grow blue thing"
+    ],
+    [
+        "Turn on light",
+        "Grow green animal"
+    ],
+    [
+        "Turn on light",
+        "Grow green cat"
+    ],
+    [
+        "Turn on light",
+        "Grow green chameleon"
+    ],
+    [
+        "Turn on light",
+        "Grow green cow"
+    ],
+    [
+        "Turn on light",
+        "Grow green fly"
+    ],
+    [
+        "Turn on light",
+        "Grow green human"
+    ],
+    [
+        "Turn on light",
+        "Grow green lion"
+    ],
+    [
+        "Turn on light",
+        "Grow green mouse"
+    ],
+    [
+        "Turn on light",
+        "Grow green parrot"
+    ],
+    [
+        "Turn on light",
+        "Grow green pig"
+    ],
+    [
+        "Turn on light",
+        "Grow green thing"
+    ],
+    [
+        "Turn on light",
+        "Grow red animal"
+    ],
+    [
+        "Turn on light",
+        "Grow red cat"
+    ],
+    [
+        "Turn on light",
+        "Grow red chameleon"
+    ],
+    [
+        "Turn on light",
+        "Grow red cow"
+    ],
+    [
+        "Turn on light",
+        "Grow red dog"
+    ],
+    [
+        "Turn on light",
+        "Grow red fly"
+    ],
+    [
+        "Turn on light",
+        "Grow red human"
+    ],
+    [
+        "Turn on light",
+        "Grow red lion"
+    ],
+    [
+        "Turn on light",
+        "Grow red mouse"
+    ],
+    [
+        "Turn on light",
+        "Grow red parrot"
+    ],
+    [
+        "Turn on light",
+        "Grow red pig"
+    ],
+    [
+        "Turn on light",
+        "Grow red thing"
+    ],
+    [
+        "Turn off light",
+        "Pour any blue thing"
+    ],
+    [
+        "Turn off light",
+        "Pour any green thing"
+    ],
+    [
+        "Turn off light",
+        "Pour any red thing"
+    ],
+    [
+        "Turn off light",
+        "Pour any supply"
+    ],
+    [
+        "Turn off light",
+        "Pour any thing"
+    ],
+    [
+        "Turn off light",
+        "Pour any water"
+    ],
+    [
+        "Turn off light",
+        "Pour blue supply"
+    ],
+    [
+        "Turn off light",
+        "Pour blue thing"
+    ],
+    [
+        "Turn off light",
+        "Pour blue water"
+    ],
+    [
+        "Turn off light",
+        "Pour green supply"
+    ],
+    [
+        "Turn off light",
+        "Pour green thing"
+    ],
+    [
+        "Turn off light",
+        "Pour green water"
+    ],
+    [
+        "Turn off light",
+        "Pour red supply"
+    ],
+    [
+        "Turn off light",
+        "Pour red thing"
+    ],
+    [
+        "Turn off light",
+        "Pour red water"
+    ],
+    [
+        "Turn on light",
+        "Pour any blue thing"
+    ],
+    [
+        "Turn on light",
+        "Pour any green thing"
+    ],
+    [
+        "Turn on light",
+        "Pour any red thing"
+    ],
+    [
+        "Turn on light",
+        "Pour any supply"
+    ],
+    [
+        "Turn on light",
+        "Pour any thing"
+    ],
+    [
+        "Turn on light",
+        "Pour any water"
+    ],
+    [
+        "Turn on light",
+        "Pour blue supply"
+    ],
+    [
+        "Turn on light",
+        "Pour blue thing"
+    ],
+    [
+        "Turn on light",
+        "Pour blue water"
+    ],
+    [
+        "Turn on light",
+        "Pour green supply"
+    ],
+    [
+        "Turn on light",
+        "Pour green thing"
+    ],
+    [
+        "Turn on light",
+        "Pour green water"
+    ],
+    [
+        "Turn on light",
+        "Pour red supply"
+    ],
+    [
+        "Turn on light",
+        "Pour red thing"
+    ],
+    [
+        "Turn on light",
+        "Pour red water"
+    ],
+    [
+        "Pour any blue thing",
+        "Grow any thing"
+    ],
+    [
+        "Pour any blue thing",
+        "Grow any blue thing"
+    ],
+    [
+        "Pour any blue thing",
+        "Grow blue thing"
+    ],
+    [
+        "Pour any blue thing",
+        "Grow any green thing"
+    ],
+    [
+        "Pour any blue thing",
+        "Grow any red thing"
+    ],
+    [
+        "Pour any blue thing",
+        "Grow red thing"
+    ],
+    [
+        "Pour any blue thing",
+        "Grow green thing"
+    ],
+    [
+        "Pour any green thing",
+        "Grow any thing"
+    ],
+    [
+        "Pour any green thing",
+        "Grow any blue thing"
+    ],
+    [
+        "Pour any green thing",
+        "Grow blue thing"
+    ],
+    [
+        "Pour any green thing",
+        "Grow any green thing"
+    ],
+    [
+        "Pour any green thing",
+        "Grow any red thing"
+    ],
+    [
+        "Pour any green thing",
+        "Grow red thing"
+    ],
+    [
+        "Pour any green thing",
+        "Grow green thing"
+    ],
+    [
+        "Pour any red thing",
+        "Grow any thing"
+    ],
+    [
+        "Pour any red thing",
+        "Grow any blue thing"
+    ],
+    [
+        "Pour any red thing",
+        "Grow blue thing"
+    ],
+    [
+        "Pour any red thing",
+        "Grow any green thing"
+    ],
+    [
+        "Pour any red thing",
+        "Grow any red thing"
+    ],
+    [
+        "Pour any red thing",
+        "Grow red thing"
+    ],
+    [
+        "Pour any red thing",
+        "Grow green thing"
+    ],
+    [
+        "Pour any supply",
+        "Grow any thing"
+    ],
+    [
+        "Pour any supply",
+        "Grow any blue thing"
+    ],
+    [
+        "Pour any supply",
+        "Grow blue thing"
+    ],
+    [
+        "Pour any supply",
+        "Grow any green thing"
+    ],
+    [
+        "Pour any supply",
+        "Grow any red thing"
+    ],
+    [
+        "Pour any supply",
+        "Grow red thing"
+    ],
+    [
+        "Pour any supply",
+        "Grow green thing"
+    ],
+    [
+        "Pour any thing",
+        "Grow any thing"
+    ],
+    [
+        "Pour any thing",
+        "Grow any blue thing"
+    ],
+    [
+        "Pour any thing",
+        "Grow blue thing"
+    ],
+    [
+        "Pour any thing",
+        "Grow any green thing"
+    ],
+    [
+        "Pour any thing",
+        "Grow any red thing"
+    ],
+    [
+        "Pour any thing",
+        "Grow red thing"
+    ],
+    [
+        "Pour any thing",
+        "Grow green thing"
+    ],
+    [
+        "Pour any water",
+        "Grow any thing"
+    ],
+    [
+        "Pour any water",
+        "Grow any blue thing"
+    ],
+    [
+        "Pour any water",
+        "Grow blue thing"
+    ],
+    [
+        "Pour any water",
+        "Grow any green thing"
+    ],
+    [
+        "Pour any water",
+        "Grow any red thing"
+    ],
+    [
+        "Pour any water",
+        "Grow red thing"
+    ],
+    [
+        "Pour any water",
+        "Grow green thing"
+    ],
+    [
+        "Pour blue supply",
+        "Grow any thing"
+    ],
+    [
+        "Pour blue supply",
+        "Grow any blue thing"
+    ],
+    [
+        "Pour blue supply",
+        "Grow blue thing"
+    ],
+    [
+        "Pour blue supply",
+        "Grow any green thing"
+    ],
+    [
+        "Pour blue supply",
+        "Grow any red thing"
+    ],
+    [
+        "Pour blue supply",
+        "Grow red thing"
+    ],
+    [
+        "Pour blue supply",
+        "Grow green thing"
+    ],
+    [
+        "Pour blue thing",
+        "Grow any thing"
+    ],
+    [
+        "Pour blue thing",
+        "Grow any blue thing"
+    ],
+    [
+        "Pour blue thing",
+        "Grow blue thing"
+    ],
+    [
+        "Pour blue thing",
+        "Grow any green thing"
+    ],
+    [
+        "Pour blue thing",
+        "Grow any red thing"
+    ],
+    [
+        "Pour blue thing",
+        "Grow red thing"
+    ],
+    [
+        "Pour blue thing",
+        "Grow green thing"
+    ],
+    [
+        "Pour blue water",
+        "Grow any thing"
+    ],
+    [
+        "Pour blue water",
+        "Grow any blue thing"
+    ],
+    [
+        "Pour blue water",
+        "Grow blue thing"
+    ],
+    [
+        "Pour blue water",
+        "Grow any green thing"
+    ],
+    [
+        "Pour blue water",
+        "Grow any red thing"
+    ],
+    [
+        "Pour blue water",
+        "Grow red thing"
+    ],
+    [
+        "Pour blue water",
+        "Grow green thing"
+    ],
+    [
+        "Pour green supply",
+        "Grow any thing"
+    ],
+    [
+        "Pour green supply",
+        "Grow any blue thing"
+    ],
+    [
+        "Pour green supply",
+        "Grow blue thing"
+    ],
+    [
+        "Pour green supply",
+        "Grow any green thing"
+    ],
+    [
+        "Pour green supply",
+        "Grow any red thing"
+    ],
+    [
+        "Pour green supply",
+        "Grow red thing"
+    ],
+    [
+        "Pour green supply",
+        "Grow green thing"
+    ],
+    [
+        "Pour green thing",
+        "Grow any thing"
+    ],
+    [
+        "Pour green thing",
+        "Grow any blue thing"
+    ],
+    [
+        "Pour green thing",
+        "Grow blue thing"
+    ],
+    [
+        "Pour green thing",
+        "Grow any green thing"
+    ],
+    [
+        "Pour green thing",
+        "Grow any red thing"
+    ],
+    [
+        "Pour green thing",
+        "Grow red thing"
+    ],
+    [
+        "Pour green thing",
+        "Grow green thing"
+    ],
+    [
+        "Pour green water",
+        "Grow any thing"
+    ],
+    [
+        "Pour green water",
+        "Grow any blue thing"
+    ],
+    [
+        "Pour green water",
+        "Grow blue thing"
+    ],
+    [
+        "Pour green water",
+        "Grow any green thing"
+    ],
+    [
+        "Pour green water",
+        "Grow any red thing"
+    ],
+    [
+        "Pour green water",
+        "Grow red thing"
+    ],
+    [
+        "Pour green water",
+        "Grow green thing"
+    ],
+    [
+        "Pour red supply",
+        "Grow any thing"
+    ],
+    [
+        "Pour red supply",
+        "Grow any blue thing"
+    ],
+    [
+        "Pour red supply",
+        "Grow blue thing"
+    ],
+    [
+        "Pour red supply",
+        "Grow any green thing"
+    ],
+    [
+        "Pour red supply",
+        "Grow any red thing"
+    ],
+    [
+        "Pour red supply",
+        "Grow red thing"
+    ],
+    [
+        "Pour red supply",
+        "Grow green thing"
+    ],
+    [
+        "Pour red thing",
+        "Grow any thing"
+    ],
+    [
+        "Pour red thing",
+        "Grow any blue thing"
+    ],
+    [
+        "Pour red thing",
+        "Grow blue thing"
+    ],
+    [
+        "Pour red thing",
+        "Grow any green thing"
+    ],
+    [
+        "Pour red thing",
+        "Grow any red thing"
+    ],
+    [
+        "Pour red thing",
+        "Grow red thing"
+    ],
+    [
+        "Pour red thing",
+        "Grow green thing"
+    ],
+    [
+        "Pour red water",
+        "Grow any thing"
+    ],
+    [
+        "Pour red water",
+        "Grow any blue thing"
+    ],
+    [
+        "Pour red water",
+        "Grow blue thing"
+    ],
+    [
+        "Pour red water",
+        "Grow any green thing"
+    ],
+    [
+        "Pour red water",
+        "Grow any red thing"
+    ],
+    [
+        "Pour red water",
+        "Grow red thing"
+    ],
+    [
+        "Pour red water",
+        "Grow green thing"
+    ]
+]

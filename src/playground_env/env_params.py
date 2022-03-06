@@ -2,8 +2,48 @@ import os
 from itertools import product
 from src.playground_env.color_generation import *
 import re
+from typing import TypedDict, List, Any, Dict, Tuple
+import numpy as np
 
-from src.playground_env.env_controller import EnvController
+class CategoriesDict(TypedDict):
+    animal:List[str]
+    plant:List[str]
+    furniture:List[str]
+    living_thing:List[str]
+    supply:List[str]
+    env_objects:List[str]
+
+
+class ParamsDict(TypedDict):
+    nb_types:int
+    max_nb_objects:int
+    admissible_actions:List[str]
+    admissible_attributes:List[str]
+    dim_body_features:Any
+    agent_position_inds:Any
+    grasped_inds:Any
+    attributes:List[str]
+    categories:CategoriesDict
+    name_attributes:List[str]
+    adjective_attributes:List[str]
+    words_test_set_def:Any
+    dim_obj_features:Any  # one-hot of things, 2D position, size, rgb code, grasped Boolean
+    color_inds:np.array
+    size_inds:np.array
+    position_inds:np.array
+    type_inds:np.array
+    min_max_sizes:Tuple
+    agent_size:Any
+    epsilon_initial_pos:Any
+    screen_size:Any
+    ratio_size:int
+    next_to_epsilon:Any
+    attribute_combinations:Any
+    obj_size_update:float
+    render_mode:bool
+    combination_sentences:Any
+    cuda:bool
+
 
 
 params_init = False
@@ -85,7 +125,7 @@ def get_env_params(max_nb_objects=None,
                    animals=None,
                    supplies=None,
                    env_objects=None
-                   ):
+                   ) -> ParamsDict:
     """
     Builds the set of environment parameters, and the set of function to extract information from the state.
 
@@ -182,6 +222,8 @@ def get_env_params(max_nb_objects=None,
     relative_sizes = ('smallest', 'biggest')
     relative_positions = ('leftest', 'rightest', 'highest', 'lowest')
     status = ('on', 'off')
+    under_lighting = (True, False)
+
     attributes = dict(types=types,
                       categories=tuple(categories.keys()),
                       colors=colors,
@@ -191,7 +233,8 @@ def get_env_params(max_nb_objects=None,
                       relative_shades=relative_shades,
                       relative_sizes=relative_sizes,
                       relative_positions=relative_positions,
-                      status=status)
+                      status=status,
+                      under_lighting=under_lighting)
 
     # Adjective combinations
     attribute_type_combinations_temp = [
@@ -251,19 +294,21 @@ def get_env_params(max_nb_objects=None,
         2: ('flower',),
         3: (re.compile(r"Grasp.*animal"),), # 3: tuple('Grasp {} animal'.format(c) for c in colors + ('any',)),
         4: (re.compile(r"Grasp.*fly"),), # 4: tuple('Grasp {} fly'.format(c) for c in colors + ('any',)),
-        5: tuple(re.compile(f"Grow.+{w}") for w in plants + ('plant', 'living_thing')) # 5: tuple('Grow {} {}'.format(c, p) for c in colors + ('any',) for p in plants + ('plant', 'living_thing'))
+        5: tuple(re.compile(f"Grow.+{w}") for w in plants + ('plant', 'living_thing')), # 5: tuple('Grow {} {}'.format(c, p) for c in colors + ('any',) for p in plants + ('plant', 'living_thing'))
+        6: (re.compile(f"^Pour.+red"),)
     }
                         
     # get indices of attributes in object feature vector
     dim_body_features = 3
     agent_position_inds = np.arange(2)
-    dim_obj_features = nb_types + 8
+    dim_obj_features = nb_types + 9
     type_inds = np.arange(0, nb_types)
     position_inds = np.arange(nb_types, nb_types + 2)
     size_inds = np.array(nb_types + 2)
     color_inds = np.arange(nb_types + 3, nb_types + 6)
     grasped_inds = np.array([nb_types + 6])
     status_inds = np.array([nb_types + 7])
+    under_lighting_inds = np.array([nb_types + 8])
 
     params = dict(nb_types=nb_types,
                   max_nb_objects=max_nb_objects,
@@ -329,13 +374,18 @@ def get_env_params(max_nb_objects=None,
         
         return ['on'] if status == 1 else ['off']
 
-    def get_obj_color(all_obj_features, i_obj):
-        controller = EnvController.getInstance()
+    def get_obj_under_lighting(all_obj_features, i_obj):
+        obj_features = all_obj_features[i_obj]
+        status = obj_features[under_lighting_inds]
+        
+        return [True] if status == 1. else [False]
 
-        if controller.env.observation is None:
-            lights_on = True
-        else:
-            lights_on = controller.env.is_env_light_on()
+    def get_obj_color(all_obj_features, i_obj):
+        obj_features = all_obj_features[i_obj]
+        lights_on = True
+
+        if 'under_lighting' in admissible_attributes:
+            lights_on = obj_features[under_lighting_inds][0] == 1.
 
         obj_features = all_obj_features[i_obj]
         rgb = obj_features[color_inds]
@@ -353,13 +403,10 @@ def get_env_params(max_nb_objects=None,
         raise ValueError
 
     def get_obj_shade(all_obj_features, i_obj):
-        controller = EnvController.getInstance()
+        lights_on = True
 
-        if controller.env.observation is None:
-            lights_on = True
-        else:
-            lights_on = controller.env.is_env_light_on()
-
+        if 'under_lighting' in admissible_attributes:
+            lights_on = obj_features[under_lighting_inds][0] == 1.
 
         obj_features = all_obj_features[i_obj]
         rgb = obj_features[color_inds]
@@ -469,7 +516,8 @@ def get_env_params(max_nb_objects=None,
                                     sizes=get_obj_size,
                                     types=get_obj_type,
                                     categories=get_obj_cat,
-                                    status=get_obj_status)
+                                    status=get_obj_status,
+                                    under_lighting=get_obj_under_lighting)
     assert sorted(list(get_attributes_functions.keys())) == sorted(list(attributes))
 
     # List all attributes of all objects from state

@@ -1,7 +1,8 @@
-from src.playground_env.env_params import get_env_params
+from src.playground_env.env_params import get_env_params, ParamsDict
 import re
 from typing import List, Union, Dict
-from itertools import chain
+from itertools import chain, product
+from functools import reduce
 
 descriptions_cache = None
 
@@ -24,11 +25,29 @@ def generate_any_description(action: str, attributes: Union[List[str],Dict[str,L
     descriptions = []
 
     if action in ('Grasp', 'Grow', 'Attempt grow', 'Pour'):
-        list_excluded = ['on', 'off']
+        list_excluded = ['on', 'off', True, False]
         if action == 'Grow':
-            list_excluded += env_params['categories']['furniture'] + env_params['categories']['supply'] + ('furniture', 'supply')
+            list_excluded += (
+                env_params['categories']['furniture'] +
+                env_params['categories']['supply'] +
+                env_params['categories']['env_objects'] +
+                ('furniture', 'supply', 'env_objects'))
         elif action == 'Attempted grow':
             list_excluded += env_params['categories']['living_thing'] + ('living_thing', 'animal', 'plant')
+        elif action == 'Pour':
+            list_excluded += (
+                env_params['categories']['animal'] +
+                env_params['categories']['env_objects'] +
+                env_params['categories']['furniture'] +
+                env_params['categories']['living_thing'] +
+                env_params['categories']['plant'] +
+                ('animal',
+                'env_objects',
+                'furniture',
+                'living_thing',
+                'plant',
+                'food')
+            )
 
         if isinstance(attributes, dict):
             adjective_attributes, name_attributes = attributes['adjective_attributes'], attributes['name_attributes']
@@ -69,7 +88,76 @@ def generate_any_description(action: str, attributes: Union[List[str],Dict[str,L
 
     return descriptions.copy()
 
-def generate_all_descriptions(env_params):
+def get_compound_goals(params:ParamsDict, descriptions:List[str]):
+    def group_by_goal_type(acc, goal):
+        goal_type = goal.split(" ", maxsplit=1)[0]
+        acc[goal_type] = acc.get(goal_type, []) + [goal]
+        return acc
+
+    
+    by_type = reduce(group_by_goal_type, descriptions, {})
+
+    # grasp
+    grasp_goals = by_type.get('Grasp', [])
+    list_excluded = (
+        params['categories']['furniture'] +
+        params['categories']['env_objects'] +
+        ('furniture', 'env_objects')
+    )
+    grasp_goals = [g for g in grasp_goals if g.rsplit(' ', maxsplit=1)[-1] not in (list_excluded)]
+    grasp_water = [g for g in grasp_goals if g.rsplit(' ', maxsplit=1)[-1] == 'water']
+    grasp_food = [g for g in grasp_goals if g.rsplit(' ', maxsplit=1)[-1] == 'food']
+    grasp_generic_goals = [g for g in grasp_goals if g.rsplit(' ', maxsplit=1)[-1] == 'thing']
+
+    # grow
+    grow_goals = by_type.get('Grow', [])
+    list_animal = (
+        params['categories']['animal'] +
+        ('animal',)
+    )
+    list_plants = (
+        params['categories']['plant'] +
+        ('plant',)
+    )
+    grow_animals_goals = [g for g in grow_goals if g.rsplit(' ', maxsplit=1)[-1] in list_animal]
+    grow_plants_goals = [g for g in grow_goals if g.rsplit(' ', maxsplit=1)[-1] in list_plants]
+    grow_generic_goals = list(set(grow_goals) - set(grow_animals_goals) - set(grow_plants_goals))
+
+    # turn
+    turn_goals = by_type.get('Turn', [])
+
+    # Pour
+    pour_goals = by_type.get('Pour', [])
+
+    compound_goals = []
+    compound_goals += (
+        # grasp
+        tuple(product(grasp_water, grow_plants_goals)) +
+        tuple(product(grasp_water, grow_generic_goals)) +
+        tuple(product(grasp_food, grow_animals_goals)) +
+        tuple(product(grasp_food, grow_generic_goals)) +
+        tuple(product(grasp_generic_goals, grow_goals)) +
+
+        # turn
+        tuple(product(turn_goals, grasp_goals)) +
+        tuple(product(turn_goals, grow_goals)) +
+        tuple(product(turn_goals, pour_goals)) +
+
+        # pour
+        tuple(product(pour_goals, grow_plants_goals)) +
+        tuple(product(pour_goals, grow_generic_goals))
+    )
+
+    compound_goals = set(compound_goals)
+    return compound_goals
+
+def generate_compound_descriptions(params: ParamsDict, train_descriptions:List[str], test_descriptions:List[str]):
+    train_descriptions_compound = get_compound_goals(params, train_descriptions)
+    test_descriptions_compound = get_compound_goals(params, test_descriptions)
+
+    return train_descriptions_compound, test_descriptions_compound
+
+def generate_all_descriptions(env_params:ParamsDict):
     """
     Generates all possible descriptions from a set of environment parameters.
 
@@ -158,12 +246,17 @@ def generate_all_descriptions(env_params):
                 
         if not to_remove:
             train_descriptions.append(descr)
+
+            if descr.startswith('Turn'):
+                test_descriptions.append(descr)
         else:
             test_descriptions.append(descr)
     
     train_descriptions = tuple(sorted(train_descriptions))
     test_descriptions = tuple(sorted(test_descriptions))
     extra_descriptions = tuple(sorted(attempted_grow_descriptions))
+
+    train_descriptions_compound, test_descriptions_compound = generate_compound_descriptions(env_params, train_descriptions, test_descriptions)
 
     descriptions_cache = (train_descriptions, test_descriptions, extra_descriptions)
     return descriptions_cache

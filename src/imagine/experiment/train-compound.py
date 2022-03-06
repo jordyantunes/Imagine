@@ -27,6 +27,7 @@ from src.stats_logger import StatsLogger
 from src.imagine.reward_function.classifier_reward_function_lstm_learned import RewardFunctionLSTM
 from src.imagine.reward_function.classifier_reward_function_lstm_pretrained import RewardFunctionLSTMPretrained
 from src.imagine.reward_function.oracle_reward_function_playground import OracleRewardFunction
+from src.compound.manager import ProbabilityManager
 import json
 
 NUM_CPU = 1
@@ -185,6 +186,9 @@ def launch(**kwargs):
     # Configure everything and log parameters
     params, rank_seed = config.configure_everything(rank, **kwargs)
 
+    # Compound Goal manager
+    probs_manager = ProbabilityManager(list(params['train_descriptions'] + params['test_descriptions']))
+
     # Define language model
     policy_language_model, reward_language_model = config.get_language_models(params)
 
@@ -196,7 +200,8 @@ def launch(**kwargs):
                                reward_language_model=reward_language_model,
                                goal_dim=policy_language_model.goal_dim,
                                one_hot_encoder=onehot_encoder,
-                               params=params)
+                               params=params,
+                               probability_manager=probs_manager)
 
     # Define reward function
     reward_function = config.get_reward_function(goal_sampler=goal_sampler,

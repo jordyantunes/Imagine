@@ -3,7 +3,6 @@ import numpy as np
 from typing import List
 
 from src.playground_env.color_generation import sample_color, Color
-from src.playground_env.env_controller import EnvController
 
 
 class Thing:
@@ -40,6 +39,9 @@ class Thing:
         for a in self.adm_rel_attributes:
             self.object_initial_attributes[a] = []
 
+        if 'under_lighting' in self.admissible_attributes:
+            self.object_initial_attributes['under_lighting'] = [True]
+
         self.__finished_initialization = False
 
         # Initialize physical attributes of the object that will compose its features.
@@ -50,6 +52,7 @@ class Thing:
         self.grasped = False
         self.scene_objects:List[Thing] = []  # list of refs to other objects from the scene
         self.status = None # On/off
+        self.under_lighting = None # On/off
 
         # initialize values for the type, position color and size.
         self._get_type_encoding()
@@ -57,6 +60,7 @@ class Thing:
         self._sample_color()
         self._sample_size()
         self._sample_status()
+        self._sample_under_lighting()
         self.initial_rgb_code = self.rgb_code.copy()
 
         # rendering
@@ -160,6 +164,24 @@ class Thing:
             status = np.array([0])
         self._update_status(status)
 
+    def _sample_under_lighting(self):
+        """
+        Sample a under_lighting for the object
+
+        """
+        if 'under_lighting' in self.admissible_attributes:
+            if self.object_initial_attributes['under_lighting'][0] == True:
+                under_lighting = [True]
+            elif self.object_initial_attributes['under_lighting'][0]  == False:
+                under_lighting = [False]
+            else:
+                under_lighting = [True]
+                # raise NotImplementedError
+        else:
+            print("under_lighting not admissible")
+            under_lighting = [True]
+        self._update_under_lighting(under_lighting)
+
     # getter
     @property
     def rgb_code(self) -> tuple:
@@ -168,27 +190,9 @@ class Thing:
         lights_on = self.is_light_on()
         # print(self.object_attributes['colors'], "on" if lights_on else "off", self.__rgb_code.astype(np.float32), (self.__rgb_code * 0.5).astype(np.float32))
         if self.__finished_initialization and not lights_on and self.__rgb_code is not None:
-            rgb = np.maximum(self.__rgb_code - 0.1, 0).astype(np.float32)
+            rgb = np.maximum(self.__rgb_code - 0.07, 0).astype(np.float32)
         else:
             rgb = self.__rgb_code.astype(np.float32)
-
-        # controller = EnvController.getInstance()
-
-        # if controller.stage != 'creation':
-        #     colors = self.params['attributes']['colors']
-        #     shades = self.params['attributes']['shades']
-
-        #     for c in colors:
-        #         for s in shades:
-        #             # if not lights_on:
-        #             #     print("lights off")
-        #             color_class = Color(c, s, lights_on)
-        #             if color_class.contains(rgb):
-        #                 return rgb
-
-        #     # if didnt work, try without lights
-        #     print("Values with error", rgb)
-        #     raise ValueError
 
         return rgb 
 
@@ -202,10 +206,30 @@ class Thing:
                 return True
         return False
 
+    @property
+    def under_lighting(self) -> tuple:
+        lights_on = self.is_light_on()
+        if self.__finished_initialization and not lights_on:
+            under_lighting = False
+        else:
+            under_lighting = True
+        return under_lighting 
+
+    @under_lighting.setter
+    def under_lighting(self, under_lighting: bool):
+        if under_lighting is None:
+            self.__under_lighting = True
+        else:    
+            self.__under_lighting = under_lighting
+
     # Update physical attributes of the object
     def _update_status(self, new_status):
         self.status = new_status
         self._update_attribute('status')
+
+    def _update_under_lighting(self, new_under_lighting: bool):
+        self.under_lighting = new_under_lighting
+        self._update_attribute('under_lighting')
 
     def _update_size(self, new_size):
         self.size = new_size
@@ -304,6 +328,8 @@ class Thing:
         # assert that attributes 1 and included in attributes 2
         assert sorted(att_1.keys()) == sorted(att_2.keys())
         for k in att_1.keys():
+            if k == 'under_lighting':
+                continue
             for v in att_1[k]:
                 if att_2[k] is not None:
                     if v not in att_2[k] :
@@ -327,6 +353,10 @@ class Thing:
             The action of the agent.
 
         """
+
+        # TODO remove
+        self.get_attributes_functions['colors']([self.get_features()], 0)
+
         update_object_grasped = False
 
         # if the hand is close enough
@@ -348,6 +378,10 @@ class Thing:
             update_object_grasped = True
 
         self.features = self.get_features()
+
+        # TODO remove
+        self.get_attributes_functions['colors']([self.get_features()], 0)
+
         return update_object_grasped
 
     def get_features(self):
@@ -355,7 +389,7 @@ class Thing:
         Form features of the object.
         """
         grasped_feature = np.array([1]) if self.grasped else np.array([-1])
-        features = np.concatenate([self.type, self.position, np.array([self.size]), self.rgb_code, grasped_feature, self.status])
+        features = np.concatenate([self.type, self.position, np.array([self.size]), self.rgb_code, grasped_feature, self.status, [1] if self.under_lighting else [0]])
         return features
 
     def _color_surface(self, surface, rgb):
@@ -421,6 +455,9 @@ class Animals(LivingThings):
         Animal objects can be grown. This function checks whether a supply is put in contact with the animal. If it is, the animal grows.
 
         """
+        # TODO remove
+        self.get_attributes_functions['colors']([self.get_features()], 0)
+
         # check whether water or food is close
         for obj in objects:
             if obj.object_descr['categories'] == 'supply':
@@ -429,6 +466,9 @@ class Animals(LivingThings):
                     # check action
                     size = min(self.size + self.obj_size_update, self.min_max_sizes[1][1] + self.obj_size_update)
                     self._update_size(size)
+        
+        # TODO remove
+        self.get_attributes_functions['colors']([self.get_features()], 0)
 
         return super().update_state(hand_position, gripper_state, objects, object_grasped, action)
 
@@ -448,27 +488,32 @@ class Plants(LivingThings):
         Plant objects can be grown. This function checks whether a water object is put in contact with the plant. If it is, the plant grows.
 
         """
-        controller = EnvController.getInstance()
 
         if self.is_light_on():
             for obj in objects:
                 if obj.object_descr['types'] == 'water':
-                    if UsedSupply(self, obj) in controller.env.used_supplies:
-                        # print("Supply already used, skip")
+                    if obj.used:
+                        print("Supply already used, skip")
                         continue
+
                     # check distance
                     if np.linalg.norm(obj.position - self.position) < (self.size + obj.size) / 2:
                         # check action
                         size_update = self.obj_size_update
                         if obj.get_obj_size_string() == 'small':
+                            print("is small")
                             size_update /= 2
-                        size = min(self.size + size_update, self.min_max_sizes[1][1] + size_update)
+                            obj.used = True
+                            size = min(self.size + size_update, self.min_max_sizes[1][1] - 0.01)
+                        else:
+                            size = min(self.size + size_update, self.min_max_sizes[1][1] + size_update)
                         self._update_size(size)
-                        controller.env.add_used_supply(self, obj)
         return super().update_state(hand_position, gripper_state, objects, object_grasped, action)
 
 
 class Supplies(Thing):
+    used:bool = False
+
     def __init__(self, object_descr, object_id_int, params):
         super().__init__(object_descr, object_id_int, params)
 

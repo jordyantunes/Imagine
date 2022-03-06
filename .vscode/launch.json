@@ -79,7 +79,8 @@
                 "--goal_invention=from_epoch_10",
                 "--n_epochs=167",
                 "--admissible_actions", "Go", "Grasp", "Grow", "Turn", "Pour",
-                "--admissible_attributes", "colors", "categories", "types", "status"]
+                "--admissible_attributes", "colors", "categories", "types", "status", "under_lighting",
+                "--max-nb-objects", "4"]
         },
     ]
 }

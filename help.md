@@ -10,6 +10,8 @@ docker run -it -d --name imagine -v cgh:/home/localuser/src/data --privileged jo
 
 docker run -it -d --name imagine-oracle -v oracle:/home/localuser/src/data --privileged jordyantunes/imagine:latest
 
+docker run -it -d --name imagine -v experiment:/home/localuser/src/data --privileged jordyantunes/imagine:latest
+
 Proposta de Valor
 Quem Somos Nós
 Onde investimos
@@ -27,3 +29,16 @@ python train.py \
 --furnitures door chair desk lamp \
 --plants flower tree grass rose \
 --animals dog cat human fly
+
+# compount
+nohup \
+python train-compound.py \
+--num_cpu=6 \
+--policy_architecture=modular_attention \
+--imagination_method=CGH \
+--reward_function=learned_lstm  \
+--goal_invention=from_epoch_10 \
+--n_epochs=167 \
+--admissible_actions Go Grasp Grow Turn Pour \
+--admissible_attributes colors categories types status \
+--max-nb-objects 4 &
