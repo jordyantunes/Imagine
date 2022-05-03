@@ -99,7 +99,14 @@ def train(policy, training_worker:RolloutWorker, evaluation_worker:RolloutWorker
             # if not available, do not provide feedback_str
             # but keep records of train, test, extra descr for statistics
             timee = time.time()
-            feedbacks_str, train_descr, test_descr, extra_descr = social_partner.get_feedback(episodes)
+            feedbacks_str, train_descr, test_descr, extra_descr, train_descr_compound, test_descr_compound = social_partner.get_feedback(episodes)
+
+            if any([len(f) > 0 for f in feedbacks_str]) and len(feedbacks_str) > 0:
+                print("feedback não vazio")
+            else:
+                print("feedback vazio")
+
+
             if not partner_available:
                 feedbacks_str = None
             time_tracker.add(time_social_partner=time.time() - timee)
@@ -115,7 +122,9 @@ def train(policy, training_worker:RolloutWorker, evaluation_worker:RolloutWorker
                                                                                feedbacks_str,
                                                                                train_descr,
                                                                                test_descr,
-                                                                               extra_descr
+                                                                               extra_descr,
+                                                                               train_descr_compound,
+                                                                               test_descr_compound
                                                                                )
             time_tracker.add(time_data_process=time.time() - timee)
             time_tracker.add(**time_dict)
@@ -158,9 +167,17 @@ def train(policy, training_worker:RolloutWorker, evaluation_worker:RolloutWorker
         timee = time.time()
         eval_episodes = []
 
-        for _ in range(n_test_rollouts):
+        if (params['conditions']['compound_goals_from'] is None 
+            or epoch > params['conditions']['compound_goals_from']):
+            now_n_test_rollouts = n_test_rollouts
+        else:
+            now_n_test_rollouts = len(params['train_descriptions'])
+
+        print("Number of tests to conduct:", now_n_test_rollouts)
+        for i in range(now_n_test_rollouts):
+            print("Eval Rollout #", i)
             # Sample goal for evaluation
-            exploit, goals_str, goals_encodings, goals_ids = eval_goal_sampler.sample(
+            exploit, goals_str, goals_encodings, goals_ids = eval_goal_sampler.sample(epoch,
                 method=params['experiment_params']['method_test'])
             # Run evaluation rollouts
             episodes = evaluation_worker.generate_rollouts(exploit=exploit,
@@ -193,7 +210,7 @@ def launch(**kwargs):
     policy_language_model, reward_language_model = config.get_language_models(params)
 
     # Define the one-hot_encoder
-    onehot_encoder = config.get_one_hot_encoder(params['train_descriptions'] + params['test_descriptions'])
+    onehot_encoder = config.get_one_hot_encoder(params['all_train_descriptions'] + params['all_test_descriptions'])
 
     # Define the goal sampler for training
     goal_sampler = GoalSampler(policy_language_model=policy_language_model,
@@ -249,7 +266,9 @@ def launch(**kwargs):
                                       reward_function=reward_function,
                                       params=params,
                                       **params['evaluation_rollout_params'],
-                                      render=False)
+                                        #   render=kwargs.get("render_mode", False)
+                                      render=False
+                                      )
     evaluation_worker.seed(rank_seed * 10)
 
     stats_logger = StatsLogger(goal_sampler=goal_sampler,
@@ -308,6 +327,9 @@ if __name__ == '__main__':
     add('--animals', default=None, nargs='*', type=str, help='Accepted animals')
     add('--supplies', default=None, nargs='*', type=str, help='Accepted supplies')
     add('--max-nb-objects', default=3, type=int, help='Numer of objects in scene')
+    add('--compound_goals_from', default=None, type=int, help="epoch number")
+    add('--render-mode', default=False, action="store_true", help="epoch number")
+    add('--add-light', default=False, action="store_true", help="Add light to scene")
     kwargs = vars(parser.parse_args())
     print("-----------Params-----------")
     print(json.dumps(kwargs, indent='\t'))

@@ -7,7 +7,7 @@ class OracleRewardFunction:
     Oracle Reward Function. Used to get ground truth rewards to evaluate success rate
     """
     def __init__(self, goal_sampler, params, convert_from_discovery_ids=False):
-        self.descriptions = params['train_descriptions']
+        self.descriptions = params['train_descriptions'] + tuple(params['train_descriptions_compound'])
         self.obs_dim = params['dims']['obs'] // 2
         self.goal_sampler = goal_sampler
         self.convert_from_discovery_ids = convert_from_discovery_ids

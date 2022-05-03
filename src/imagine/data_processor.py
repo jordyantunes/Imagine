@@ -1,5 +1,6 @@
 import time
 from collections import deque
+from typing import List, Set, Tuple
 
 import numpy as np
 from mpi4py import MPI
@@ -14,9 +15,12 @@ class ExplorationTracker:
         self.test_descr = sorted(params['test_descriptions'])
         self.train_descr = sorted(params['train_descriptions'])
         self.extra_descr = sorted(params['extra_descriptions'])
-        self.all_descriptions = sorted(list(set(self.train_descr + self.test_descr + self.extra_descr)))
+        self.train_descr_compound = sorted(params['train_descriptions_compound'])
+        self.test_descr_compound = sorted(params['test_descriptions_compound'])
+        self.all_descriptions = sorted(list(set(self.train_descr + self.test_descr + self.extra_descr))) + sorted(self.train_descr_compound + self.test_descr_compound)
         self.metrics = dict(counter_since_begininng=dict())
-        for descr in self.train_descr + self.test_descr + self.extra_descr:
+
+        for descr in self.all_descriptions: # self.train_descr + self.test_descr + self.extra_descr + list(self.train_descr_compound) + list(self.test_descr_compound):
             self.metrics['counter_since_begininng'][descr] = 0
         self.reset_metrics()
 
@@ -26,16 +30,16 @@ class ExplorationTracker:
         self.metrics['count_reward_test_set'] = None
         self.metrics['count_reward_train_set'] = None
         self.metrics['count_reward_extra_set'] = None
-        for descr in self.train_descr + self.test_descr + self.extra_descr:
+        for descr in self.all_descriptions: # self.train_descr + self.test_descr + self.extra_descr:
             self.metrics['rewards_last_state'][descr] = 0
 
     def get_average_rarity(self):
         return np.mean([(1 / (self.metrics['counter_since_begininng'][descr] + 1)) for descr in self.all_descriptions])
 
-    def update(self, episode_list, train_descr, test_descr, extra_descr):
+    def update(self, episode_list, train_descr, test_descr, extra_descr, train_descr_compound:Set[str], test_descr_compound:Set[str]):
         # track number of reward and exploration score
         explo_score = 0
-        descriptions = sorted(list(set(train_descr + test_descr + extra_descr)))
+        descriptions = sorted(list(set(train_descr + test_descr + extra_descr))) + sorted(list(train_descr_compound | test_descr_compound))
         prev_counters = self.metrics['counter_since_begininng'].copy()
         for descr in descriptions:
             self.metrics['rewards_last_state'][descr] += 1
@@ -71,11 +75,11 @@ class DataProcessor:
 
         # track metrics for reward function
         self.stats_confusion_rew_func = [[deque(maxlen=100), deque(maxlen=100)] for _ in
-                                         range(len(params['train_descriptions']))]
+                                         range(len(params['train_descriptions'] + tuple(params['train_descriptions_compound'])))]
 
         # Track return histories
-        self.training_return_histories = [deque(maxlen=100) for _ in range(len(params['train_descriptions']))]
-        self.evaluation_return_histories = [deque(maxlen=100) for _ in range(len(params['train_descriptions']))]
+        self.training_return_histories = [deque(maxlen=100) for _ in range(len(params['train_descriptions'] + tuple(params['train_descriptions_compound'])))]
+        self.evaluation_return_histories = [deque(maxlen=100) for _ in range(len(params['train_descriptions'] + tuple(params['train_descriptions_compound'])))]
 
         if params['experiment_params']['save_obs']:
             self.states_to_save = deque()
@@ -86,8 +90,9 @@ class DataProcessor:
     def clear_memory_states_to_save(self):
         self.states_to_save = deque()
 
-    def process(self, current_episode, epoch, episodes, partner_available,
-                feedbacks_str, train_descr, test_descr, extra_descr):
+    def process(self, current_episode:int, epoch:int, episodes, partner_available:bool,
+                feedbacks_str:List[str], train_descr:List[str], test_descr:List[str], extra_descr:List[str],
+                train_descr_compound:Set[str], test_descr_compound:Set[str]):
 
         rank = MPI.COMM_WORLD.Get_rank()
         time_dict = dict()
@@ -98,6 +103,8 @@ class DataProcessor:
         all_train_descr  = MPI.COMM_WORLD.gather(train_descr, root=0)
         all_test_descr  = MPI.COMM_WORLD.gather(test_descr, root=0)
         all_extra_descr  = MPI.COMM_WORLD.gather(extra_descr, root=0)
+        all_train_descr_compound  = MPI.COMM_WORLD.gather(train_descr_compound, root=0)
+        all_test_descr_compound  = MPI.COMM_WORLD.gather(test_descr_compound, root=0)
 
         all_episodes = MPI.COMM_WORLD.gather(episodes, root=0)
 
@@ -107,13 +114,17 @@ class DataProcessor:
             all_train_descr_list = []
             all_test_descr_list = []
             all_extra_descr_list = []
+            all_train_descr_compound_list = set()
+            all_test_descr_compound_list = set()
             for i in range(len(all_episodes)):
                 all_episodes_list += all_episodes[i]
                 all_train_descr_list += all_train_descr[i]
                 all_test_descr_list += all_test_descr[i]
                 all_extra_descr_list += all_extra_descr[i]
+                all_train_descr_compound_list |= all_train_descr_compound[i]
+                all_test_descr_compound_list |= all_test_descr_compound[i]
 
-            self.exploration_tracker.update(all_episodes_list, train_descr, test_descr, extra_descr)
+            self.exploration_tracker.update(all_episodes_list, train_descr, test_descr, extra_descr, train_descr_compound, test_descr_compound)
 
         if partner_available:
 
@@ -133,7 +144,7 @@ class DataProcessor:
                 time_dict.update(time_infer_social_partner=time.time() - timee)
 
                 if len(goals_reached_str[0]) > 0:
-                    print("stop")
+                    print("goal reached")
                 # # # # # #
                 # Update the goal sampler
                 # # # # # #
@@ -231,7 +242,7 @@ class DataProcessor:
                 # get the list of known goals
                 discovered_goals_str = self.goal_sampler.feedback_memory['string'].copy()
                 # discovered goals are only the one that are not imagined
-                discovered_goals_str = np.array(discovered_goals_str)[np.where(np.array(self.goal_sampler.feedback_memory['imagined']) == 0)].tolist()
+                discovered_goals_str = np.array(discovered_goals_str, dtype=object)[np.where(np.array(self.goal_sampler.feedback_memory['imagined']) == 0)].tolist()
                 for i in range(len(feedbacks_str[ep])):
                     # if never seen before, add the feedback to the list of known goals
                     if feedbacks_str[ep][i] not in discovered_goals_str:
@@ -251,7 +262,7 @@ class DataProcessor:
                 # get the list of known goals
                 discovered_goals_str = self.goal_sampler.feedback_memory['string'].copy()
                 # discovered goals are only the one that are not imagined
-                discovered_goals_str = np.array(discovered_goals_str)[np.where(np.array(self.goal_sampler.feedback_memory['imagined']) == 0)].tolist()
+                discovered_goals_str = np.array(discovered_goals_str, dtype=object)[np.where(np.array(self.goal_sampler.feedback_memory['imagined']) == 0)].tolist()
                 new_goals_ep = []
                 for i in range(len(feedbacks_str[ep])):
                     # if never seen before, add the feedback to the list of known goals
@@ -304,7 +315,7 @@ class DataProcessor:
     def convert_feedbacks_to_reward_samples(self,
                                             all_episodes_list,
                                             goals_reached_ids,
-                                            goals_not_reached_ids):
+                                            goals_not_reached_ids) -> Tuple[np.array, List[int], List[int]]:
         states = []
         goal_id_reached_lists = []
         goal_id_not_reached_lists = []
@@ -319,8 +330,19 @@ class DataProcessor:
     def process_evaluation(self, episodes):
 
         successes = []
+        compound_goals_successes = []
+
         for ep in episodes:
             success = self.oracle_reward_function.eval_goal_from_episode(ep, goal_id=ep['g_id'])  # here g_id is the oracle index directly
             successes.append(success)
             self.evaluation_return_histories[ep['g_id']].append(success)
+
+            if isinstance(ep['g_str'], tuple):
+                goal1, goal2 = ep['g_str']
+                compound_goals_successes.append((goal1, goal2, success))
+        
+        if len(compound_goals_successes) > 0:
+            print("Atualizando probabilidades dos compound goals")
+            self.goal_sampler.update_compound_goals_probabilities(compound_goals_successes)
+
         return mpi_average(np.mean(successes))

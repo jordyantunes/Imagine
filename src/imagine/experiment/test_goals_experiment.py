@@ -193,7 +193,7 @@ params['dims'] = {
     "inds_grasped_obj": []
   }
 
-train, test, extra = generate_all_descriptions(params)
+train, test, extra, train_descriptions_compound, test_descriptions_compound = generate_all_descriptions(params)
 
 params["experiment_params"] = {
     "n_cpus": 6,

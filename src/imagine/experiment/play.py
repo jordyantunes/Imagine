@@ -91,7 +91,7 @@ def main(policy_file, seed, n_test_rollouts, render):
 
 
     env_params = evaluation_worker.env.unwrapped.params
-    train_descriptions, test_descriptions, _ = generate_all_descriptions(env_params)
+    train_descriptions, test_descriptions, _, train_descriptions_compound, test_descriptions_compound = generate_all_descriptions(env_params)
     train_descriptions = list(train_descriptions)
     np.random.shuffle(list(test_descriptions))
     np.random.shuffle(train_descriptions)

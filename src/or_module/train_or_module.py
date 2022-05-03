@@ -13,7 +13,7 @@ cuda = torch.cuda.is_available()
 n_points = 500000
 batch_size = 64
 lr = 0.005
-n_objs = 4
+n_objs = 6
 n_epochs = 15
 
 # balanced train set

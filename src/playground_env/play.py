@@ -20,7 +20,7 @@ env = gym.make(ENV_NAME, reward_screen=False, viz_data_collection=True)
 pygame.init()
 
 env_params = get_env_params(admissible_attributes=('colors', 'categories', 'types', 'status'))
-train_descriptions, test_descriptions, extra_descriptions = generate_all_descriptions(env_params)
+train_descriptions, test_descriptions, extra_descriptions, train_descriptions_compound, test_descriptions_compound = generate_all_descriptions(env_params)
 all_descriptions = train_descriptions +  test_descriptions
 
 # Select the goal to generate the scene.

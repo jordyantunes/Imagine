@@ -101,7 +101,7 @@ if USE_LOCAL_CONFIG:
 def configure_everything(rank, seed, num_cpu, env, trial_id, n_epochs, reward_function, policy_encoding,
                          feedback_strategy, policy_architecture, goal_invention, reward_checkpoint,
                          rl_positive_ratio, p_partner_availability, imagination_method, git_commit='', display=True,
-                         admissible_attributes=None, **kwargs):
+                         admissible_attributes=None, compound_goals_from:int=None, **kwargs):
     # Seed everything
     rank_seed = seed + 1000000 * rank
     set_global_seeds(rank_seed)
@@ -114,11 +114,11 @@ def configure_everything(rank, seed, num_cpu, env, trial_id, n_epochs, reward_fu
     params = DEFAULT_CONFIG
 
     # Env generating function
-    def make_env():
+    def make_env(**overload_args:dict):
         return gym.make(params['conditions']['env_name'],
                         display=display,
                         admissible_attributes=admissible_attributes,
-                        **kwargs)
+                        **{**kwargs,**overload_args})
 
     # Get info from environment and configure dimensions dict
     tmp_env = make_env()
@@ -129,13 +129,15 @@ def configure_everything(rank, seed, num_cpu, env, trial_id, n_epochs, reward_fu
     params['reward_function']['n_objs'] = params['env_params']['max_nb_objects']
     params['make_env'] = make_env
 
-    train_descriptions, test_descriptions, extra_descriptions = generate_all_descriptions(params['env_params'])
+    train_descriptions, test_descriptions, extra_descriptions, train_descriptions_compound, test_descriptions_compound = generate_all_descriptions(params['env_params'])
     # compute imagined goals to get the list of all possible goals
     goal_generator = SentenceGeneratorHeuristic(train_descriptions, test_descriptions, sentences=None, method='CGH')
     goal_generator.update_model(train_descriptions + test_descriptions)
     imagined_descriptions = goal_generator.generate_sentences()
     all_descriptions = train_descriptions + test_descriptions + tuple(imagined_descriptions)
 
+    all_train_descriptions = train_descriptions + tuple(train_descriptions_compound)
+    all_test_descriptions = test_descriptions + tuple(test_descriptions_compound)
     # train_descriptions, test_descriptions, all_descriptions = get_descriptions(ENV_ID)
     # assert sorted(train_descriptions) == sorted(train_descriptions_env)
     # assert sorted(test_descriptions) == sorted(test_descriptions_env)
@@ -144,6 +146,10 @@ def configure_everything(rank, seed, num_cpu, env, trial_id, n_epochs, reward_fu
                   test_descriptions=test_descriptions,
                   extra_descriptions=extra_descriptions,
                   all_descriptions=all_descriptions,
+                  train_descriptions_compound=train_descriptions_compound,
+                  test_descriptions_compound=test_descriptions_compound,
+                  all_train_descriptions=all_train_descriptions,
+                  all_test_descriptions=all_test_descriptions,
                   git_commit=git_commit
                   )
 
@@ -166,6 +172,7 @@ def configure_everything(rank, seed, num_cpu, env, trial_id, n_epochs, reward_fu
                                 policy_architecture=policy_architecture,
                                 reward_function=reward_function,
                                 goal_invention=goal_invention,
+                                compound_goals_from=compound_goals_from,
                                 imagination_method=imagination_method,
                                 feedback_strategy=feedback_strategy,
                                 rl_positive_ratio=rl_positive_ratio,
@@ -192,7 +199,7 @@ def configure_everything(rank, seed, num_cpu, env, trial_id, n_epochs, reward_fu
                                        logdir=logdir,
                                        seed=seed,
                                        n_cpus=num_cpu,
-                                       n_test_rollouts=len(params['train_descriptions']),
+                                       n_test_rollouts=len(params['train_descriptions'] + tuple(params['train_descriptions_compound'])),
                                        )
     params['reward_function'].update(reward_positive_ratio=params['conditions']['reward_positive_ratio'])
     # Define social partner params
@@ -258,7 +265,15 @@ def configure_everything(rank, seed, num_cpu, env, trial_id, n_epochs, reward_fu
 
 
 def get_one_hot_encoder(all_descriptions):
-    _, max_seq_length, word_set = analyze_descr(all_descriptions)
+    descriptions = []
+    for desc in all_descriptions:
+        if isinstance(desc, tuple):
+            new_goal_str = " ".join(desc)
+            descriptions.append(new_goal_str)
+        else:
+            descriptions.append(desc)
+
+    _, max_seq_length, word_set = analyze_descr(descriptions)
     vocab = Vocab(word_set)
     one_hot_encoder = OneHotEncoder(vocab, max_seq_length)
     return one_hot_encoder

@@ -66,7 +66,7 @@ class RolloutWorker:
         self.save_obs = save_obs
         self.params = params.copy()
         self.rank = MPI.COMM_WORLD.Get_rank()
-        self.env = make_env()
+        self.env = make_env(render_mode=self.render)
 
         assert self.T > 0
 

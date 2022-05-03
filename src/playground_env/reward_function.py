@@ -1,5 +1,9 @@
+from itertools import product
+
 from src.playground_env.env_params import get_env_params
-from src.playground_env.descriptions import generate_all_descriptions, generate_any_description, sort_attributes
+from src.playground_env.descriptions import generate_all_descriptions, generate_any_description, sort_attributes, get_compound_goals
+
+from typing import List, Set, Tuple
 
 # train_descriptions, test_descriptions, extra_descriptions = generate_all_descriptions(get_env_params())
 
@@ -178,7 +182,7 @@ def get_extra_grow_descriptions(get_supply_contact_ids, initial_state, current_s
 
     return grow_descriptions.copy()
 
-def sample_descriptions_from_state(state, params):
+def sample_descriptions_from_state(state, params) -> Tuple[List[str], List[str], List[str], Set[str], Set[str]]:
     """
     This function samples all description of the current state
     Parameters
@@ -221,11 +225,6 @@ def sample_descriptions_from_state(state, params):
         obj_att = []
         for k in admissible_attributes:
             obj_att += get_attributes_functions[k](obj_features, i_obj)
-            # try:
-            #     obj_att += get_attributes_functions[k](obj_features, i_obj)
-            # except Exception as e:
-            #     print("ERROR getting attribute", e)
-            #     raise Exception(e)
         obj_attributes.append(obj_att)
 
     def sort_attributes(attributes):
@@ -264,7 +263,7 @@ def sample_descriptions_from_state(state, params):
     test_descr = []
     extra_descr = []
     
-    train_descriptions, test_descriptions, extra_descriptions = generate_all_descriptions(get_env_params())
+    train_descriptions, test_descriptions, extra_descriptions, train_descriptions_compound, test_descriptions_compound = generate_all_descriptions(get_env_params())
     
     for descr in descriptions:
         if descr in train_descriptions:
@@ -277,7 +276,15 @@ def sample_descriptions_from_state(state, params):
             print(descr)
             raise ValueError
 
-    return train_descr.copy(), test_descr.copy(), extra_descr.copy()
+    compound_desc = get_compound_goals(params, descriptions)
+
+    if len(compound_desc) > 0:
+        print("found compound goals")
+
+    train_desc_compound = compound_desc.intersection(train_descriptions_compound)
+    test_desc_compound = compound_desc.intersection(test_descriptions_compound)
+
+    return train_descr.copy(), test_descr.copy(), extra_descr.copy(), train_desc_compound.copy(), test_desc_compound.copy()
 
 def get_reward_from_state(state, goal, params):
     """
@@ -314,7 +321,7 @@ def get_reward_from_state(state, goal, params):
     assert len(current_state) == len(initial_state)
 
     nb_objs = count_objects(current_state)
-    obj_features = [get_obj_features(current_state, i_obj) for i_obj in range(nb_objs)]
+    obj_features = [get_obj_features(initial_state, i_obj) for i_obj in range(nb_objs)]
 
     # extract object attributes
     obj_attributes = []
@@ -328,34 +335,48 @@ def get_reward_from_state(state, goal, params):
                 raise Exception(e)
         obj_attributes.append(obj_att)
 
-    words = goal.split(' ')
-    reward = False
+    
+    goal = (goal,) if isinstance(goal, str) else goal
 
-    if words[0] == 'Go':
-        go_descr = get_move_descriptions(get_agent_position_attributes, current_state)
-        if goal in go_descr:
-            reward = True
+    rewards = []
+    for g in goal:
+        words = g.split(' ')
 
-    if words[0] == 'Grasp':
-        grasp_descr = get_grasp_descriptions(get_grasped_ids, current_state, sort_attributes, obj_attributes, params, check_if_relative, combine_two)
-        if goal in grasp_descr:
-            reward = True
+        if words[0] == 'Go':
+            go_descr = get_move_descriptions(get_agent_position_attributes, current_state)
+            if g in go_descr:
+                rewards.append(True)
+            else:
+                rewards.append(False)
 
-    if words[0] == 'Turn':
-        grasp_descr = get_grasp_descriptions(get_grasped_ids, current_state, sort_attributes, obj_attributes, params, check_if_relative, combine_two)
-        if goal in grasp_descr:
-            reward = True
+        if words[0] == 'Grasp':
+            grasp_descr = get_grasp_descriptions(get_grasped_ids, current_state, sort_attributes, obj_attributes, params, check_if_relative, combine_two)
+            if g in grasp_descr:
+                rewards.append(True)
+            else:
+                rewards.append(False)
 
-    # Add Grow descriptions
-    if words[0] == 'Grow':
-        grow_descr = get_grow_descriptions(get_grown_ids, initial_state, current_state, params, obj_attributes, sort_attributes, combine_two, check_if_relative)
-        if goal in grow_descr:
-            reward = True
+        if words[0] == 'Turn':
+            grasp_descr = get_grasp_descriptions(get_grasped_ids, current_state, sort_attributes, obj_attributes, params, check_if_relative, combine_two)
+            if g in grasp_descr:
+                rewards.append(True)
+            else:
+                rewards.append(False)
 
-    if words[0] == 'Pour':
-        pour_descriptions = get_pour_descriptions(get_poured_ids, initial_state, current_state, obj_attributes, params)
-        if goal in pour_descriptions:
-            reward = True
+        # Add Grow descriptions
+        if words[0] == 'Grow':
+            grow_descr = get_grow_descriptions(get_grown_ids, initial_state, current_state, params, obj_attributes, sort_attributes, combine_two, check_if_relative)
+            if g in grow_descr:
+                rewards.append(True)
+            else:
+                rewards.append(False)
 
-    return reward
+        if words[0] == 'Pour':
+            pour_descriptions = get_pour_descriptions(get_poured_ids, initial_state, current_state, obj_attributes, params)
+            if g in pour_descriptions:
+                rewards.append(True)
+            else:
+                rewards.append(False)
+                
+    return all(rewards)
 

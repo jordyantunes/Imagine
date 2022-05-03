@@ -38,6 +38,7 @@ class GoalSampler:
                                     policy_encoding=[],
                                     reward_encoding=[],
                                     imagined=[],
+                                    compound=[]
                                     )
         self.imagined_goals = dict(string=[],
                                    competence=[],
@@ -73,26 +74,34 @@ class GoalSampler:
 
 
     def add_entries_to_feedback_memory(self, str_list, episode_count, imagined):
-        for goal_str in str_list:
-            if goal_str not in self.feedback2id.keys():
+        for goal in str_list:
+            if goal not in self.feedback2id.keys():
                 memory_id = self.nb_discovered_goals
-                if goal_str in self.params['train_descriptions']:
-                    oracle_id = self.params['train_descriptions'].index(goal_str)
+                if goal in self.params['all_train_descriptions']:
+                    oracle_id = self.params['all_train_descriptions'].index(goal)
                 else:
                     oracle_id = None
+
+                if isinstance(goal, tuple):
+                    goal_str = " ".join(goal)
+                    self.feedback_memory['compound'].append(1)
+                else:
+                    goal_str = goal
+                    self.feedback_memory['compound'].append(0)
+
                 one_hot = self.one_hot_encoder.encode(goal_str.lower().split(" "))
-                self.feedback2one_hot[goal_str] = one_hot
+                self.feedback2one_hot[goal] = one_hot
                 self.id2one_hot[memory_id] = one_hot
                 if self.reward_language_model is not None:
                     reward_encoding = self.reward_language_model.encode(goal_str)
                     self.feedback_memory['reward_encoding'].append(reward_encoding.copy())
                 policy_encoding = self.policy_language_model.encode(goal_str)
-                self.feedback2id[goal_str] = memory_id
+                self.feedback2id[goal] = memory_id
                 self.id2oracleid[memory_id] = oracle_id
-                self.id2feedback[memory_id] = goal_str
+                self.id2feedback[memory_id] = goal
                 self.feedback_memory['memory_id'].append(memory_id)
                 self.feedback_memory['oracle_id'].append(oracle_id)
-                self.feedback_memory['string'].append(goal_str)
+                self.feedback_memory['string'].append(goal)
                 self.feedback_memory['target_counter'].append(0)
                 self.feedback_memory['reached_counter'].append(0)
                 self.feedback_memory['iter_discovery'].append(episode_count)
@@ -100,11 +109,11 @@ class GoalSampler:
                 self.feedback_memory['policy_encoding'].append(policy_encoding.copy())
                 self.feedback_memory['imagined'].append(imagined)
                 self.nb_discovered_goals += 1
-            elif goal_str in self.feedback2id.keys() and not imagined:  # if goal previously imagined is discovered later, change its status
-                ind = self.feedback_memory['string'].index(goal_str)
+            elif goal in self.feedback2id.keys() and not imagined:  # if goal previously imagined is discovered later, change its status
+                ind = self.feedback_memory['string'].index(goal)
                 if self.feedback_memory['imagined'][ind] == 1:
                     self.feedback_memory['imagined'][ind] = 0
-                    logger.info('Goal already imagined:', goal_str)
+                    logger.info('Goal already imagined:', goal)
 
 
     def update_discovered_goals(self,
@@ -138,6 +147,8 @@ class GoalSampler:
                                                 episode_count=episode_count,
                                                 imagined=1)
 
+    def update_compound_goals_probabilities(self, outcomes):
+        self.probs_manager.new_epoch(outcomes)
 
     def update(self,
                current_episode,
@@ -219,10 +230,17 @@ class GoalSampler:
 
         goal_invention = self.params['conditions']['goal_invention']
         imagined = False
+
         if 'from_epoch' in goal_invention:
             from_epoch = int(goal_invention.split('_')[-1])
             if epoch > from_epoch:
                 imagined = np.random.random() < self.params['conditions']['p_imagined']
+            
+        compound_goal = self.params['conditions']['compound_goals_from']
+        compound = False
+
+        if compound_goal is not None and epoch > compound_goal:
+            compound = True
 
         if self.rank == 0:
             all_goals_str = []
@@ -233,23 +251,72 @@ class GoalSampler:
                 goals_str = []
                 goals_encodings = []
                 goals_ids = []
-                for j in range(self.rollout_batch_size):
-                    # when there is no goal in memory, sample random goal from standard normal distribution
-                    if len(self.feedback_memory['memory_id']) == 0:
-                            goals_encodings.append(np.random.normal(size=self.goal_dim))
-                            goals_str.append('Random Goal')
-                            goals_ids.append(-1)
-                    else:
-                        if strategy == 'random':
-                            if imagined and self.imagined_goal_ids.size > 0:
-                                ind = np.random.choice(self.imagined_goal_ids)
-                            else:
-                                ind = np.random.choice(self.not_imagined_goal_ids)
+
+                if not compound:
+                    for j in range(self.rollout_batch_size):
+                        # when there is no goal in memory, sample random goal from standard normal distribution
+                        if len(self.feedback_memory['memory_id']) == 0:
+                                goals_encodings.append(np.random.normal(size=self.goal_dim))
+                                goals_str.append('Random Goal')
+                                goals_ids.append(-1)
                         else:
-                            raise NotImplementedError
+                            if strategy == 'random':
+                                if imagined and self.imagined_goal_ids.size > 0:
+                                    ind = np.random.choice(self.imagined_goal_ids)
+                                else:
+                                    compound_goals = np.argwhere(np.array(self.feedback_memory['compound']) == 1).flatten()
+                                    compound_ids = np.array(self.feedback_memory['memory_id'])[compound_goals]
+                                    goals = list(set(self.not_imagined_goal_ids) - set(compound_ids))
+                                    ind = np.random.choice(goals)
+                                # else:
+                                #     ind = np.random.choice(self.not_imagined_goal_ids)
+                                
+                            else:
+                                raise NotImplementedError
+                            goals_encodings.append(self.feedback_memory['policy_encoding'][ind])
+                            goals_str.append(self.id2feedback[ind])
+                            goals_ids.append(ind)
+                else:
+                    print("sampling compound goals")
+                    probs, goals = self.probs_manager.get_n_highest_improvement(self.rollout_batch_size)
+                    for g in goals:
+                        if g not in self.feedback2id:
+                            print("Compound goal not yet discovered")
+                            continue
+                        ind = self.feedback2id[g]
                         goals_encodings.append(self.feedback_memory['policy_encoding'][ind])
-                        goals_str.append(self.id2feedback[ind])
+                        goals_str.append(g)
                         goals_ids.append(ind)
+                    
+                    if len(goals_ids) == 0:
+                        print("selecting random compound goal")
+                        compound_goals = np.argwhere(np.array(self.feedback_memory['compound']) == 1).flatten()
+
+                        ind = np.array([])
+
+                        if compound_goals.size > 0:
+                            compound_ids = np.array(self.feedback_memory['memory_id'])[compound_goals]
+                            ind = np.random.choice(compound_ids, (self.rollout_batch_size,), replace=False)
+
+                        if ind.shape[0] < self.rollout_batch_size:
+                            if compound_goals.size == 0:
+                                print("no compound goal found to sample, using simple goal")
+                            else:
+                                print("not enough compound goal found to sample {}, using simple goal".format(ind.shape[0]))
+
+                            goals_needed = self.rollout_batch_size - ind.shape[0]
+                            compound_goals = np.argwhere(np.array(self.feedback_memory['compound']) == 1).flatten()
+                            compound_ids = np.array(self.feedback_memory['memory_id'])[compound_goals]
+                            goals = list(set(self.not_imagined_goal_ids) - set(compound_ids))
+                            ind = np.append(ind, np.random.choice(goals, (goals_needed,), replace=False))
+
+                        assert ind.shape[0] == self.rollout_batch_size
+
+                        for i in ind:
+                            goals_encodings.append(self.feedback_memory['policy_encoding'][i])
+                            goals_str.append(self.id2feedback[i])
+                            goals_ids.append(i)
+
                 all_goals_str.append(goals_str)
                 all_goals_encodings.append(goals_encodings)
                 all_goals_ids.append(goals_ids)
@@ -268,8 +335,9 @@ class GoalSampler:
 class EvalGoalSampler:
 
     def __init__(self, policy_language_model, one_hot_encoder, params):
-        self.descriptions = params['train_descriptions']
+        self.descriptions = params['train_descriptions'] + tuple(params['train_descriptions_compound'])
         self.nb_descriptions = len(self.descriptions)
+        self.nb_descriptions_str = len(params['train_descriptions'])
         self.count = 0
         self.policy_language_model = policy_language_model
         self.rollout_batch_size = params['evaluation_rollout_params']['rollout_batch_size']
@@ -278,8 +346,14 @@ class EvalGoalSampler:
     def reset(self):
         self.count = 0
 
-    def sample(self, method='robin'):
-        # print(self.descriptions[self.count])
+    def sample(self, epoch:int, method='robin'):
+        
+        compound_goal_from = self.params['conditions']['compound_goals_from']
+        compound = False
+
+        if compound_goal_from is not None and epoch > compound_goal_from:
+            compound = True
+
         goals_str = []
         goals_encodings = []
         goals_ids = []
@@ -287,13 +361,14 @@ class EvalGoalSampler:
         if method == 'robin':
             ind = self.count
         elif method == 'random':
-            ind = np.random.randint(self.nb_descriptions)
+            ind = np.random.randint(self.nb_descriptions if compound else self.nb_descriptions_str)
         else:
             raise NotImplementedError
 
         for _ in range(self.rollout_batch_size):
-            g_str = self.descriptions[ind]
-            goals_str.append(g_str)
+            goal = self.descriptions[ind]
+            g_str = ' '.join(goal) if isinstance(goal, tuple) else goal 
+            goals_str.append(goal)
             policy_encoding = self.policy_language_model.encode(g_str).flatten()
             goals_encodings.append(policy_encoding)
             goals_ids.append(ind)

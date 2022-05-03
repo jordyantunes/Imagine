@@ -11,6 +11,7 @@ class SentenceGenerator:
         pass
 
     def update_model(self, sentences_list):
+        sentences_list = chain.from_iterable([[s] if isinstance(s, str) else list(s) for s in sentences_list])
         new_sentence_set = set(sentences_list).difference(self.sentences_set)
         self.sentences_set = self.sentences_set.union(sentences_list)
         new_sentence_tokenized = [word_tokenize(s) for s in new_sentence_set]
@@ -303,7 +304,7 @@ if __name__ == '__main__':
     from src.playground_env.descriptions import generate_all_descriptions
 
     env_params = get_env_params()
-    train_descriptions, test_descriptions, _ = generate_all_descriptions(env_params)
+    train_descriptions, test_descriptions, _, train_descriptions_compound, test_descriptions_compound = generate_all_descriptions(env_params)
     import numpy as np
 
     # np.random.shuffle(train_descriptions)

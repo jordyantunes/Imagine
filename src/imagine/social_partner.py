@@ -1,5 +1,6 @@
 import numpy as np
 from mpi4py import MPI
+from typing import List, Set, Tuple
 import random
 
 from src.playground_env.reward_function import sample_descriptions_from_state
@@ -30,19 +31,24 @@ class SocialPartner:
         available = MPI.COMM_WORLD.bcast(available, root=0)
         return available
 
-    def get_feedback(self, episodes):
+    def get_feedback(self, episodes) -> Tuple[List[str], List[str], List[str], List[str], Set[str], Set[str]]:
         all_goals_reached_str = []
         all_test_descr = []
         all_extra_descr = []
         all_train_descr = []
+        all_train_descr_compound = set()
+        all_test_descr_compound = set()
         for ep in episodes:
-            goals_reached_str, test_descr, extra_descr = self.feedback_fun(ep)
-            all_goals_reached_str.append(goals_reached_str)
+            goals_reached_str, test_descr, extra_descr, train_desc_compound, test_desc_compound = self.feedback_fun(ep)
+            all_goal_reached_str = goals_reached_str + list(train_desc_compound) + list(test_desc_compound)
+            all_goals_reached_str.append(all_goal_reached_str)
             all_train_descr += goals_reached_str.copy()
             all_test_descr += test_descr.copy()
             all_extra_descr += extra_descr.copy()
+            all_train_descr_compound |= train_desc_compound
+            all_test_descr_compound |= test_desc_compound
 
-        return all_goals_reached_str, all_train_descr.copy(), all_test_descr.copy(), all_extra_descr.copy()
+        return all_goals_reached_str, all_train_descr.copy(), all_test_descr.copy(), all_extra_descr.copy(), all_train_descr_compound.copy(), all_test_descr_compound.copy()
 
     def get_one_pos_one_neg_feedback(self, episodes):
         all_goals_reached_str, _, _, _ = self.get_feedback(episodes)
@@ -52,6 +58,6 @@ class SocialPartner:
         return pos, neg
 
     def get_exhaustive_feedback_playground(self, episode):
-        train_descr, test_descr, extra_descr = sample_descriptions_from_state(episode['obs'][-1],
+        train_descr, test_descr, extra_descr, train_desc_compound, test_desc_compound = sample_descriptions_from_state(episode['obs'][-1],
                                                                               self.params['env_params'])
-        return train_descr, test_descr, extra_descr
+        return train_descr, test_descr, extra_descr, train_desc_compound, test_desc_compound

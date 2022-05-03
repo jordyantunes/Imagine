@@ -201,10 +201,13 @@ class Thing:
         self.__rgb_code = rgb_code
 
     def is_light_on(self) -> bool:
+        light_object = False
         for o in self.scene_objects:
-            if isinstance(o, Light) and o.status == np.array([1]):
-                return True
-        return False
+            if isinstance(o, Light):
+                light_object = True
+                if o.status == np.array([1]):
+                    return True
+        return False if light_object else True
 
     @property
     def under_lighting(self) -> tuple:

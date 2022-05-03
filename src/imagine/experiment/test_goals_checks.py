@@ -22,7 +22,7 @@ input_params = {
 
 init_params(**input_params)
 params = get_env_params(render_mode=True)
-train, test, extra = generate_all_descriptions(params)
+train, test, extra, train_descriptions_compound, test_descriptions_compound = generate_all_descriptions(params)
 
 grow = [t.split(' ') for t in train if t.startswith("Grow")]
 grow = list(set([g[0] + ' ' + g[-1] for g in grow]))

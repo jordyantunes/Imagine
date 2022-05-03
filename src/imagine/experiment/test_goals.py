@@ -17,8 +17,8 @@ from src.playground_env.descriptions import generate_all_descriptions
 from src.playground_env.env_params import get_env_params, init_params
 from src.playground_env.reward_function import sample_descriptions_from_state, get_reward_from_state
 
-admissible_attributes=['colors', 'categories', 'types', 'sizes', 'relative_sizes']
-# admissible_attributes=['colors', 'categories', 'types']
+# admissible_attributes=['colors', 'categories', 'types', 'sizes', 'relative_sizes']
+admissible_attributes=['colors', 'categories', 'types']
 
 furnitures = ['door', 'chair', 'desk', 'lamp']
 plants = ['flower', 'tree', 'bush', 'rose']
@@ -27,9 +27,10 @@ animals = ['dog', 'cat', 'human', 'fly']
 init_params(admissible_attributes=admissible_attributes,
             furnitures=furnitures,
             plants=plants,
-            animals=animals)
+            animals=animals,
+            env_objects=[])
 params = get_env_params(render_mode=args.render)
-train, test, extra = generate_all_descriptions(params)
+train, test, extra, train_descriptions_compound, test_descriptions_compoundv = generate_all_descriptions(params)
 
 
 if not params['render_mode']:
@@ -78,7 +79,7 @@ while not stop:
     env.render()
 
     # Sample descriptions of the current state
-    train_descr, test_descr, extra_descr = sample_descriptions_from_state(out[0], env.unwrapped.params)
+    train_descr, test_descr, extra_descr, *_ = sample_descriptions_from_state(out[0], env.unwrapped.params)
     descr = train_descr + test_descr
     print(descr)
 

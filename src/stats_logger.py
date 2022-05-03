@@ -23,7 +23,7 @@ class StatsLogger:
         self.params = params
         self.rank = MPI.COMM_WORLD.Get_rank()
         self.logdir = self.params['experiment_params']['logdir']
-        self.nb_goals = len(params['train_descriptions'])
+        self.nb_goals = len(params['train_descriptions'] + tuple(params['train_descriptions_compound']))
         if self.rank == 0:
             self.latest_policy_path = os.path.join(logger.get_dir(), 'policy_checkpoints/policy_latest.pkl')
             self.best_policy_path = os.path.join(logger.get_dir(), 'policy_checkpoints/policy_best.pkl')

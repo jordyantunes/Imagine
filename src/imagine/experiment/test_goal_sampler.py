@@ -19,7 +19,7 @@ input_params = {
 
 init_params(**input_params)
 params = get_env_params(render_mode=True)
-train, test, extra = generate_all_descriptions(params)
+train, test, extra, train_descriptions_compound, test_descriptions_compound = generate_all_descriptions(params)
 train, test = sorted(train), sorted(test)
 
 print("train descriptions", len(train), "test descriptions", len(test))

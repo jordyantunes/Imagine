@@ -55,6 +55,7 @@ class PlayGroundNavigationV1(gym.Env):
                  plant=None,
                  animal=None,
                  supply=None,
+                 add_light=False,
                  **others
                  ):
 
@@ -78,12 +79,13 @@ class PlayGroundNavigationV1(gym.Env):
                     plant=plant,
                     animal=animal,
                     supply=supply)
-        self.params = get_env_params()
+        self.params = get_env_params(render_mode=render_mode)
         self.adm_attributes = self.params['admissible_attributes']
         self.adm_abs_attributes = [a for a in self.adm_attributes if 'relative' not in a]
         self.adm_rel_attributes = [a for a in self.adm_attributes if a not in self.adm_abs_attributes]
 
         self.gripper_change = False
+        self.add_light = add_light
 
         self.rel_attributes_mapping = {
             # rel_attr: (abs_corresp, abs_opposite)
@@ -197,66 +199,82 @@ class PlayGroundNavigationV1(gym.Env):
                     o[k] = np.random.choice(self.attributes[k])
         return objects_decr.copy()
 
-    def reset_with_goal(self, goal_str):
-        words = goal_str.split(' ')
+    def reset_with_goal(self, goal):
+        if isinstance(goal, tuple):
+            pass
+            # print("Reset with Compound goal")
+        else:
+            goal = (goal,)
+        
         objs = []
 
-        if words[0] == 'Grow':
-            obj_to_be_grown = dict(zip(self.adm_abs_attributes, [None for _ in range(len(self.adm_abs_attributes))]))
-            obj_supply = dict(zip(self.adm_abs_attributes, [None for _ in range(len(self.adm_abs_attributes))]))
+        for goal_str in goal:
+            words = goal_str.split(' ')
 
-            rel_attributes = []
-            # first add the object that should be grown
-            for w in words[1:]:
-                for k in self.adm_abs_attributes:
-                    if w in self.attributes[k]:
-                        obj_to_be_grown[k] = w
-                for k in self.adm_rel_attributes:
-                    if w in self.attributes[k]:
-                        obj_to_be_grown[k] = self.rel_attributes_mapping[w][0]
-                        rel_attributes.append((k, w))
-            
-            if obj_to_be_grown['categories'] is None and obj_to_be_grown['types'] is None:
-                # if only attributes are proposed, sample a grownable object type
-                obj_to_be_grown['categories'] = np.random.choice(['animal', 'plant'])
-            objs.append(obj_to_be_grown.copy())
+            if words[0] == 'Grow':
+                obj_to_be_grown = dict(zip(self.adm_abs_attributes, [None for _ in range(len(self.adm_abs_attributes))]))
+                obj_supply = dict(zip(self.adm_abs_attributes, [None for _ in range(len(self.adm_abs_attributes))]))
 
-            # add object to compare if description is relative
-            if len(rel_attributes) > 0:
-                obj_to_compare = obj_to_be_grown.copy()
-                for k, attr in rel_attributes:
-                    obj_to_compare[k] = self.rel_attributes_mapping[attr][1]
-                objs.append(obj_to_compare.copy())
+                rel_attributes = []
+                # first add the object that should be grown
+                for w in words[1:]:
+                    for k in self.adm_abs_attributes:
+                        if w in self.attributes[k]:
+                            obj_to_be_grown[k] = w
+                    for k in self.adm_rel_attributes:
+                        if w in self.attributes[k]:
+                            obj_to_be_grown[k] = self.rel_attributes_mapping[w][0]
+                            rel_attributes.append((k, w))
+                
+                if obj_to_be_grown['categories'] is None and obj_to_be_grown['types'] is None:
+                    # if only attributes are proposed, sample a grownable object type
+                    obj_to_be_grown['categories'] = np.random.choice(['animal', 'plant'])
 
-            # now sample the supply
-            if obj_to_be_grown['categories'] in ['living_thing', 'plant'] or obj_to_be_grown['types'] in \
-                    self.categories['plant']:
-                obj_supply.update(dict(types='water',
-                                       categories='supply'))
+                if obj_to_be_grown not in objs:
+                    objs.append(obj_to_be_grown.copy())
+
+                # add object to compare if description is relative
+                if len(rel_attributes) > 0:
+                    obj_to_compare = obj_to_be_grown.copy()
+                    for k, attr in rel_attributes:
+                        obj_to_compare[k] = self.rel_attributes_mapping[attr][1]
+                    objs.append(obj_to_compare.copy())
+
+                # now sample the supply
+                if obj_to_be_grown['categories'] in ['living_thing', 'plant'] or obj_to_be_grown['types'] in \
+                        self.categories['plant']:
+                    obj_supply.update(dict(types='water',
+                                        categories='supply'))
+                else:
+                    obj_supply.update(dict(categories='supply'))
+
+                if obj_supply not in objs:
+                    objs.append(obj_supply.copy())
+
             else:
-                obj_supply.update(dict(categories='supply'))
-            objs.append(obj_supply.copy())
+                rel_attributes = []
 
-        else:
-            rel_attributes = []
+                obj = dict(zip(self.adm_abs_attributes, [None for _ in range(len(self.adm_abs_attributes))]))
+                for w in words[1:]:
+                    for k in self.adm_abs_attributes:
+                        if w in self.attributes[k]:
+                            obj[k] = w
+                    for k in self.adm_rel_attributes:
+                        if w in self.attributes[k]:
+                            obj[k] = self.rel_attributes_mapping[w][0]
+                            rel_attributes.append((k, w))
 
-            obj = dict(zip(self.adm_abs_attributes, [None for _ in range(len(self.adm_abs_attributes))]))
-            for w in words[1:]:
-                for k in self.adm_abs_attributes:
-                    if w in self.attributes[k]:
-                        obj[k] = w
-                for k in self.adm_rel_attributes:
-                    if w in self.attributes[k]:
-                        obj[k] = self.rel_attributes_mapping[w][0]
-                        rel_attributes.append((k, w))
-            objs.append(obj.copy())
-            
-            # add object to compare if description is relative
-            if len(rel_attributes) > 0:
-                obj_to_compare = obj.copy()
-                for k, attr in rel_attributes:
-                    obj_to_compare[k] = self.rel_attributes_mapping[attr][1]
-                objs.append(obj_to_compare.copy())
+                if obj not in objs:
+                    objs.append(obj.copy())
+                
+                # add object to compare if description is relative
+                if len(rel_attributes) > 0:
+                    obj_to_compare = obj.copy()
+                    for k, attr in rel_attributes:
+                        obj_to_compare[k] = self.rel_attributes_mapping[attr][1]
+                    
+                    if obj_to_compare not in objs:
+                        objs.append(obj_to_compare.copy())
 
         return self.reset_scene(objs)
 
@@ -285,7 +303,7 @@ class PlayGroundNavigationV1(gym.Env):
             self.gripper_state = -1
 
         objects = objects or []
-        if len([o for o in objects if o['types'] == 'light']) == 0:
+        if len([o for o in objects if o['types'] == 'light']) == 0 and self.add_light:
             objects.append({
                 "categories": "env_objects",
                 "types": "light",
@@ -361,8 +379,10 @@ class PlayGroundNavigationV1(gym.Env):
         #     print("observe lights on")
         obj_features = np.array([obj.get_features() for obj in self.objects]).flatten()
 
+        feature_size = self.objects[0].get_features().shape[0]
         # TODO remove
-        obj_features_list = np.reshape(obj_features, (len(self.objects), 42))
+        obj_features_list = np.reshape(obj_features, (len(self.objects), feature_size))
+
         for i in range(obj_features_list.shape[0]):
             self.params['extract_functions']['get_attributes_functions']['colors'](obj_features_list, i)
 
@@ -384,9 +404,6 @@ class PlayGroundNavigationV1(gym.Env):
         Run one timestep of the environment's dynamics.
         """
         action = np.array(action).clip(-1, 1)
-
-        if np.sum(action) != 0:
-            self.first_action = True
 
         # Update the agent position
         self.agent_pos = np.clip(self.agent_pos + action[:2] * self.agent_step_size, -1.2, 1.2)
@@ -413,17 +430,20 @@ class PlayGroundNavigationV1(gym.Env):
                                                    action))
         self.object_grasped = any(any_object_grasped)
 
+
+        # for obj in self.objects:
+        #     obj.update_state(self.agent_pos,
+        #                     self.gripper_state > 0,
+        #                     self.objects,
+        #                     self.object_grasped,
+        #                     action)
+
         # TODO remove try catch
-        try:
-            self.observation[:self.half_dim_obs] = self.observe()
-        except Exception as e:
-            print(e)
-            # for obj in copy_objs:
-            #     obj.update_state(self.agent_pos,
-            #                     self.gripper_state > 0,
-            #                     self.objects,
-            #                     self.object_grasped,
-            #                     action)
+        self.observation[:self.half_dim_obs] = self.observe()
+        # try:
+        # except Exception as e:
+        #     print(e)
+        #     raise Exception(e)
 
         self.observation[self.half_dim_obs:] = self.observation[:self.half_dim_obs] - self.initial_observation
 

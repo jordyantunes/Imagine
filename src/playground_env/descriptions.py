@@ -1,6 +1,6 @@
 from src.playground_env.env_params import get_env_params, ParamsDict
 import re
-from typing import List, Union, Dict
+from typing import List, Union, Dict, Tuple
 from itertools import chain, product
 from functools import reduce
 
@@ -157,7 +157,7 @@ def generate_compound_descriptions(params: ParamsDict, train_descriptions:List[s
 
     return train_descriptions_compound, test_descriptions_compound
 
-def generate_all_descriptions(env_params:ParamsDict):
+def generate_all_descriptions(env_params:ParamsDict) -> Tuple[List[str], List[str], List[str], List[str], List[str]]:
     """
     Generates all possible descriptions from a set of environment parameters.
 
@@ -174,6 +174,10 @@ def generate_all_descriptions(env_params:ParamsDict):
         Tuple of descriptions that belong to the testing set (that contain occurrences reserved to the testing set).
     extra_descriptions: tuple of str
         Other descriptions that we might want to track (here when the agent tries to grow furniture for instance).
+    training_descriptions_compound: tuple of str
+        Tuple of descriptions that belong to the training set (descriptions that do not contain occurrences reserved to the testing set).
+    test_descriptions_compound: tuple of str
+        Tuple of descriptions that belong to the testing set (that contain occurrences reserved to the testing set).
 
     """
     global descriptions_cache
@@ -258,10 +262,10 @@ def generate_all_descriptions(env_params:ParamsDict):
 
     train_descriptions_compound, test_descriptions_compound = generate_compound_descriptions(env_params, train_descriptions, test_descriptions)
 
-    descriptions_cache = (train_descriptions, test_descriptions, extra_descriptions)
+    descriptions_cache = (train_descriptions, test_descriptions, extra_descriptions, train_descriptions_compound, test_descriptions_compound)
     return descriptions_cache
 
 if __name__ == '__main__':
     env_params = get_env_params()
-    train_descriptions, test_descriptions, extra_descriptions = generate_all_descriptions(env_params)
+    train_descriptions, test_descriptions, extra_descriptions, train_descriptions_compound, test_descriptions_compound = generate_all_descriptions(env_params)
     

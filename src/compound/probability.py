@@ -13,6 +13,8 @@ class MarkovChain:
     n_classes : int
 
     def __init__(self, classes:List[str]) -> None:
+        classes = list(set(classes))
+        
         self.n_classes = len(classes) + 1
         self.class_map = {
             c : i

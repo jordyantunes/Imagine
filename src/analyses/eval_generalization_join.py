@@ -121,7 +121,7 @@ def run_generalization_study(path, freq=10):
 
             policy_language_model, reward_language_model = config.get_language_models(params)
 
-            onehot_encoder = config.get_one_hot_encoder(params['train_descriptions'] + params['test_descriptions'])
+            onehot_encoder = config.get_one_hot_encoder(params['train_descriptions'] + params['test_descriptions'] + list(params['train_descriptions_compound']) + list(params['test_descriptions_compound']))
             goal_sampler = GoalSampler(policy_language_model=policy_language_model,
                                        reward_language_model=reward_language_model,
                                        goal_dim=policy_language_model.goal_dim,
