@@ -1,3 +1,4 @@
+from shutil import ExecError
 import numpy as np
 import matplotlib.pyplot as plt
 from gym.spaces import Box
@@ -82,7 +83,7 @@ class Color:
         contains: Bool
             True if rgb code in given Color class.
         """
-        contains = self.space.contains(rgb)
+        contains = self.space.contains(rgb.astype(np.float32))
         if self.color == 'red' and self.shade == 'light':
             contains = contains and (rgb[2] - rgb[1] <= 0.05)
         return contains
@@ -95,9 +96,13 @@ class Color:
         -------
         rgb: 1D nd.array of size 3
         """
-        rgb = np.random.uniform(self.space.low, self.space.high, 3)
+        rgb = np.random.uniform(self.space.low, self.space.high, 3).astype(np.float32)
         if self.color == 'red' and self.shade == 'light':
             rgb[2] = rgb[1] + np.random.uniform(-0.05, 0.05)
+
+        # if not self.contains(rgb):
+        #     raise Exception("err")
+
         return rgb
 
 

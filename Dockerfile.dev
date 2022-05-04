@@ -24,7 +24,8 @@ RUN python -m pip install \
     matplotlib==3.4.0 \
     pandas==1.2.3 \
     tqdm==4.59.0 \
-    tensorflow==2.4.1 \
+    tensorflow \ 
+    # should be tensorflow==2.4.1 but pypi not working
     mpi4py==3.0.3 \
     numpy==1.19.5 \
     scikit_learn==0.24.1
@@ -35,9 +36,11 @@ RUN python -m pip install pygame==2.0.1 \
     gym 
 
 RUN python -m pip install \
-    torch==1.8.1+cu111 torchvision==0.9.1+cu111 torchaudio==0.8.1 -f https://download.pytorch.org/whl/torch_stable.html
+    # torch==1.8.1+cu111 torchvision==0.9.1+cu111 torchaudio==0.8.1 -f https://download.pytorch.org/whl/torch_stable.html
+    pip install torch==1.8.1+cpu torchvision==0.9.1+cpu torchaudio==0.8.1 -f https://download.pytorch.org/whl/torch_stable.html
 
 RUN python -m pip install deepdiff
+RUN python -m pip install networkx==2.6.3
 
 FROM python:3.8-slim as build
 
@@ -45,7 +48,12 @@ RUN apt-get update -y && apt-get install openmpi-bin -y
 
 COPY --from=compile /opt/venv /opt/venv
 
+RUN apt-get update \
+ && apt-get install -y sudo
+
 RUN useradd -ms /bin/bash localuser
+RUN adduser localuser sudo
+RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 USER localuser
 WORKDIR /home/localuser
 

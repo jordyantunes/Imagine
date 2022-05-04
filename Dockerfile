@@ -40,6 +40,7 @@ RUN python -m pip install \
     pip install torch==1.8.1+cpu torchvision==0.9.1+cpu torchaudio==0.8.1 -f https://download.pytorch.org/whl/torch_stable.html
 
 RUN python -m pip install deepdiff
+RUN python -m pip install networkx==2.6.3
 
 FROM python:3.8-slim as build
 
@@ -47,7 +48,12 @@ RUN apt-get update -y && apt-get install openmpi-bin -y
 
 COPY --from=compile /opt/venv /opt/venv
 
+RUN apt-get update \
+ && apt-get install -y sudo
+
 RUN useradd -ms /bin/bash localuser
+RUN adduser localuser sudo
+RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 USER localuser
 WORKDIR /home/localuser
 
