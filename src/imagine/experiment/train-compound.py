@@ -30,6 +30,13 @@ from src.imagine.reward_function.oracle_reward_function_playground import Oracle
 from src.compound.manager import ProbabilityManager
 import json
 
+#TODO remove memory profiler
+# from guppy import hpy
+# hp = hpy()
+from pympler import tracker
+tr = tracker.SummaryTracker()
+
+
 NUM_CPU = 1
 NB_EPOCHS = 500
 ENV = 'PlaygroundNavigation-v1'
@@ -47,6 +54,10 @@ REWARD_CHECKPOINT = 'model_0.pk'  # 'pre_trained/reward_func_checkpoint_270'
 def train(policy, training_worker:RolloutWorker, evaluation_worker:RolloutWorker, data_processor:DataProcessor, goal_sampler:GoalSampler, eval_goal_sampler:EvalGoalSampler, reward_function:Union[RewardFunctionLSTM, RewardFunctionLSTM, OracleRewardFunction],
           n_epochs:int, n_test_rollouts:int, n_cycles:int, n_batches:int, social_partner:SocialPartner,
           stats_logger, params, **kwargs):
+    #TODO remove memory profiling
+    # global hp
+    global tr
+
     print('\n\n')
     print(params['conditions'])
     print('\n\n')
@@ -195,8 +206,24 @@ def train(policy, training_worker:RolloutWorker, evaluation_worker:RolloutWorker
         # # # # # # # # # # # # # # # # # #
         stats_logger.compute_metrics(epoch, episode_count, eval_success_rate, time_tracker)
 
+        #TODO remove memory profiling
+        # h = hp.heap()
+        # print(h)
+        # for i in range(5):
+        #     print("-----------------------------------------------------------------")
+        #     print("---------------Objeto pai----------------------------------------")
+        #     print(h.byrcs[i])
+        #     print("---------------Objetos filhos------------------------------------")
+        #     print(h.byrcs[i].byid)
+        #     print("\n\n")
+        tr.print_diff()
+
 
 def launch(**kwargs):
+    #TODO remove memory profiling
+    # global hp
+    # hp.setrelheap()
+
     # Fork for multi-CPU MPI implementation.
     rank = fork(kwargs['num_cpu'], custom_params=kwargs['custom_mpi_params'])
 
@@ -318,7 +345,7 @@ if __name__ == '__main__':
     add('--reward_checkpoint', default=REWARD_CHECKPOINT, type=str, help="reward checkpoint file for pretrained")
     add('--p_partner_availability', default=P_PARTNER_AVAIL, type=float, help="probability availability partner")
     add('--imagination_method', default=IMAG_METHOD, type=str, help="CGH, low_precision, low_coverage, oracle, random")
-    add('--admissible_actions', default=None, nargs='*', type=str, help="Admissable Actions. Affects sentences. Default: ('Grow', 'Grasp', 'Go', )")
+    add('--admissible_actions', default=None, nargs='*', type=str, help="Admissable Actions. Affects sentences. Default: ('Grow', 'Grasp', 'Move', )")
     add('--admissible_attributes', default=None, nargs='*', type=str, help="Admissable attributes. Affects sentences. Default: ('colors', 'categories', 'types')")
     # add('--custom_mpi_params', default=['--oversubscribe'], nargs='*', type=str, help="Custom MPI Params")
     add('--custom_mpi_params', default=None, nargs='*', type=str, help="Custom MPI Params")

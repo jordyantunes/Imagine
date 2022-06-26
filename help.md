@@ -12,6 +12,12 @@ docker run -it -d --name imagine-oracle -v oracle:/home/localuser/src/data --pri
 
 docker run -it -d --name imagine -v experiment:/home/localuser/src/data --privileged jordyantunes/imagine:latest
 
+docker run -it -d --name compound -v compound:/home/localuser/src/data --privileged jordyantunes/imagine:compound
+
+docker run -it -d --name compound-new -v compound-new:/home/localuser/src/data --privileged jordyantunes/imagine:compound
+
+docker run -it -d --name compound-mem -v compound-mem:/home/localuser/src/data --privileged jordyantunes/imagine:compound
+
 Proposta de Valor
 Quem Somos Nós
 Onde investimos
@@ -33,12 +39,16 @@ python train.py \
 # compount
 nohup \
 python train-compound.py \
---num_cpu=6 \
+--num_cpu=8 \
 --policy_architecture=modular_attention \
 --imagination_method=CGH \
 --reward_function=learned_lstm  \
 --goal_invention=from_epoch_10 \
---n_epochs=167 \
---admissible_actions Go Grasp Grow Turn Pour \
---admissible_attributes colors categories types status \
---max-nb-objects 4 &
+--n_epochs=201 \
+--admissible_attributes colors categories types sizes relative_sizes \
+--admissible_actions Move Grasp Grow Turn Pour \
+--compound_goals_from=120 \
+--admissible_actions Move Grasp Grow Turn Pour \
+--admissible_attributes colors categories types status under_lighting \
+--max-nb-objects 6 \
+--add-light &

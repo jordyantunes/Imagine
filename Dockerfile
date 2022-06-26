@@ -24,7 +24,12 @@ RUN python -m pip install \
     matplotlib==3.4.0 \
     pandas==1.2.3 \
     tqdm==4.59.0 \
-    tensorflow \ 
+    # erro que aconteceu 29/05
+    protobuf~=3.19.0 \
+    # memory profiling
+    Pympler==1.0.1 \ 
+    https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow_cpu-2.4.1-cp38-cp38-manylinux2010_x86_64.whl \
+    # tensorflow \ 
     # should be tensorflow==2.4.1 but pypi not working
     mpi4py==3.0.3 \
     numpy==1.19.5 \
@@ -41,6 +46,7 @@ RUN python -m pip install \
 
 RUN python -m pip install deepdiff
 RUN python -m pip install networkx==2.6.3
+RUN python -m pip install guppy3
 
 FROM python:3.8-slim as build
 
@@ -62,7 +68,7 @@ ENV PYTHONPATH="/home/localuser"
 
 RUN python -c "import nltk; nltk.download('punkt')"
 
-COPY src src
-COPY pretrained_weights pretrained_weights
+COPY --chown=localuser:sudo src src
+COPY --chown=localuser:sudo pretrained_weights pretrained_weights
 
 ENTRYPOINT "/bin/bash"

@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+nohup \
 python train-compound.py \
 --num_cpu=6 \
 --policy_architecture=modular_attention \
@@ -13,4 +14,4 @@ python train-compound.py \
 --admissible_actions Go Grasp Grow Turn Pour \
 --admissible_attributes colors categories types status under_lighting \
 --max-nb-objects 6 \
---add-light
+--add-light &

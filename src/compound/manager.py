@@ -45,6 +45,11 @@ class ProbabilityManager:
             
             self.epoch_probability.append(probs)
 
+        if len(self.epochs) > 2:
+            print("Removing previous epochs from history")
+            del self.epochs[:-2]
+            del self.epoch_probability[:-2]
+
         self.current_epoch = MPI.COMM_WORLD.bcast(self.current_epoch, root=0)
         self.epochs = MPI.COMM_WORLD.bcast(self.epochs, root=0)
         self.epoch_probability = MPI.COMM_WORLD.bcast(self.epoch_probability, root=0)

@@ -6,6 +6,7 @@ from src.utils.util import set_global_seeds
 import src.imagine.experiment.config as config
 from src.imagine.interaction import RolloutWorker
 from src.imagine.goal_sampler import GoalSampler
+from src.compound.manager import ProbabilityManager
 from src.playground_env.reward_function import get_reward_from_state
 from src.playground_env.env_params import get_env_params
 from src.utils.util import get_stat_func
@@ -81,7 +82,8 @@ def run_generalization_study(path, freq=10):
         set_global_seeds(seed)
 
         goal_invention = int(params['conditions']['goal_invention'].split('_')[-1])
-        test_descriptions = params['test_descriptions']
+        compound_goals_from = params['conditions']['compound_goals_from']
+        test_descriptions = params['all_test_descriptions']
 
         rank = 0
         if first:
@@ -106,17 +108,22 @@ def run_generalization_study(path, freq=10):
                                                             p_partner_availability=params['conditions']['p_social_partner_availability'],
                                                             git_commit='',
                                                             imagination_method=params['conditions']['imagination_method'],
-                                                            admissible_attributes=params['env_params'].get('admissible_attributes'),
-                                                            cuda=params['env_params'].get('cuda'),
-                                                            **params['env_params'].get('categories', {}))
+                                                            # admissible_attributes=params['env_params'].get('admissible_attributes'),
+                                                            # cuda=params['env_params'].get('cuda'),
+                                                            # **params['env_params'].get('categories', {}),
+                                                            **params['env_params'])
 
 
             policy_language_model, reward_language_model = config.get_language_models(params)
 
-            onehot_encoder = config.get_one_hot_encoder(params['train_descriptions'] + params['test_descriptions'] + list(params['train_descriptions_compound']) + list(params['test_descriptions_compound']))
+            onehot_encoder = config.get_one_hot_encoder(params['all_train_descriptions'] + params['all_test_descriptions'])
+
+            probs_manager = ProbabilityManager(list(params['train_descriptions'] + params['test_descriptions']))
+
             goal_sampler = GoalSampler(policy_language_model=policy_language_model,
                                        reward_language_model=reward_language_model,
                                        goal_dim=policy_language_model.goal_dim,
+                                       probability_manager=probs_manager,
                                        one_hot_encoder=onehot_encoder,
                                        **params.get('goal_sampler', {}),
                                        params=params)
@@ -177,9 +184,13 @@ def run_generalization_study(path, freq=10):
                 evaluation_worker.clear_history()
                 successes_per_descr = np.zeros([len(test_descriptions)])
                 for ind_inst, instruction in enumerate(test_descriptions):
+                    if isinstance(instruction, list) and epoch < compound_goals_from:
+                        print("Skipping compound goal")
+                        continue
+
                     # instruction = 'Grasp any fly'
                     success_instruction = []
-                    goal_str = [instruction]
+                    goal_str = [instruction] if isinstance(instruction, str) else [" ".join(instruction)]
                     goal_encoding = [policy_language_model.encode(goal_str[0])]
                     goal_id = [0]
                     for i in range(N_REPET):

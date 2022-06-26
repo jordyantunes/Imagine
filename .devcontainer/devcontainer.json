@@ -4,8 +4,11 @@
 	"name": "Python 3",
 	"build": {
 		"dockerfile": "../Dockerfile.dev",
+		"args": {},
 		"context": ".."
 	},
+
+	"runArgs": ["--privileged"],
 
 	// Set *default* container specific settings.json values on container create.
 	"settings": { 

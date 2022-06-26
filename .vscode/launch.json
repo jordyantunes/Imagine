@@ -18,6 +18,22 @@
                 ]
         },
         {
+            "name": "Compound: eval_gen",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/analyses/eval_generalization.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/src/analyses/",
+            "env": {
+                "HOME": "C:/Users/jordy"
+            },
+            "args": [
+                "--path",
+                "C:\\Users\\jordy\\OneDrive\\UTFPR\\Mestrado\\experimentos\\compound\\_data\\expe\\PlaygroundNavigation-v1",
+                // "--run", "False"
+                ]
+        },
+        {
             "name": "Python: Arquivo Atual",
             "type": "python",
             "request": "launch",
@@ -79,7 +95,7 @@
                 "--goal_invention=from_epoch_10",
                 "--compound_goals_from=10",
                 "--n_epochs=20",
-                "--admissible_actions", "Go", "Grasp", "Grow", "Turn", "Pour",
+                "--admissible_actions", "Move", "Grasp", "Grow", "Turn", "Pour",
                 "--admissible_attributes", "colors", "categories", "types", "status", "under_lighting",
                 "--max-nb-objects", "6",
                 "--add-light"
@@ -96,18 +112,36 @@
                 "HOME": "/home/localuser"
             },
             "args": [
-                "--num_cpu=1",
+                "--num_cpu=2",
                 "--policy_architecture=modular_attention",
                 "--imagination_method=CGH",
                 "--reward_function=learned_lstm",
-                "--goal_invention=from_epoch_10",
+                "--goal_invention=from_epoch_5",
                 "--compound_goals_from=10",
-                "--n_epochs=20",
-                "--admissible_actions", "Go", "Grasp", "Grow", "Turn", "Pour",
+                "--n_epochs=21",
+                "--admissible_actions", "Move", "Grasp", "Grow", "Turn", "Pour",
                 "--admissible_attributes", "colors", "categories", "types", "status", "under_lighting",
                 "--max-nb-objects", "6",
                 "--add-light"
             ]
+        },
+        {
+            "name": "Compound Full: eval_gen",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/analyses/eval_generalization.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/src/analyses/",
+            "env": {
+                "HOME": "C:/Users/jordy"
+            },
+            "args": [
+                "--path",
+                "C:/Users/jordy/OneDrive/UTFPR/Mestrado/experimentos/compound-full/_data/expe/PlaygroundNavigation-v1",
+                "--plot", "TRUE",
+                "--run", "TRUE"
+                // "--run", "False"
+                ]
         },
     ]
 }
