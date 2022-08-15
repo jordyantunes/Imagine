@@ -32,6 +32,10 @@
 		"ms-python.vscode-pylance"
 	],
 
+	"mounts": [
+		"type=bind,source=C:\\Users\\jordy\\OneDrive\\UTFPR\\Mestrado\\experimentos,target=/experimentos"
+	]
+
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
 

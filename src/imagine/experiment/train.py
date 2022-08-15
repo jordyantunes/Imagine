@@ -5,6 +5,8 @@ import argparse
 from pathlib import Path
 from typing import Union
 
+from src.imagine.rl.ddpg import DDPG
+
 if os.getenv("HOME") is None:
     os.environ['HOME'] = str(Path.home())
 
@@ -43,7 +45,7 @@ RL_RATIO_POSITIVE = 0.5
 REWARD_CHECKPOINT = 'model_0.pk'  # 'pre_trained/reward_func_checkpoint_270'
 
 
-def train(policy, training_worker:RolloutWorker, evaluation_worker:RolloutWorker, data_processor:DataProcessor, goal_sampler:GoalSampler, eval_goal_sampler:EvalGoalSampler, reward_function:Union[RewardFunctionLSTM, RewardFunctionLSTM, OracleRewardFunction],
+def train(policy:DDPG, training_worker:RolloutWorker, evaluation_worker:RolloutWorker, data_processor:DataProcessor, goal_sampler:GoalSampler, eval_goal_sampler:EvalGoalSampler, reward_function:Union[RewardFunctionLSTM, RewardFunctionLSTM, OracleRewardFunction],
           n_epochs:int, n_test_rollouts:int, n_cycles:int, n_batches:int, social_partner:SocialPartner,
           stats_logger, params, **kwargs):
     print('\n\n')

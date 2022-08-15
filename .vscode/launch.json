@@ -14,8 +14,9 @@
             "args": [
                 "--path",
                 "C:\\Users\\jordy\\OneDrive\\UTFPR\\Mestrado\\experimentos\\noimagination\\_data\\expe\\PlaygroundNavigation-v1",
-                "--run", "False"
-                ]
+                "--run",
+                "False"
+            ]
         },
         {
             "name": "Compound: eval_gen",
@@ -31,7 +32,7 @@
                 "--path",
                 "C:\\Users\\jordy\\OneDrive\\UTFPR\\Mestrado\\experimentos\\compound\\_data\\expe\\PlaygroundNavigation-v1",
                 // "--run", "False"
-                ]
+            ]
         },
         {
             "name": "Python: Arquivo Atual",
@@ -61,10 +62,28 @@
                 "--reward_function=learned_lstm ",
                 "--goal_invention=from_epoch_10",
                 "--n_epochs=167",
-                "--admissible_attributes", "colors", "categories", "types", "sizes", "relative_sizes",
-                "--furnitures", "door", "chair", "desk", "lamp",
-                "--plants", "flower", "tree", "grass", "rose",
-                "--animals", "dog", "cat", "human", "fly"]
+                "--admissible_attributes",
+                "colors",
+                "categories",
+                "types",
+                "sizes",
+                "relative_sizes",
+                "--furnitures",
+                "door",
+                "chair",
+                "desk",
+                "lamp",
+                "--plants",
+                "flower",
+                "tree",
+                "grass",
+                "rose",
+                "--animals",
+                "dog",
+                "cat",
+                "human",
+                "fly"
+            ]
         },
         {
             "name": "Python: play",
@@ -76,6 +95,25 @@
             "env": {
                 "HOME": "C:/Users/jordy"
             },
+        },
+        {
+            "name": "Experiment: play",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/imagine/experiment/play.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/src/imagine/experiment",
+            "env": {
+                "HOME": "C:/Users/jordy"
+            },
+            "args": [
+                "--policy_file",
+                "C:/Users/jordy/OneDrive/UTFPR/Mestrado/experimentos/compound-full/_data/expe/PlaygroundNavigation-v1/333/policy_checkpoints/policy_200.pkl",
+                "--params_file",
+                "C:/Users/jordy/OneDrive/UTFPR/Mestrado/experimentos/compound-full/_data/expe/PlaygroundNavigation-v1/333/params.json",
+                "--path",
+                "C:/Users/jordy/OneDrive/UTFPR/Mestrado/experimentos/compound-full/_data/expe/PlaygroundNavigation-v1/333"
+            ]
         },
         {
             "name": "Train Compound",
@@ -95,10 +133,119 @@
                 "--goal_invention=from_epoch_10",
                 "--compound_goals_from=10",
                 "--n_epochs=20",
-                "--admissible_actions", "Move", "Grasp", "Grow", "Turn", "Pour",
-                "--admissible_attributes", "colors", "categories", "types", "status", "under_lighting",
-                "--max-nb-objects", "6",
-                "--add-light"
+                "--admissible_actions",
+                "Move",
+                "Grasp",
+                "Grow",
+                "Turn",
+                "Pour",
+                "--admissible_attributes",
+                "colors",
+                "categories",
+                "types",
+                "status",
+                "under_lighting",
+                "--max-nb-objects",
+                "6",
+                "--add-light",
+                "--compound-goals"
+            ]
+        },
+        {
+            "name": "Train Compound: Category Only",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/imagine/experiment/train-compound.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/src/imagine/experiment/",
+            "env": {
+                "HOME": "C:/Users/jordy"
+            },
+            "args": [
+                "--num_cpu=1",
+                "--policy_architecture=modular_attention",
+                "--imagination_method=CGH",
+                "--reward_function=learned_lstm",
+                "--goal_invention=from_epoch_10",
+                "--compound_goals_from=10",
+                "--n_epochs=20",
+                "--admissible_actions",
+                "Move",
+                "Grasp",
+                "Grow",
+                "Turn",
+                "Pour",
+                "--admissible_attributes",
+                "colors",
+                "categories",
+                "types",
+                "status",
+                "under_lighting",
+                "--max-nb-objects",
+                "6",
+                "--add-light",
+                "--furnitures",
+                "door",
+                "chair",
+                "desk",
+                "lamp",
+                "window",
+                "--animals",
+                "dog",
+                "cat",
+                "human",
+                "fly",
+                "--compound-config",
+                "category_only:true",
+                "--compound-goals"
+            ]
+        },
+        {
+            "name": "Train No Compound",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/imagine/experiment/train-compound.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/src/imagine/experiment/",
+            "env": {
+                "HOME": "C:/Users/jordy"
+            },
+            "args": [
+                "--num_cpu=1",
+                "--policy_architecture=modular_attention",
+                "--imagination_method=CGH",
+                "--reward_function=learned_lstm",
+                "--goal_invention=from_epoch_10",
+                "--compound_goals_from=10",
+                "--n_epochs=20",
+                "--admissible_actions",
+                "Move",
+                "Grasp",
+                "Grow",
+                "Turn",
+                "Pour",
+                "--admissible_attributes",
+                "colors",
+                "categories",
+                "types",
+                "status",
+                "under_lighting",
+                "--max-nb-objects",
+                "6",
+                "--add-light",
+                "--furnitures",
+                "door",
+                "chair",
+                "desk",
+                "lamp",
+                "window",
+                "--animals",
+                "dog",
+                "cat",
+                "human",
+                "fly",
+                "--compound-config",
+                "category_only:true"
             ]
         },
         {
@@ -119,10 +266,69 @@
                 "--goal_invention=from_epoch_5",
                 "--compound_goals_from=10",
                 "--n_epochs=21",
-                "--admissible_actions", "Move", "Grasp", "Grow", "Turn", "Pour",
-                "--admissible_attributes", "colors", "categories", "types", "status", "under_lighting",
-                "--max-nb-objects", "6",
+                "--admissible_actions",
+                "Move",
+                "Grasp",
+                "Grow",
+                "Turn",
+                "Pour",
+                "--admissible_attributes",
+                "colors",
+                "categories",
+                "types",
+                "status",
+                "under_lighting",
+                "--max-nb-objects",
+                "6",
                 "--add-light"
+            ]
+        },
+        {
+            "name": "Train Compound Reduced - Docker",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/imagine/experiment/train-compound.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/src/imagine/experiment/",
+            "env": {
+                "HOME": "/home/localuser"
+            },
+            "args": [
+                "--num_cpu=1",
+                "--policy_architecture=modular_attention",
+                "--imagination_method=CGH",
+                "--reward_function=learned_lstm",
+                "--goal_invention=from_epoch_5",
+                "--compound_goals_from=10",
+                "--n_epochs=21",
+                "--admissible_actions",
+                "Move",
+                "Grasp",
+                "Grow",
+                "Turn",
+                "Pour",
+                "--admissible_attributes",
+                "colors",
+                "categories",
+                "types",
+                "status",
+                "under_lighting",
+                "--max-nb-objects",
+                "6",
+                "--add-light",
+                "--furnitures",
+                "door",
+                "chair",
+                "desk",
+                "lamp",
+                "window",
+                "--animals",
+                "dog",
+                "cat",
+                "human",
+                "fly",
+                "--compound-config",
+                "category_only:true"
             ]
         },
         {
@@ -138,10 +344,33 @@
             "args": [
                 "--path",
                 "C:/Users/jordy/OneDrive/UTFPR/Mestrado/experimentos/compound-full/_data/expe/PlaygroundNavigation-v1",
-                "--plot", "TRUE",
-                "--run", "TRUE"
+                "--plot",
+                "TRUE",
+                // "--run", "TRUE"
+                "--run",
+                "False"
+            ]
+        },
+        {
+            "name": "Compound Full: eval_gen Docker",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/analyses/eval_generalization.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/src/analyses/",
+            "env": {
+                "HOME": "C:/Users/jordy",
+                "NLTK_DATA": "/home/localuser/nltk_data"
+            },
+            "args": [
+                "--path",
+                "/experimentos/no-compound/_data/expe/PlaygroundNavigation-v1",
+                "--plot",
+                "TRUE",
+                "--run",
+                "TRUE"
                 // "--run", "False"
-                ]
+            ]
         },
     ]
 }

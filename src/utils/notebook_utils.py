@@ -12,6 +12,7 @@ sys.path.append('../../../')
 import src.imagine.experiment.config as config
 
 from src.imagine.goal_sampler import GoalSampler
+from src.compound.manager import ProbabilityManager
 
 
 def get_params_for_notebook(path, params_file_name='params.json'):
@@ -39,7 +40,9 @@ def get_params_for_notebook(path, params_file_name='params.json'):
                                                         'p_social_partner_availability'],
                                                     imagination_method=params['conditions']['imagination_method'],
                                                     git_commit='',
-                                                    display=False)
+                                                    display=False,
+                                                    **params['env_params']['categories'],
+                                                    **params['env_params'])
     return params
 
 
@@ -48,13 +51,17 @@ def get_modules_for_notebook(path, params):
     POLICY_FILE = path + 'policy_checkpoints/policy_{}.pkl'.format(EPOCH)
     policy_language_model, reward_language_model = config.get_language_models(params)
 
-    onehot_encoder = config.get_one_hot_encoder(params['all_descriptions'])
+    onehot_encoder = config.get_one_hot_encoder(params['all_train_descriptions'] + params['all_test_descriptions'])
+
+    probs_manager = ProbabilityManager(list(params['train_descriptions'] + params['test_descriptions']))
+
     # Define the goal sampler for training
     goal_sampler = GoalSampler(policy_language_model=policy_language_model,
                                reward_language_model=reward_language_model,
                                goal_dim=policy_language_model.goal_dim,
                                one_hot_encoder=onehot_encoder,
-                               params=params)
+                               params=params,
+                               probability_manager=probs_manager)
 
     reward_function = config.get_reward_function(goal_sampler, params)
     if params['conditions']['reward_function'] == 'learned_lstm':
@@ -79,9 +86,7 @@ def generate_animation_reward_module(env, goal_str, reward_language_model, rewar
     ax2 = fig.add_subplot(1, 2, 2)
 
     plots = []
-    rewards1 = []
-    rewards2 = []
-    rewards3 = []
+    rewards = []
     ## Rollout of a policy
     env.reset()
     initial_o = env.unwrapped.reset_with_goal(goal_str)
@@ -95,19 +100,25 @@ def generate_animation_reward_module(env, goal_str, reward_language_model, rewar
         o, _, _, _ = env.step(action)
         input_o = torch.tensor(o).float().view(1, len(o))
         reward_per_object = reward_function.reward_function.compute_logits_before_or(input_o, input_goal)
-        r1, r2, r3 = (elem.detach()[0][0].item() for elem in reward_per_object)
-        rewards1.append(r1)
-        rewards2.append(r2)
-        rewards3.append(r3)
-        env.render(close=True)
+        this_reward = (elem.detach()[0][0].item() for elem in reward_per_object)
         obs = pygame.surfarray.array3d(env.viewer).transpose([1, 0, 2])
         im = ax1.imshow(obs, animated=True)
-        line1, = ax2.plot(rewards1, color='blue', label='R for ' + objects[0])
-        line2, = ax2.plot(rewards2, color='red', label='R for ' + objects[1])
-        line3, = ax2.plot(rewards3, color='green', label='R for ' + objects[2])
+        env.render(close=True)
+        lines_to_plot = []
+
+        for i, r in enumerate(this_reward):
+            if len(rewards) == i:
+                rewards.append([])
+            rewards[i].append(r)
+            line, = ax2.plot(rewards[i], color='blue', label='R for ' + objects[i])
+            lines_to_plot.append(line)
+        
+        # line1, = ax2.plot(rewards1, color='blue', label='R for ' + objects[0])
+        # line2, = ax2.plot(rewards2, color='red', label='R for ' + objects[1])
+        # line3, = ax2.plot(rewards3, color='green', label='R for ' + objects[2])
         if t == 0:
             ax2.legend()
-        plots.append([im, line1, line2, line3])
+        plots.append([im, *lines_to_plot])
 
     ani = animation.ArtistAnimation(fig, plots, interval=400, blit=False,
                                     repeat=False)
@@ -120,9 +131,10 @@ def generate_animation_policy_module(env, goal_str, reward_language_model, polic
     ax2 = fig.add_subplot(1, 2, 2)
 
     plots = []
-    z_list1 = []
-    z_list2 = []
-    z_list3 = []
+    # z_list1 = []
+    # z_list2 = []
+    # z_list3 = []
+    z_list = []
     ## Rollout of a policy
     env.reset()
     initial_o = env.unwrapped.reset_with_goal(goal_str)
@@ -136,19 +148,30 @@ def generate_animation_policy_module(env, goal_str, reward_language_model, polic
         o, _, _, _ = env.step(action)
         input_o = torch.tensor(o).float().view(1, len(o))
         norm_per_object = policy.actor_network.get_norm_per_object(input_o, input_goal)
-        z1, z2, z3 = (elem.detach().item() for elem in norm_per_object)
-        z_list1.append(z1)
-        z_list2.append(z2)
-        z_list3.append(z3)
+        z_now = (elem.detach().item() for elem in norm_per_object)
+
         env.render(close=True)
         obs = pygame.surfarray.array3d(env.viewer).transpose([1, 0, 2])
         im = ax1.imshow(obs, animated=True)
-        line1, = ax2.plot(z_list1, color='blue', label='|z| for ' + objects[0])
-        line2, = ax2.plot(z_list2, color='red', label='|z| for ' + objects[1])
-        line3, = ax2.plot(z_list3, color='green', label='|z| for ' + objects[2])
+
+        lines_to_plot = []
+
+        for i, z in enumerate(z_now):
+            if len(z_list) == i:
+                z_list.append([])
+            z_list[i].append(z)
+            line, = ax2.plot(z_list[i], color='blue', label='|z| for ' + objects[i])
+            lines_to_plot.append(line)
+        # z_list1.append(z1)
+        # z_list2.append(z2)
+        # z_list3.append(z3)
+        
+        # line1, = ax2.plot(z_list1, color='blue', label='|z| for ' + objects[0])
+        # line2, = ax2.plot(z_list2, color='red', label='|z| for ' + objects[1])
+        # line3, = ax2.plot(z_list3, color='green', label='|z| for ' + objects[2])
         if t == 0:
             ax2.legend()
-        plots.append([im, line1, line2, line3])
+        plots.append([im, *lines_to_plot])
 
     ani = animation.ArtistAnimation(fig, plots, interval=400, blit=False,
                                     repeat=False)
@@ -158,10 +181,10 @@ def generate_animation_policy_module(env, goal_str, reward_language_model, polic
 def plot_attention_vector(attention_vector, goal_str, params):
     body_feat = ['Body X', 'Body Y', 'Body gripper']
     obj_things = list(params['env_params']['name_attributes'])[:-5]
-    obj_feat = ['obj X', 'obj Y', 'obj size', 'obj R', 'obj G', 'obj B', 'obj gripper']
+    obj_feat = ['obj X', 'obj Y', 'obj size', 'obj R', 'obj G', 'obj B', 'obj gripper', 'obj status', 'obj under_light']
     delta_body_feat = ['Δ ' + elem for elem in body_feat]
     delta_obj_things = ['Δ ' + elem for elem in obj_things]
-    delta_obj_feat = ['Δ ' + elem for elem in obj_feat]
+    delta_obj_feat = ['Δ ' + elem for elem in obj_feat[:-2]]
 
     state_description = body_feat + delta_body_feat + obj_things + obj_feat + delta_obj_things + delta_obj_feat
 

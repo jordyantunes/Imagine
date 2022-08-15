@@ -155,7 +155,7 @@ def configure_everything(rank, seed, num_cpu, env, trial_id, n_epochs, reward_fu
 
     # Configure logging
     if rank == 0:
-        logdir = find_save_path('../../data/expe/' + env + "/", trial_id)
+        logdir = find_save_path(str(Path(REPO_PATH) / 'data/expe/' / env) + "/", trial_id)
         logger.configure(dir=logdir)
         os.makedirs(logdir + 'tmp/', exist_ok=True)
         os.makedirs(logdir + 'reward_checkpoints/', exist_ok=True)
@@ -341,7 +341,7 @@ def simple_goal_subtract(a, b):
     return a - b
 
 
-def configure_learning_algo(reward_function, goal_sampler, params, reuse=False, use_mpi=True):
+def configure_learning_algo(reward_function, goal_sampler, params, reuse=False, use_mpi=True) -> DDPG:
     sample_her_transitions = configure_her(params, reward_function, goal_sampler)
     params['dims'].update(action_max=1)
     # Learning agent

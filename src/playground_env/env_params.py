@@ -43,7 +43,7 @@ class ParamsDict(TypedDict):
     render_mode:bool
     combination_sentences:Any
     cuda:bool
-
+    compound_config:dict
 
 
 params_init = False
@@ -81,7 +81,9 @@ global_params = dict(max_nb_objects=3,
                      plants = AVAILABLE_OBJECTS['plants'],
                      animals = AVAILABLE_OBJECTS['animals'],
                      supplies = AVAILABLE_OBJECTS['supplies'],
-                     env_objects = AVAILABLE_OBJECTS['env_objects'])
+                     env_objects = AVAILABLE_OBJECTS['env_objects'],
+                     compound_config = {},
+                     compound_goals = False)
 
 cache_env_params = None
 
@@ -124,7 +126,9 @@ def get_env_params(max_nb_objects=None,
                    plants=None,
                    animals=None,
                    supplies=None,
-                   env_objects=None
+                   env_objects=None,
+                   compound_config=None,
+                   compound_goals=None
                    ) -> ParamsDict:
     """
     Builds the set of environment parameters, and the set of function to extract information from the state.
@@ -177,7 +181,9 @@ def get_env_params(max_nb_objects=None,
         obj_size_update is None and \
         render_mode is None and \
         cuda is None and \
-        cache_env_params is not None:
+        cache_env_params is not None and \
+        compound_config is not None and \
+        compound_goals is not None:
         return cache_env_params
 
     max_nb_objects= max_nb_objects or global_params['max_nb_objects']
@@ -192,6 +198,8 @@ def get_env_params(max_nb_objects=None,
     obj_size_update= obj_size_update or global_params['obj_size_update']
     render_mode= render_mode or global_params['render_mode']
     cuda = cuda or global_params['cuda']
+    compound_config = compound_config or global_params['compound_config']
+    compound_goals = compound_goals or global_params['compound_goals']
 
     # list objects and categories
     furnitures = furnitures or global_params['furnitures']
@@ -337,7 +345,9 @@ def get_env_params(max_nb_objects=None,
                   obj_size_update=obj_size_update,
                   render_mode=render_mode,
                   combination_sentences=combination_sentences,
-                  cuda=cuda
+                  cuda=cuda,
+                  compound_config=compound_config,
+                  compound_goals=compound_goals
                   )
 
     # # # # # # # # # # # # # # #

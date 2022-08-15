@@ -111,17 +111,27 @@ def get_compound_goals(params:ParamsDict, descriptions:List[str]):
 
     # grow
     grow_goals = by_type.get('Grow', [])
-    list_animal = (
-        params['categories']['animal'] +
-        ('animal',)
-    )
-    list_plants = (
-        params['categories']['plant'] +
-        ('plant',)
-    )
+
+    if not params.get('compound_config', {}).get('category_only', False):
+        list_animal = (
+            params['categories']['animal'] +
+            ('animal',)
+        )
+        list_plants = (
+            params['categories']['plant'] +
+            ('plant',)
+        )
+    else:
+        list_animal = (
+            'animal',
+        )
+        list_plants = (
+            'plant',
+        )
+
     grow_animals_goals = [g for g in grow_goals if g.rsplit(' ', maxsplit=1)[-1] in list_animal]
     grow_plants_goals = [g for g in grow_goals if g.rsplit(' ', maxsplit=1)[-1] in list_plants]
-    grow_generic_goals = list(set(grow_goals) - set(grow_animals_goals) - set(grow_plants_goals))
+    grow_generic_goals = [g for g in grow_goals if g.rsplit(' ', maxsplit=1)[-1] in ('thing',)]
 
     # turn
     turn_goals = by_type.get('Turn', [])
@@ -136,11 +146,14 @@ def get_compound_goals(params:ParamsDict, descriptions:List[str]):
         tuple(product(grasp_water, grow_generic_goals)) +
         tuple(product(grasp_food, grow_animals_goals)) +
         tuple(product(grasp_food, grow_generic_goals)) +
-        tuple(product(grasp_generic_goals, grow_goals)) +
+        tuple(product(grasp_generic_goals, grow_generic_goals)) +
+        tuple(product(grasp_generic_goals, grow_animals_goals)) +
+        tuple(product(grasp_generic_goals, grow_plants_goals)) +
 
         # turn
         tuple(product(turn_goals, grasp_goals)) +
-        tuple(product(turn_goals, grow_goals)) +
+        tuple(product(turn_goals, grow_plants_goals)) +
+        tuple(product(turn_goals, grow_generic_goals)) +
         tuple(product(turn_goals, pour_goals)) +
 
         # pour
@@ -260,7 +273,10 @@ def generate_all_descriptions(env_params:ParamsDict) -> Tuple[List[str], List[st
     test_descriptions = tuple(sorted(test_descriptions))
     extra_descriptions = tuple(sorted(attempted_grow_descriptions))
 
-    train_descriptions_compound, test_descriptions_compound = generate_compound_descriptions(env_params, train_descriptions, test_descriptions)
+    if env_params['compound_goals']:
+        train_descriptions_compound, test_descriptions_compound = generate_compound_descriptions(env_params, train_descriptions, test_descriptions)
+    else:
+        train_descriptions_compound, test_descriptions_compound = (set(), set())
 
     descriptions_cache = (train_descriptions, test_descriptions, extra_descriptions, train_descriptions_compound, test_descriptions_compound)
     return descriptions_cache

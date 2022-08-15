@@ -56,6 +56,8 @@ class PlayGroundNavigationV1(gym.Env):
                  animal=None,
                  supply=None,
                  add_light=False,
+                 compound_config:dict=None,
+                 compound_goals:bool=False,
                  **others
                  ):
 
@@ -78,7 +80,9 @@ class PlayGroundNavigationV1(gym.Env):
                     furniture=furniture,
                     plant=plant,
                     animal=animal,
-                    supply=supply)
+                    supply=supply,
+                    compound_config=compound_config,
+                    compound_goals=compound_goals)
         self.params = get_env_params(render_mode=render_mode)
         self.adm_attributes = self.params['admissible_attributes']
         self.adm_abs_attributes = [a for a in self.adm_attributes if 'relative' not in a]

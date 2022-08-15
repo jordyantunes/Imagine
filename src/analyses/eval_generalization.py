@@ -108,6 +108,7 @@ def run_generalization_study(path, freq=10):
                                                             p_partner_availability=params['conditions']['p_social_partner_availability'],
                                                             git_commit='',
                                                             imagination_method=params['conditions']['imagination_method'],
+                                                            **params['env_params']['categories'],
                                                             # admissible_attributes=params['env_params'].get('admissible_attributes'),
                                                             # cuda=params['env_params'].get('cuda'),
                                                             # **params['env_params'].get('categories', {}),
@@ -233,7 +234,7 @@ def plot_generalization(path, freq):
         set_global_seeds(seed)
 
         goal_invention = int(params['conditions']['goal_invention'].split('_')[-1])
-        test_descriptions = params['test_descriptions']
+        test_descriptions = params['all_test_descriptions']
 
         success_rates = np.loadtxt(path + '/' + trial + '/generalization_success_rates.txt')
 
@@ -283,6 +284,8 @@ def plot_generalization(path, freq):
         for type_index, type_descriptions in test_set_def.items():
             inds_desc = []
             for i_test_d, test_descr in enumerate(test_descriptions):
+                if isinstance(test_descr, list):
+                    test_descr = " ".join(test_descr)
                 for type_d in type_descriptions:
                     if isinstance(type_d, re.Pattern):
                         r = type_d.search(test_descr)

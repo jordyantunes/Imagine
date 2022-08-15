@@ -179,7 +179,7 @@ def train(policy, training_worker:RolloutWorker, evaluation_worker:RolloutWorker
         eval_episodes = []
 
         if (params['conditions']['compound_goals_from'] is None 
-            or epoch > params['conditions']['compound_goals_from']):
+            or epoch > params['conditions']['compound_goals_from'] or not params['compound_goals']):
             now_n_test_rollouts = n_test_rollouts
         else:
             now_n_test_rollouts = len(params['train_descriptions'])
@@ -324,6 +324,29 @@ def launch(**kwargs):
 
 
 if __name__ == '__main__':
+    def cast_to_python(value):
+        try:
+            bool_value = None
+            if value == 'true':
+                bool_value = True
+            elif value == 'false':
+                bool_value = False
+
+            if bool_value is None:
+                raise Exception("Not bool")
+        except:
+            pass
+        else:
+            return bool_value
+
+        raise Exception("Not able to cast to python")
+
+    def create_dict(dict_string=""):
+        key_value_list = [tuple(i.split(":")) for i in dict_string.split(",")]
+        key_value_list = [i for i in key_value_list if len(i) == 2]
+        key_value_list = [(k, cast_to_python(v)) for k,v in key_value_list]
+        return dict(key_value_list)
+
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     add = parser.add_argument
     add('--env', type=str, default=ENV, help='the name of the OpenAI Gym environment that you want to train on')
@@ -357,6 +380,8 @@ if __name__ == '__main__':
     add('--compound_goals_from', default=None, type=int, help="epoch number")
     add('--render-mode', default=False, action="store_true", help="epoch number")
     add('--add-light', default=False, action="store_true", help="Add light to scene")
+    add('--compound-config', default="{}", type=create_dict, help="compound goals configuration")
+    add('--compound-goals', action="store_true")
     kwargs = vars(parser.parse_args())
     print("-----------Params-----------")
     print(json.dumps(kwargs, indent='\t'))

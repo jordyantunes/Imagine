@@ -16,18 +16,19 @@ from src.imagine.interaction import RolloutWorker
 from src.imagine.goal_sampler import GoalSampler
 from src.playground_env.reward_function import get_reward_from_state
 from src.playground_env.descriptions import generate_all_descriptions
+from src.compound.manager import ProbabilityManager
 
 PATH = Path(os.getenv('IMAGINE_TRAINED_WEIGHTS') or '../../../pretrained_weights/')
-EPOCH = '160'
+EPOCH = '200'
 POLICY_FILE = str(PATH / 'policy_checkpoints/policy_{}.pkl'.format(EPOCH))
 PARAMS_FILE = str(PATH / 'params.json')
 
 
-def main(policy_file, seed, n_test_rollouts, render):
+def main(policy_file, params_file, path, seed, n_test_rollouts, render):
     set_global_seeds(seed)
 
     # Load params
-    with open(PARAMS_FILE) as json_file:
+    with open(params_file) as json_file:
         params = json.load(json_file)
 
     if not render:
@@ -50,22 +51,27 @@ def main(policy_file, seed, n_test_rollouts, render):
                                                     p_partner_availability=params['conditions'][
                                                         'p_social_partner_availability'],
                                                     imagination_method=params['conditions']['imagination_method'],
-                                                    admissible_attributes=params['experiment_params']['admissible_attributes'],
-                                                    git_commit='')
+                                                    # admissible_attributes=params['env_params']['admissible_attributes'],
+                                                    git_commit='',
+                                                    **params['env_params']
+                                                    )
 
     policy_language_model, reward_language_model = config.get_language_models(params)
 
     onehot_encoder = config.get_one_hot_encoder(params['all_descriptions'])
+    # Compound Goal manager
+    probs_manager = ProbabilityManager(list(params['train_descriptions'] + params['test_descriptions']))
     # Define the goal sampler for training
     goal_sampler = GoalSampler(policy_language_model=policy_language_model,
                                reward_language_model=reward_language_model,
                                goal_dim=policy_language_model.goal_dim,
                                one_hot_encoder=onehot_encoder,
-                               params=params)
+                               params=params,
+                               probability_manager=probs_manager)
 
     reward_function = config.get_reward_function(goal_sampler, params)
     if params['conditions']['reward_function'] == 'learned_lstm':
-        reward_function.restore_from_checkpoint(str(PATH / 'reward_checkpoints/reward_func_checkpoint_{}'.format(EPOCH)))
+        reward_function.restore_from_checkpoint(str(path / 'reward_checkpoints/reward_func_checkpoint_{}'.format(EPOCH)))
     policy_language_model.set_reward_function(reward_function)
     if reward_language_model is not None:
         reward_language_model.set_reward_function(reward_function)
@@ -76,7 +82,7 @@ def main(policy_file, seed, n_test_rollouts, render):
                                             goal_sampler=goal_sampler,
                                             params=params)
 
-    policy.load_params(POLICY_FILE)
+    policy.load_params(policy_file)
 
     evaluation_worker = RolloutWorker(make_env=params['make_env'],
                                       policy=policy,
@@ -118,6 +124,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     add = parser.add_argument
     add('--policy_file', type=str, default=POLICY_FILE)
+    add('--params_file', type=str, default=PARAMS_FILE)
+    add('--path', type=Path, default=PATH)
     add('--seed', type=int, default=0)  # int(np.random.randint(1e6)))
     add('--n_test_rollouts', type=int, default=20)
     add('--render', type=int, default=1)
